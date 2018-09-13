@@ -1,0 +1,26 @@
+{
+  "author": "Graham Dyson",
+  "bugs": {
+    "url": "https://github.com/DevSnicket/plugin-discovery/issues"
+  },
+  "dependencies": {
+    "array.prototype.flatmap": "1.2.1",
+    "babylon": "6.18.0",
+    "babylon-walk": "1.0.2",
+    "path": "0.12.7"
+  },
+  "devDependencies": {
+    "@types/node": "10.9.4",
+    "eslint": "5.5.0"
+  },
+  "homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
+  "license": "MIT",
+  "name": "@devsnicket/plugin-discovery-commonjs-babel-plugin",
+  "discovery": "https://github.com/DevSnicket/plugin-discovery/commonjs-babel-plugin",
+  "scripts": {
+    "lint": "eslint .",
+    "pack": "mkdir output; cd output; npm pack ../",
+    "test": "./test.sh"
+  },
+  "version": "1.0.0"
+}

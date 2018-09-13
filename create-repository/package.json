@@ -1,0 +1,18 @@
+{
+  "author": "Graham Dyson",
+  "bugs": {
+    "url": "https://github.com/DevSnicket/plugin-discovery/issues"
+  },
+  "devDependencies": {
+    "eslint": "5.5.0"
+  },
+  "homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
+  "license": "MIT",
+  "name": "@devsnicket/plugin-discovery-create-repository",
+  "discovery": "https://github.com/DevSnicket/plugin-discovery/create-repository",
+  "scripts": {
+	"lint": "eslint .",
+	"pack": "mkdir output; cd output; npm pack ../"
+  },
+  "version": "1.0.0"
+}

@@ -1,0 +1,6 @@
+/.vs
+/.vscode
+commonjs-babel-plugin/test/
+commonjs-babel-plugin/test.expected.js
+node_modules/
+output/

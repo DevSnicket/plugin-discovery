@@ -1,0 +1,4 @@
+jsconfig.json
+output/
+test/
+test.sh

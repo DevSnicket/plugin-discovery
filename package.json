@@ -1,0 +1,16 @@
+{
+  "author": "Graham Dyson",
+  "bugs": {
+    "url": "https://github.com/DevSnicket/plugin-discovery/issues"
+  },
+  "devDependencies": {
+    "eslint": "5.5.0"
+  },
+  "homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
+  "discovery": "https://github.com/DevSnicket/plugin-discovery",
+  "scripts": {
+    "lint": "eslint .",
+	"pack": "(cd commonjs-babel-plugin; npm run pack); (cd create-repository; npm run pack)",
+    "test": "cd commonjs-babel-plugin; npm test"
+  }
+}
