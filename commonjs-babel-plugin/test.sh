@@ -43,5 +43,6 @@ function testPackages {
 	testRepositoryInPath subdirectory/
 }
 
+mkdir test
 testPackages babel-6 'babel-cli@6 babel-core@6'
 testPackages babel-7 '@babel/cli@7 @babel/core@7'
