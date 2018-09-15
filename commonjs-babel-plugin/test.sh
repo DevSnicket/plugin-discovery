@@ -21,12 +21,13 @@ function testRepositoryInPath {
 
 function testPackages {
 	local testDirectoryPath=test/$1
-	echo "Running tests for packages $testDirectoryPath"
+	echo "Running tests in \"$testDirectoryPath\" for packages $2"
 	rm -r $testDirectoryPath
 	mkdir $testDirectoryPath
 	cd $testDirectoryPath
 	echo {} > package.json
 	npm install $2
+	npm install array.prototype.flatmap@1.2.1
 	npm install ../../../create-repository/output/devsnicket-plugin-discovery-create-repository*.tgz
 
 	echo "{ \"plugins\": [ [ \"../../index.js\", { \"log\": \"warnings\" } ] ] }" > .babelrc
