@@ -11,4 +11,4 @@ notifications:
 script:
   - npm run lint
   - npm run pack
-  - npm run test
+  - cd commonjs-babel-plugin ./test.sh
