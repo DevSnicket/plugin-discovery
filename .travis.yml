@@ -1,0 +1,14 @@
+cache:
+  directories:
+    - node_modules
+install:
+  - npm install
+language: node_js
+node_js:
+  - "8.11.2"
+notifications:
+  email: false
+script:
+  - npm run lint
+  - npm run pack
+  - npm run test
