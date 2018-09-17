@@ -3,7 +3,7 @@
   "bugs": {
     "url": "https://github.com/DevSnicket/plugin-discovery/issues"
   },
-  "description": "A factory function and Babel plug-in that can be used together to invert dependencies between modules and make them discovered plug-ins.",
+  "description": "A factory function and Babel plug-in that can be used together to invert dependencies between modules and turn them into discovered plug-ins.",
   "devDependencies": {
     "eslint": "5.5.0"
   },
