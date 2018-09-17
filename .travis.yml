@@ -2,7 +2,7 @@ cache:
   directories:
     - node_modules
 install:
-  - npm install
+  -  npm install; cd commonjs-babel-plugin; npm install
 language: node_js
 node_js:
   - "8.11.2"
