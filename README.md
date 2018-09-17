@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/DevSnicket/plugin-discovery.svg?branch=master)](https://travis-ci.org/DevSnicket/plugin-discovery)
 
-Plug-in Discovery is a JavaScript factory function and a Babel plug-in that can be used together to invert dependencies between modules and turn them into discovered plug-ins.
+Plug-in Discovery is a JavaScript factory function and a Babel plug-in that when used together can invert dependencies between modules and turn them into discovered plug-ins.
 
 There is currently support for file-based CommonJS modules (i.e. not via packages).
 
@@ -18,7 +18,7 @@ Or with [`yarn`](https://yarnpkg.com/en/package/@devsnicket/plugin-discovery-cre
 ```bash
 yarn add @devsnicket/plugin-discovery-create-repository
 ```
-The create repository package contains a factory function. When this function is called and exported a type of plug-in is defined (in this example "someSortOfPlugins").
+The create repository package contains a factory function. When this function is called and the return repository object is exported a plug-in contract is defined (in this example "someSortOfPlugins").
 
 ```javascript
 // someSortOfPlugins.js
@@ -27,7 +27,7 @@ module.exports =
 	();
 ```
 
-This can then be plugged into by objects/functions etc from another file.
+This can then be plugged into by objects/functions etc from other files.
 
 ```javascript
 // plugin1.js
@@ -35,7 +35,7 @@ require("./someSortOfPlugins")
 .plugin("plug-in number 1");
 ```
 
-The plug-ins can then be iterated and used from another file.
+The plug-ins can then be iterated and used from other files.
 
 ```javascript
 // consoleLogPlugins.js
@@ -47,7 +47,7 @@ for (const plugin require("./someSortOfPlugins"))
 
 ## CommonJS Babel plug-in / package
 
-The code above alone won't work as there isn't a module require call to import the plug-in file from the file that iterates the plug-ins. The purpose of a repository object is so that plug-ins can be identified. 
+The code above alone won't work as there isn't a module require call to import the 2nd plug-in file from the 3rd file that iterates the plug-ins. The purpose of a repository object is so that plug-ins can be identified. 
 
 The CommonJS Babel plug-in package discovers DevSnicket plug-in usage and will automatically add module require calls.
 
