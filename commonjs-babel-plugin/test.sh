@@ -25,7 +25,7 @@ function testPackages {
 	rm -r $testDirectoryPath
 	mkdir $testDirectoryPath
 	cd $testDirectoryPath
-	echo {} > package.json
+	echo "{ \"description\": \"test for $2\", \"license\": \"UNLICENSED\", \"repository\": \"none\" }" > package.json
 	npm install $2
 	npm install array.prototype.flatmap@1.2.1
 	npm install ../../../create-repository/output/devsnicket-plugin-discovery-create-repository*.tgz
