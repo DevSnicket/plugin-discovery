@@ -1,5 +1,7 @@
 # Plug-in Discovery
 
+[![Build Status](https://travis-ci.org/DevSnicket/plugin-discovery.svg?branch=master)](https://travis-ci.org/DevSnicket/plugin-discovery)
+
 Plug-in Discovery is a JavaScript factory function and a Babel plug-in that can be used together to invert dependencies between modules and turn them into discovered plug-ins.
 
 There is currently support for file-based CommonJS modules (i.e. not via packages).
