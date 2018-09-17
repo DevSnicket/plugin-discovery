@@ -3,13 +3,15 @@
   "bugs": {
     "url": "https://github.com/DevSnicket/plugin-discovery/issues"
   },
+  "description": "A factory function that creates a repository to which functions/objects etc can be plugged into and discovered from elsewhere.\nDiscovery requires a Babel plug-in to add module imports @devsnicket/plugin-discovery-commonjs-babel-plugin.",
   "devDependencies": {
     "eslint": "5.5.0"
   },
+  "discovery": "https://github.com/DevSnicket/plugin-discovery/create-repository",
   "homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
   "license": "MIT",
   "name": "@devsnicket/plugin-discovery-create-repository",
-  "discovery": "https://github.com/DevSnicket/plugin-discovery/create-repository",
+  "repository": "https://github.com/DevSnicket/plugin-discovery/tree/master/create-repository",
   "scripts": {
 	"lint": "eslint .",
 	"pack": "mkdir output; cd output; npm pack ../"

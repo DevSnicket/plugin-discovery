@@ -9,14 +9,16 @@
     "babylon-walk": "1.0.2",
     "path": "0.12.7"
   },
+  "description": "A Babel plug-in that adds CommonJS require calls to import modules that use @devsnicket/plugin-discovery-create-repository.",
   "devDependencies": {
     "@types/node": "10.9.4",
     "eslint": "5.5.0"
   },
+  "discovery": "https://github.com/DevSnicket/plugin-discovery/commonjs-babel-plugin",
   "homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
   "license": "MIT",
   "name": "@devsnicket/plugin-discovery-commonjs-babel-plugin",
-  "discovery": "https://github.com/DevSnicket/plugin-discovery/commonjs-babel-plugin",
+  "repository": "https://github.com/DevSnicket/plugin-discovery/tree/master/commonjs-babel-plugin",
   "scripts": {
     "lint": "eslint .",
     "pack": "mkdir output; cd output; npm pack ../",
