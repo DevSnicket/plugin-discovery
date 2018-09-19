@@ -15,5 +15,4 @@ notifications:
   email: false
 script:
   - npm run lint
-  - npm run pack
   - cd commonjs-babel-plugin; bash test.sh

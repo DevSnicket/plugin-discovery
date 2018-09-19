@@ -13,7 +13,6 @@
   "repository": "https://github.com/DevSnicket/plugin-discovery/tree/master",
   "scripts": {
     "lint": "eslint .",
-	"pack": "(cd commonjs-babel-plugin; npm run pack); (cd create-repository; npm run pack)",
     "test": "cd commonjs-babel-plugin; npm test"
   }
 }
