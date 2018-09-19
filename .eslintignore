@@ -1,6 +1,6 @@
 /.vs
 /.vscode
 commonjs-babel-plugin/test/
-commonjs-babel-plugin/test.expected.js
+commonjs-babel-plugin/test.repository.expected.js
 node_modules/
 output/

@@ -24,9 +24,11 @@ module.exports =
 					identifier("require"),
 					[
 						stringLiteral(
-							getRelativePath(
-								pluginRepository.directoryPath,
-								requirePath,
+							ensureRelativePathPrefix(
+								getRelativePath(
+									pluginRepository.directoryPath,
+									requirePath,
+								),
 							),
 						),
 					],
@@ -48,4 +50,16 @@ function getParentProgramOfNodePath(
 		);
 	else
 		throw Error("Could not find parent file.");
+}
+
+function ensureRelativePathPrefix(
+	path,
+) {
+	return (
+		path.startsWith(".")
+		?
+		path
+		:
+		`./${path}`
+	);
 }
