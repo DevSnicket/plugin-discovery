@@ -50,7 +50,7 @@ function testPackages {
 
 	echo "{ \"description\": \"test for $2\", \"license\": \"UNLICENSED\", \"repository\": \"none\" }" > package.json
 	npm install $2
-	npm install ../../../create-repository/output/devsnicket-plugin-discovery-create-repository-*.tgz
+	npm install ../../../create-repository
 
 	echo "{ \"plugins\": [ [ \"../../index.js\", { \"log\": \"warnings\" } ] ] }" > .babelrc
 
