@@ -45,11 +45,11 @@ for (const plugin require("./someSortOfPlugins"))
 // plug-in number 1
 ```
 
+The code above alone won't work as there isn't a module require call to import the 2nd plug-in file from the 3rd file that iterates the plug-ins. The purpose of the repository object is so plug-ins can be identified by the [@devsnicket/plugin-discovery-create-repository](https://www.npmjs.com/package/@devsnicket/plugin-discovery-create-repository) package as it will automatically add the missing module require calls.
+
 ## CommonJS Babel plug-in / package
 
-The code above alone won't work as there isn't a module require call to import the 2nd plug-in file from the 3rd file that iterates the plug-ins. The purpose of a repository object is so that plug-ins can be identified. 
-
-The CommonJS Babel plug-in package discovers DevSnicket plug-in usage and will automatically add module require calls.
+The CommonJS Babel plug-in package discovers DevSnicket plug-in usage and will automatically add module require calls where the package [@devsnicket/plugin-discovery-create-repository](https://www.npmjs.com/package/@devsnicket/plugin-discovery-create-repository) has been used.
 
 Install using [`npm`](https://www.npmjs.com/package/@devsnicket/plugin-discovery-commonjs-babel-plugin):
 
