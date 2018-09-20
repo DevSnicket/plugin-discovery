@@ -1,0 +1,14 @@
+<svg height="102" width="185" xmlns="http://www.w3.org/2000/svg">
+  <defs><style type="text/css">polyline{fill:none;stroke:black}rect{fill:lightgray}text{font-family:arial}text.dependency{font-size:10px}text.module{font-size:16px}</style></defs>
+  <rect x="51" y="0" width="83" height="32"/>
+  <text class="module" x="61" y="22">module 1</text>
+  <polyline points="92.5,32 92.5,52 42.5,52 42.5,70"/>
+  <polygon points="32.5,60 52.5,60 42.5,70"/>
+  <polyline points="92.5,32 92.5,52 142.5,52 142.5,70"/>
+  <polygon points="132.5,60 152.5,60 142.5,70"/>
+  <text class="dependency" x="97.5" y="45">require</text>
+  <rect x="0" y="70" width="85" height="32"/>
+  <text class="module" x="10" y="92">module 2</text>
+  <rect x="100" y="70" width="85" height="32"/>
+  <text class="module" x="110" y="92">module 3</text>
+</svg>
