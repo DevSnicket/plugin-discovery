@@ -19,7 +19,7 @@ module.exports =
 			const
 				log = createConsoleLogFromOption(state.opts.log),
 				sourceFilePath = path.resolve(state.file.opts.filename),
-				sourceRootPath = path.resolve(state.file.opts.sourceRoot || "./");
+				sourceRootPath = path.resolve(state.opts.rootDirectory || state.file.opts.sourceRoot || "./");
 
 			if (!visitedFilePaths.has(sourceFilePath) && isCallOfRequireCreateRepository(nodePath.node)) {
 				log.detail(`discovery "${sourceFilePath}"`);
