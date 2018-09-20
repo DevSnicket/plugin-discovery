@@ -1,4 +1,4 @@
-<svg height="102" width="320" xmlns="http://www.w3.org/2000/svg">
+<svg height="102" width="316" xmlns="http://www.w3.org/2000/svg">
   <defs><style type="text/css">polyline{fill:none;stroke:black}rect{fill:lightgray}text{font-family:arial}text.dependency{font-size:10px}text.module{font-size:16px}</style></defs>
   <rect x="0" y="0" width="85" height="32"/>
   <text class="module" x="10" y="22">module 1</text>
@@ -7,14 +7,14 @@
   <rect x="200" y="0" width="84" height="32"/>
   <text class="module" x="210" y="22">module 3</text>
   <polyline points="42.5,32 42.5,52 117,52 117,70"/>
-  <text class="dependency" x="47.5" y="45">require &amp; iterate</text>
+  <text class="dependency" x="47.5" y="45">require &#x2F; iterate</text>
   <polygon points="107,60 127,60 117,70"/>
   <polyline points="142,32 142,70"/>
   <polygon points="132,60 152,60 142,70"/>
-  <text class="dependency" x="147" y="45">require &amp; plug in</text>
+  <text class="dependency" x="147" y="45">require &#x2F; plug in</text>
   <polyline points="242.5,32 242.5,52 167,52 167,70"/>
   <polygon points="157,60 177,60 167,70"/>
-  <text class="dependency" x="247.5" y="45">require &amp; plug in</text>
+  <text class="dependency" x="247.5" y="45">require &#x2F; plug in</text>
   <rect x="66" y="70" width="142" height="32"/>
   <text class="module" x="76" y="92">plug-in repository</text>
 </svg>
