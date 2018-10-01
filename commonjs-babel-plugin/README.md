@@ -8,6 +8,9 @@ There is currently support for file-based CommonJS modules (i.e. not via package
 
 ## CommonJS Babel plug-in / package
 
+[![NPM](https://img.shields.io/npm/v/@devsnicket/plugin-discovery-commonjs-babel-plugin.svg)](https://www.npmjs.com/package/@devsnicket/plugin-discovery-commonjs-babel-plugin
+)
+
 The CommonJS Babel plug-in package discovers DevSnicket plug-in usage and will automatically add module require calls where the package [@devsnicket/plugin-discovery-create-repository](https://www.npmjs.com/package/@devsnicket/plugin-discovery-create-repository) has been used.
 
 Install using [`npm`](https://www.npmjs.com/package/@devsnicket/plugin-discovery-commonjs-babel-plugin):

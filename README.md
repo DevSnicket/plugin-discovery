@@ -12,6 +12,9 @@ There is currently support for file-based CommonJS modules (i.e. not via package
 
 ## Create repository factory function / package
 
+[![NPM](https://img.shields.io/npm/v/@devsnicket/plugin-discovery-create-repository.svg)](https://www.npmjs.com/package/@devsnicket/plugin-discovery-create-repository
+)
+
 Install using [`npm`](https://www.npmjs.com/package/@devsnicket/plugin-discovery-create-repository):
 
 ```bash
@@ -52,6 +55,9 @@ for (const plugin require("./someSortOfPlugins"))
 The code above alone won't work as there isn't a module require call to import the 2nd plug-in file from the 3rd file that iterates the plug-ins. The purpose of the repository object is so plug-ins can be identified by the [@devsnicket/plugin-discovery-create-repository](https://www.npmjs.com/package/@devsnicket/plugin-discovery-create-repository) package as it will automatically add the missing module require calls.
 
 ## CommonJS Babel plug-in / package
+
+[![NPM](https://img.shields.io/npm/v/@devsnicket/plugin-discovery-commonjs-babel-plugin.svg)](https://www.npmjs.com/package/@devsnicket/plugin-discovery-commonjs-babel-plugin
+)
 
 The CommonJS Babel plug-in package discovers DevSnicket plug-in usage and will automatically add module require calls where the package [@devsnicket/plugin-discovery-create-repository](https://www.npmjs.com/package/@devsnicket/plugin-discovery-create-repository) has been used.
 
