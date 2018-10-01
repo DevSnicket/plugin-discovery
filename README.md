@@ -67,3 +67,7 @@ yarn add --dev @devsnicket/plugin-discovery-commonjs-babel-plugin
 ```
 
 The Babel plug-in will need to be specified in your [Babel configuration](https://babeljs.io/docs/en/plugins#plugin-preset-paths), [WebPack Babel Loader configuration](https://github.com/babel/babel-loader#options) or equivalent.
+
+## Example
+
+An example of plug-in discovery can be found in [Eunice](https://github.com/DevSnicket/Eunice). For its test harnesses a plug-in repository is defined ([Harnesses/processorPlugins.js](https://github.com/DevSnicket/Eunice/blob/master/Harnesses/processorPlugins.js)) so [processors](https://github.com/DevSnicket/Eunice/tree/master/Processors) can be discovered and included automatically.
