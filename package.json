@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": "https://github.com/DevSnicket/plugin-discovery/tree/master",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "npx eslint .",
     "test": "cd commonjs-babel-plugin; npm test"
   }
 }

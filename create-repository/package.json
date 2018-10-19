@@ -13,7 +13,7 @@
   "name": "@devsnicket/plugin-discovery-create-repository",
   "repository": "https://github.com/DevSnicket/plugin-discovery/tree/master/create-repository",
   "scripts": {
-	"lint": "eslint ."
+	"lint": "npx eslint ."
   },
   "version": "1.2.0"
 }
