@@ -1,17 +1,5 @@
 jobs:
   include:
-    - stage: install, lint and test
-      install:
-        - (cd commonjs-babel-plugin && npm install)
-        - npm install
-      language: node_js
-      node_js:
-        - "8.11.2"
-      notifications:
-        email: false
-      script:
-        - npm run lint
-        - npm test
     - stage: npm publish
       before_deploy:
         - cd create-repository
@@ -27,3 +15,14 @@ jobs:
         email: grahamdyson@hotmail.com
         provider: npm
         skip_cleanup: true
+install:
+  - (cd commonjs-babel-plugin && npm install)
+  - npm install
+language: node_js
+node_js:
+  - "8.11.2"
+notifications:
+  email: false
+script:
+  - npm run lint
+  - npm test
