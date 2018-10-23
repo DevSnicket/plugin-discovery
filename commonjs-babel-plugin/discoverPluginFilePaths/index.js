@@ -27,7 +27,7 @@ function discoverPluginFilePaths({
 		fileOrDirectory,
 	) {
 		const fileOrDirectoryPath =
-			path.join(`${directoryPath}/${fileOrDirectory}`);
+			path.join(directoryPath, fileOrDirectory);
 
 		return (
 			discoverWhenInDirectory()

@@ -28,5 +28,5 @@
 	"license": "MIT",
 	"name": "@devsnicket/plugin-discovery-commonjs-babel-plugin",
 	"repository": "https://github.com/DevSnicket/plugin-discovery/tree/master/commonjs-babel-plugin",
-	"version": "1.5.0"
+	"version": "1.6.0"
 }

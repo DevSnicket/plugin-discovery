@@ -1,4 +1,4 @@
-const getRelativePath = require("path").relative;
+const path = require("path");
 
 module.exports =
 	({
@@ -25,9 +25,13 @@ module.exports =
 					[
 						stringLiteral(
 							ensureRelativePathPrefix(
-								getRelativePath(
+								path.relative(
 									pluginRepository.directoryPath,
 									requirePath,
+								)
+								.replace(
+									path.sep,
+									"/",
 								),
 							),
 						),
@@ -53,13 +57,13 @@ function getParentProgramOfNodePath(
 }
 
 function ensureRelativePathPrefix(
-	path,
+	file,
 ) {
 	return (
-		path.startsWith(".")
+		file.startsWith(".")
 		?
-		path
+		file
 		:
-		`./${path}`
+		`./${file}`
 	);
 }
