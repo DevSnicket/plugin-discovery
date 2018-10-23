@@ -1,27 +1,30 @@
 const
 	fs = require("fs"),
-	path = require("path");
+	path = require("path"),
+	{ promisify } = require("util");
+
+const writeFile = promisify(fs.writeFile);
 
 module.exports =
-	({
+	async({
 		babelVersion,
 		directory,
 	}) => {
-		writeJsonTestFile({
+		await writeJsonTestFile({
 			content: createPackageJson(),
 			testFile: "package.json",
 		});
 
-		writeJsonTestFile({
+		await writeJsonTestFile({
 			content: createBabelrc(),
 			testFile: ".babelrc",
 		});
 
-		function writeJsonTestFile({
+		async function writeJsonTestFile({
 			content,
 			testFile,
 		}) {
-			fs.writeFileSync(
+			await writeFile(
 				path.join(directory, testFile),
 				JSON.stringify(content),
 			);

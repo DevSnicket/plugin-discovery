@@ -2,39 +2,41 @@ const npm = require("npm");
 
 module.exports =
 	({
-		callback,
 		directory,
 		packages,
-	}) => {
-		npm.load(
-			{ prefix: directory },
-			afterNpmLoad,
-		);
-
-		function afterNpmLoad(
-			error,
-		) {
-			if (error)
-				throw error;
-			else
-				npm.on(
-					"log",
-					// eslint-disable-next-line no-console
-					console.log,
+	}) =>
+		new Promise(
+			(resolve, reject) => {
+				npm.load(
+					{ prefix: directory },
+					afterNpmLoad,
 				);
 
-			npm.commands.install(
-				packages,
-				afterInstallCommand,
-			);
-		}
+				function afterNpmLoad(
+					error,
+				) {
+					if (error)
+						reject(error);
+					else
+						npm.on(
+							"log",
+							// eslint-disable-next-line no-console
+							console.log,
+						);
 
-		function afterInstallCommand(
-			error,
-		) {
-			if (error)
-				throw error;
-			else
-				return callback();
-		}
-	};
+					npm.commands.install(
+						packages,
+						afterInstallCommand,
+					);
+				}
+
+				function afterInstallCommand(
+					error,
+				) {
+					if (error)
+						reject(error);
+					else
+						resolve();
+				}
+			},
+		);

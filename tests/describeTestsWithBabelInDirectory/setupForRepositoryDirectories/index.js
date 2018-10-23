@@ -2,22 +2,26 @@ const
 	callModuleInProcess = require("../callModuleInProcess"),
 	fs = require("fs"),
 	path = require("path"),
-	writeConfigurationFiles = require("./writeConfigurationFiles");
+	writeConfigurationFiles = require("./writeConfigurationFiles"),
+	{ promisify } = require("util");
+
+const
+	makeDirectory = promisify(fs.mkdir),
+	writeFile = promisify(fs.writeFile);
 
 module.exports =
-	({
+	async({
 		babel,
-		callback,
 		repository,
 	}) => {
-		fs.mkdirSync(repository.directories.root);
+		await makeDirectory(repository.directories.root);
 
-		writeConfigurationFiles({
+		await writeConfigurationFiles({
 			babelVersion: babel.version,
 			directory: repository.directories.root,
 		});
 
-		callModuleInProcess({
+		await callModuleInProcess({
 			argument:
 				{
 					directory:
@@ -28,48 +32,46 @@ module.exports =
 							path.join("..", "..", "..", "create-repository"),
 						],
 				},
-			callback:
-				writePlugins,
 			directory:
 				__dirname,
 			moduleFile:
 				"./installPackages",
 		});
 
-		function writePlugins() {
-			writePluginsInDirectory(
+		await writePlugins();
+
+		async function writePlugins() {
+			await writePluginsInDirectory(
 				repository.directories.root,
 			);
 
-			fs.mkdirSync(repository.directories.sub);
+			await makeDirectory(repository.directories.sub);
 
-			writePluginsInDirectory(
+			await writePluginsInDirectory(
 				repository.directories.sub,
 			);
-
-			callback();
 		}
 
-		function writePluginsInDirectory(
+		async function writePluginsInDirectory(
 			directory,
 		) {
-			writeTestFile({
+			await writeTestFile({
 				content: `require("./${repository.filename}").plugIn("test plug-in");`,
 				relativePath: "plugin.js",
 			});
 
-			fs.mkdirSync(path.join(directory, "pluginSubdirectory"));
+			await makeDirectory(path.join(directory, "pluginSubdirectory"));
 
-			writeTestFile({
+			await writeTestFile({
 				content: `require("../${repository.filename}").plugIn("test sub-directory plug-in of repository in parent directory");`,
 				relativePath: path.join("pluginSubdirectory", "pluginOfRepositoryInParentDirectory.js"),
 			});
 
-			function writeTestFile({
+			async function writeTestFile({
 				content,
 				relativePath,
 			}) {
-				fs.writeFileSync(
+				await writeFile(
 					path.join(directory, relativePath),
 					content,
 				);

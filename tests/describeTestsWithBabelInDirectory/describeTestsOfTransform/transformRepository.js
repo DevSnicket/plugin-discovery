@@ -1,6 +1,5 @@
 module.exports =
 	({
-		callback,
 		babelCorePackage,
 		repositoryFile,
 		transformFunctionName,
@@ -9,7 +8,7 @@ module.exports =
 			// eslint-disable-next-line global-require
 			require(babelCorePackage)[transformFunctionName];
 
-		callback(
+		return (
 			transform(
 				"module.exports = require(\"@devsnicket/plugin-discovery-create-repository\")();",
 				{
@@ -17,6 +16,6 @@ module.exports =
 					sourceFileName: repositoryFile,
 				},
 			)
-			.code,
+			.code
 		);
 	};

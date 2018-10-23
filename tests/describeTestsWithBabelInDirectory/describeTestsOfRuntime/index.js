@@ -2,85 +2,84 @@ const
 	callModuleInProcess = require("../callModuleInProcess"),
 	fs = require("fs"),
 	path = require("path"),
+	{ promisify } = require("util"),
 	setupForRepositoryDirectories = require("../setupForRepositoryDirectories");
+
+const
+	copyFile = promisify(fs.copyFile),
+	writeFile = promisify(fs.writeFile);
 
 module.exports =
 	({
 		babel,
-		repository,
+		getRepositoryForTestDescription,
 	}) => {
-		const iterateRepositoryFilename = "iterateRepository.js";
+		const
+			iterateRepositoryFilename = "iterateRepository.js",
+			testDescription = "runtime";
+
+		let repository = null;
 
 		beforeAll(
-			callback =>
-				setupForRepositoryDirectories({
+			async() => {
+				repository = await getRepositoryForTestDescription(testDescription);
+
+				await setupForRepositoryDirectories({
 					babel,
-					callback:
-						() => {
-							fs.copyFileSync(
-								path.join(__dirname, iterateRepositoryFilename),
-								path.join(repository.directories.root, iterateRepositoryFilename),
-							);
-
-							callback();
-						},
 					repository,
-				}),
-		);
+				});
 
-		describe(
-			"runtime",
-			() => {
-				test(
-					"in root directory",
-					callback =>
-						testRuntimeInDirectory({
-							callback,
-							directory: repository.directories.root,
-						}),
-				);
-
-				test(
-					"in sub-directory",
-					callback =>
-						testRuntimeInDirectory({
-							callback,
-							directory: repository.directories.sub,
-						}),
+				await copyFile(
+					path.join(__dirname, iterateRepositoryFilename),
+					path.join(repository.directories.root, iterateRepositoryFilename),
 				);
 			},
 		);
 
-		function testRuntimeInDirectory({
-			callback,
+		describe(
+			testDescription,
+			() => {
+				test(
+					"in root directory",
+					() =>
+						testRuntimeInDirectory(
+							repository.directories.root,
+						),
+				);
+
+				test(
+					"in sub-directory",
+					() =>
+						testRuntimeInDirectory(
+							repository.directories.sub,
+						),
+				);
+			},
+		);
+
+		async function testRuntimeInDirectory(
 			directory,
-		}) {
-			fs.writeFileSync(
+		) {
+			await writeFile(
 				path.join(directory, repository.filename),
 				repository.transformed,
 			);
 
-			callModuleInProcess({
-				argument:
-					{ repositoryFile: path.join(directory, repository.filename) },
-				callback:
-					plugins => {
-						expect(plugins)
-						.toEqual(
-							[
-								"test plug-in",
-								"test sub-directory plug-in of repository in parent directory",
-							],
-						);
-
-						callback();
-					},
-				directory:
-					repository.directories.root,
-				moduleFile:
-					iterateRepositoryFilename,
-			});
-
-			callback();
+			expect(
+				await callModuleInProcess({
+					argument:
+						path.join(directory, repository.filename),
+					directory:
+						repository.directories.root,
+					moduleFile:
+						iterateRepositoryFilename,
+				}),
+			)
+			.toEqual(
+				[
+					"test plug-in",
+					"test sub-directory plug-in of repository in parent directory",
+				],
+			);
 		}
 	};

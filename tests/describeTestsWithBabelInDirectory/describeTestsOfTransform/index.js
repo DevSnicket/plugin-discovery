@@ -2,77 +2,78 @@ const
 	callModuleInProcess = require("../callModuleInProcess"),
 	fs = require("fs"),
 	path = require("path"),
-	setupForRepositoryDirectories = require("../setupForRepositoryDirectories");
+	setupForRepositoryDirectories = require("../setupForRepositoryDirectories"),
+	{ promisify } = require("util");
+
+const copyFile = promisify(fs.copyFile);
 
 module.exports =
 	({
 		babel,
-		repository,
+		getRepositoryForTestDescription,
 	}) => {
-		const transformRepositoryFilename = "transformRepository.js";
+		const
+			testDescription = "transform",
+			transformRepositoryFilename = "transformRepository.js";
+
+		let repository = null;
 
 		beforeAll(
-			callback =>
-				setupForRepositoryDirectories({
+			async() => {
+				repository = await getRepositoryForTestDescription(testDescription);
+
+				await setupForRepositoryDirectories({
 					babel,
-					callback:
-						() => {
-							fs.copyFileSync(
-								path.join(__dirname, transformRepositoryFilename),
-								path.join(repository.directories.root, transformRepositoryFilename),
-							);
-
-							callback();
-						},
 					repository,
-				}),
-		);
+				});
 
-		describe(
-			"transform",
-			() => {
-				test(
-					"in root directory",
-					callback =>
-						testTransformInDirectory({
-							callback,
-							directory: repository.directories.root,
-						}),
-				);
-
-				test(
-					"in sub-directory",
-					callback =>
-						testTransformInDirectory({
-							callback,
-							directory: repository.directories.sub,
-						}),
+				await copyFile(
+					path.join(__dirname, transformRepositoryFilename),
+					path.join(repository.directories.root, transformRepositoryFilename),
 				);
 			},
 		);
 
-		function testTransformInDirectory({
-			callback,
-			directory,
-		}) {
-			callModuleInProcess({
-				argument:
-					{
-						babelCorePackage: babel.corePackage,
-						repositoryFile: path.join(directory, repository.filename),
-						transformFunctionName: babel.transformFunctionName,
-					},
-				callback:
-					transformedCode => {
-						expect(transformedCode)
-						.toEqual(repository.transformed);
+		describe(
+			testDescription,
+			() => {
+				test(
+					"in root directory",
+					() =>
+						testTransformInDirectory(
+							repository.directories.root,
+						),
+				);
 
-						callback();
-					},
-				directory:
-					repository.directories.root,
-				moduleFile:
-					transformRepositoryFilename,
-			});
+				test(
+					"in sub-directory",
+					() =>
+						testTransformInDirectory(
+							repository.directories.sub,
+						),
+				);
+			},
+		);
+
+		async function testTransformInDirectory(
+			directory,
+		) {
+			expect(
+				await callModuleInProcess({
+					argument:
+						{
+							babelCorePackage: babel.corePackage,
+							repositoryFile: path.join(directory, repository.filename),
+							transformFunctionName: babel.transformFunctionName,
+						},
+					directory:
+						repository.directories.root,
+					moduleFile:
+						transformRepositoryFilename,
+				}),
+			)
+			.toEqual(
+				repository.transformed,
+			);
 		}
 	};

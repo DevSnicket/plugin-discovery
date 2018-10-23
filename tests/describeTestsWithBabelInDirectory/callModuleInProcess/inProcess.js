@@ -4,21 +4,21 @@ process.on(
 		argument,
 		moduleFile,
 	}) =>
-		// eslint-disable-next-line global-require
-		require(
-			moduleFile,
-		)({
-			...argument,
-			callback,
-		}),
+		Promise.resolve(
+			// eslint-disable-next-line global-require
+			require(moduleFile)(argument),
+		)
+		.then(
+			sendWhenDefinedAndExit,
+		),
 );
 
-function callback(
-	result,
+function sendWhenDefinedAndExit(
+	value,
 ) {
 	// eslint-disable-next-line no-undefined
-	if (result !== undefined)
-		process.send(result);
+	if (value !== undefined)
+		process.send(value);
 
 	// eslint-disable-next-line no-process-exit
 	process.exit();

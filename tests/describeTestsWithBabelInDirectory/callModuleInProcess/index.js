@@ -5,35 +5,37 @@ const
 module.exports =
 	({
 		argument,
-		callback,
 		directory,
 		moduleFile,
-	}) => {
-		const process =
-			childProcess.fork(
-				path.join(__dirname, "inProcess"),
-				[],
-				{
-					cwd: directory,
-					execArgv: [],
-				},
-			);
+	}) =>
+		new Promise(
+			resolve => {
+				const process =
+					childProcess.fork(
+						path.join(__dirname, "inProcess"),
+						[],
+						{
+							cwd: directory,
+							execArgv: [],
+						},
+					);
 
-		// eslint-disable-next-line init-declarations
-		let result;
+				// eslint-disable-next-line init-declarations
+				let result;
 
-		process.on(
-			"message",
-			message => result = message,
+				process.on(
+					"message",
+					message => result = message,
+				);
+
+				process.on(
+					"exit",
+					() => resolve(result),
+				);
+
+				process.send({
+					argument,
+					moduleFile: path.join(directory, moduleFile),
+				});
+			},
 		);
-
-		process.on(
-			"exit",
-			() => callback(result),
-		);
-
-		process.send({
-			argument,
-			moduleFile: path.join(directory, moduleFile),
-		});
-	};

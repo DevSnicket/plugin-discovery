@@ -2,23 +2,16 @@ const
 	describeTestsOfRuntime = require("./describeTestsOfRuntime"),
 	describeTestsOfTransform = require("./describeTestsOfTransform"),
 	fs = require("fs"),
-	path = require("path");
+	getRepositoryForDirectoryAndTestDescription = require("./getRepositoryForDirectoryAndTestDescription"),
+	path = require("path"),
+	{ promisify } = require("util");
 
-const repository =
-	{
-		filename:
-			"repository.js",
-		transformed:
-			fs.readFileSync(
-				path.join(__dirname, "repository.transformed.js"),
-				{ encoding: "utf-8" },
-			),
-	};
+const makeDirectory = promisify(fs.mkdir);
 
 module.exports =
 	({
 		babel,
-		directory: outputDirectory,
+		directory,
 	}) => {
 		describe(
 			`babel ${babel.corePackage} ${babel.version}`,
@@ -26,43 +19,31 @@ module.exports =
 		);
 
 		function testBabel() {
-			const outputDirectoryForBabelVersion =
-				path.join(outputDirectory, `babel-${babel.version}`);
+			const directoryForBabel =
+				path.join(directory, `babel-${babel.version}`);
 
-			fs.mkdirSync(outputDirectoryForBabelVersion);
+			beforeAll(
+				() => makeDirectory(directoryForBabel),
+			);
 
 			describeTestsOfTransform({
 				babel,
-				repository:
-					{
-						directories: getRepositoryDirectoriesFromTestDescription("transform"),
-						...repository,
-					},
+				getRepositoryForTestDescription,
 			});
 
 			describeTestsOfRuntime({
 				babel,
-				repository:
-					{
-						directories: getRepositoryDirectoriesFromTestDescription("runtime"),
-						...repository,
-					},
+				getRepositoryForTestDescription,
 			});
 
-			function getRepositoryDirectoriesFromTestDescription(
+			function getRepositoryForTestDescription(
 				testDescription,
 			) {
-				const root =
-					path.join(
-						outputDirectoryForBabelVersion,
-						testDescription,
-					);
-
 				return (
-					{
-						root,
-						sub: path.join(root, "repositoryInSubdirectory"),
-					}
+					getRepositoryForDirectoryAndTestDescription({
+						directory: directoryForBabel,
+						testDescription,
+					})
 				);
 			}
 		}
