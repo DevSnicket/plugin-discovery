@@ -7,7 +7,7 @@ deploy:
   provider: npm
   skip_cleanup: true
 install:
-  -  npm install; cd commonjs-babel-plugin; npm install
+  -  npm install; (cd commonjs-babel-plugin; npm install)
 language: node_js
 node_js:
   - "8.11.2"
