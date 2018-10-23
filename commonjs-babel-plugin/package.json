@@ -1,19 +1,32 @@
 {
-  "author": "Graham Dyson",
-  "bugs": {
-    "url": "https://github.com/DevSnicket/plugin-discovery/issues"
-  },
-  "dependencies": {
-    "array.prototype.flatmap": "1.2.1",
-    "babylon": "6.18.0",
-    "babylon-walk": "1.0.2",
-    "path": "0.12.7"
-  },
-  "description": "A Babel plug-in that adds CommonJS require calls to import modules that use @devsnicket/plugin-discovery-create-repository.",
-  "discovery": "https://github.com/DevSnicket/plugin-discovery/commonjs-babel-plugin",
-  "homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
-  "license": "MIT",
-  "name": "@devsnicket/plugin-discovery-commonjs-babel-plugin",
-  "repository": "https://github.com/DevSnicket/plugin-discovery/tree/master/commonjs-babel-plugin",
-  "version": "1.3.0"
+	"author": "Graham Dyson",
+	"bugs": {
+		"url": "https://github.com/DevSnicket/plugin-discovery/issues"
+	},
+	"dependencies": {
+		"array.prototype.flatmap": "1.2.1",
+		"babylon": "6.18.0",
+		"babylon-walk": "1.0.2",
+		"path": "0.12.7"
+	},
+	"description": "A Babel plug-in that adds CommonJS require calls to import modules that use @devsnicket/plugin-discovery-create-repository.",
+	"discovery": "https://github.com/DevSnicket/plugin-discovery/commonjs-babel-plugin",
+	"homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
+	"keywords": [
+		"babel",
+		"commonjs",
+		"dependency",
+		"dependencies",
+		"discovery",
+		"injection",
+		"inversion",
+		"module",
+		"modules",
+		"plugin",
+		"plugins"
+	],
+	"license": "MIT",
+	"name": "@devsnicket/plugin-discovery-commonjs-babel-plugin",
+	"repository": "https://github.com/DevSnicket/plugin-discovery/tree/master/commonjs-babel-plugin",
+	"version": "1.5.0"
 }
