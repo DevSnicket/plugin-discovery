@@ -5,7 +5,11 @@
   },
   "description": "A factory function and Babel plug-in that can be used together to invert dependencies between modules and turn them into discovered plug-ins.",
   "devDependencies": {
-    "eslint": "5.5.0"
+    "@types/jest": "23.3.5",
+    "@types/node": "10.9.4",
+    "eslint": "5.5.0",
+    "jest": "23.6.0",
+    "npm": "6.4.1"
   },
   "discovery": "https://github.com/DevSnicket/plugin-discovery",
   "homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
@@ -13,6 +17,6 @@
   "repository": "https://github.com/DevSnicket/plugin-discovery/tree/master",
   "scripts": {
     "lint": "npx eslint .",
-    "test": "cd commonjs-babel-plugin; npm test"
+    "test": "npx jest"
   }
 }

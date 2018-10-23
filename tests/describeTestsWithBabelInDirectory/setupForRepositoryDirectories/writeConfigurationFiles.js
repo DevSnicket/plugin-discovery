@@ -44,7 +44,7 @@ function createBabelrc() {
 			plugins:
 				[
 					[
-						path.join(__dirname, "..", "..", "..", "index.js"),
+						path.join(__dirname, "..", "..", "..", "commonjs-babel-plugin", "index.js"),
 						{ log: "warnings" },
 					],
 				],

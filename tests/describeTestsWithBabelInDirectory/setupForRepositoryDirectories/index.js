@@ -25,7 +25,7 @@ module.exports =
 					packages:
 						[
 							`${babel.corePackage}@${babel.version}`,
-							path.join("..", "..", "..", "..", "create-repository"),
+							path.join("..", "..", "..", "create-repository"),
 						],
 				},
 			callback:
