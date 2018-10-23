@@ -11,8 +11,11 @@
   },
   "description": "A Babel plug-in that adds CommonJS require calls to import modules that use @devsnicket/plugin-discovery-create-repository.",
   "devDependencies": {
+    "@types/jest": "23.3.5",
     "@types/node": "10.9.4",
-    "eslint": "5.5.0"
+    "eslint": "5.5.0",
+    "jest": "23.6.0",
+    "npm": "6.4.1"
   },
   "discovery": "https://github.com/DevSnicket/plugin-discovery/commonjs-babel-plugin",
   "homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
@@ -21,7 +24,7 @@
   "repository": "https://github.com/DevSnicket/plugin-discovery/tree/master/commonjs-babel-plugin",
   "scripts": {
     "lint": "npx eslint .",
-    "test": "bash test.sh"
+    "test": "npx jest"
   },
   "version": "1.3.0"
 }

@@ -1,6 +1,1 @@
-.eslintignore
 jsconfig.json
-output/
-test/
-test.repository.expected.js
-test.sh

@@ -4,6 +4,7 @@ require("array.prototype.flatmap")
 const
 	{ parse } = require("babylon"),
 	fs = require("fs"),
+	getPathFromRequireArguments = require("./getPathFromRequireArguments"),
 	path = require("path"),
 	walk = require("babylon-walk").simple;
 
@@ -27,7 +28,6 @@ function discoverPluginFilePaths({
 	) {
 		const fileOrDirectoryPath =
 			path.join(`${directoryPath}/${fileOrDirectory}`);
-
 
 		return (
 			discoverWhenInDirectory()
@@ -118,6 +118,7 @@ function discoverPluginFilePaths({
 					walk(
 						syntaxTree,
 						{ CallExpression: visitCallExpression },
+						null,
 					);
 
 					return found;
@@ -125,23 +126,28 @@ function discoverPluginFilePaths({
 					function visitCallExpression(
 						callExpression,
 					) {
-						if (!found) {
-							found =
-								callExpression.callee.name === "require"
-								&&
-								pluginRepositoryFile.path === getRequirePath();
+						if (!found && (found = isRequreOfPluginRepository()))
+							log.discoveredFilePath(filePath);
 
-							if (found)
-								log.discoveredFilePath(filePath);
-						}
-
-						function getRequirePath() {
+						function isRequreOfPluginRepository() {
 							return (
-								path.join(
-									path.dirname(filePath),
-									callExpression.arguments[0].value,
-								)
+								isRequire()
+								&&
+								pluginRepositoryFile.path === getPathFromRequire()
 							);
+
+							function isRequire() {
+								return callExpression.callee.name === "require";
+							}
+
+							function getPathFromRequire() {
+								return (
+									getPathFromRequireArguments({
+										arguments: callExpression.arguments,
+										filePath,
+									})
+								);
+							}
 						}
 					}
 				}

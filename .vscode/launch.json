@@ -6,72 +6,13 @@
 			"type": "node",
 		},
 		{
-			"args":
-				[
-					"node_modules/babel-cli/lib/babel/index.js",
-					"repository.js",
-				],
-			"cwd":
-				"${workspaceFolder}/commonjs-babel-plugin/test/babel-6",
-			"name":
-				"test babel 6",
-			"request":
-				"launch",
-			"type":
-				"node",
-			"useWSL":
-				true,
-		},
-		{
-			"args":
-				[
-					"node_modules/@babel/cli/lib/babel/index.js",
-					"repository.js",
-				],
-			"cwd":
-				"${workspaceFolder}/commonjs-babel-plugin/test/babel-7",
-			"name":
-				"test babel 7",
-			"request":
-				"launch",
-			"type":
-				"node",
-			"useWSL":
-				true,
-		},
-		{
-			"args":
-				[
-					"node_modules/babel-cli/lib/babel/index.js",
-					"subdirectory/repository.js",
-				],
-			"cwd":
-				"${workspaceFolder}/commonjs-babel-plugin/test/babel-6",
-			"name":
-				"test respository in sub-directory babel 6",
-			"request":
-				"launch",
-			"type":
-				"node",
-			"useWSL":
-				true,
-		},
-		{
-			"args":
-				[
-					"node_modules/@babel/cli/lib/babel/index.js",
-					"subdirectory/repository.js",
-				],
-			"cwd":
-				"${workspaceFolder}/commonjs-babel-plugin/test/babel-7",
-			"name":
-				"test respository in sub-directory babel 7",
-			"request":
-				"launch",
-			"type":
-				"node",
-			"useWSL":
-				true,
+			"args": [ "test/test.js" ],
+			"cwd": "${workspaceFolder}/commonjs-babel-plugin",
+			"name": "jest",
+			"program": "${workspaceFolder}/commonjs-babel-plugin/node_modules/jest/bin/jest.js",
+			"request": "launch",
+			"type": "node",
+			"useWSL": true
 		}
 	]
 }
