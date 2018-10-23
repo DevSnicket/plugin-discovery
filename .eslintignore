@@ -1,5 +1,5 @@
 /.vs
 /.vscode
-/commonjs-babel-plugin/test/describeTestsWithBabelInDirectory/repository.transformed.js
-/commonjs-babel-plugin/test/output
+/tests/describeTestsWithBabelInDirectory/repository.transformed.js
+/tests/output
 node_modules/
