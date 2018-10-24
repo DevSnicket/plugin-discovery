@@ -4,6 +4,10 @@
 
 Plug-in Discovery is a JavaScript factory function and a Babel plug-in that when used together can invert dependencies between modules and turn them into discovered plug-ins.
 
+before | after
+------ | -----
+![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/before.svg?sanitize=true) | ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/after.svg?sanitize=true)
+
 There is currently support for file-based CommonJS modules (i.e. not via packages).
 
 ## CommonJS Babel plug-in / package
