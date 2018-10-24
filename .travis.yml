@@ -11,6 +11,7 @@ deploy:
   skip_cleanup: true
 install:
   - npm install
+  - (cd ../tests; npm install)
 language: node_js
 node_js:
   - "8.11.2"
