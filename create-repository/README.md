@@ -52,4 +52,4 @@ for (const plugin require("./someSortOfPlugins"))
 // plug-in number 1
 ```
 
-The code above alone won't work as there isn't a module require call to import the 2nd plug-in file from the 3rd file that iterates the plug-ins. The purpose of the repository object is so plug-ins can be identified by the [@devsnicket/plugin-discovery-create-repository](https://www.npmjs.com/package/@devsnicket/plugin-discovery-create-repository) package as it will automatically add the missing module require calls.
+The code above alone won't work as there isn't a module require call to import the 2nd plug-in file from the 3rd file that iterates the plug-ins. The purpose of the repository object is so plug-ins can be identified by the [@devsnicket/plugin-discovery-commonjs-babel-plugin](https://www.npmjs.com/package/@devsnicket/plugin-discovery-commonjs-babel-plugin) package as it will automatically add the missing module require calls.
