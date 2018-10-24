@@ -5,22 +5,31 @@
   },
   "description": "A factory function that creates a repository to which functions/objects etc can be plugged into and discovered from elsewhere.\nDiscovery requires a Babel plug-in to add module imports @devsnicket/plugin-discovery-commonjs-babel-plugin.",
   "discovery": "https://github.com/DevSnicket/plugin-discovery/create-repository",
+  "devDependencies": {
+    "@types/jest": "23.3.7",
+    "eslint": "5.7.0",
+    "jest": "23.6.0"
+  },
   "homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
   "keywords": [
-	  "babel",
-	  "commonjs",
-	  "dependency",
-	  "dependencies",
-	  "discovery",
-	  "injection",
-	  "inversion",
-	  "module",
-	  "modules",
-	  "plugin",
-	  "plugins"
+    "babel",
+    "commonjs",
+    "dependency",
+    "dependencies",
+    "discovery",
+    "injection",
+    "inversion",
+    "module",
+    "modules",
+    "plugin",
+    "plugins"
   ],
   "license": "MIT",
   "name": "@devsnicket/plugin-discovery-create-repository",
   "repository": "https://github.com/DevSnicket/plugin-discovery/tree/master/create-repository",
+  "scripts": {
+    "lint": "npx eslint .",
+    "test": "npx jest"
+  },
   "version": "1.3.0"
 }

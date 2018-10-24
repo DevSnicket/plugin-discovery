@@ -1,5 +1,5 @@
 const
-	deleteDirectoryContents = require("./deleteDirectoryContents"),
+	deleteDirectoryContents = require("../../tests/setupForRepositoryDirectories/deleteDirectoryContents"),
 	describeTestsWithBabelInDirectory = require("./describeTestsWithBabelInDirectory"),
 	fs = require("fs"),
 	path = require("path");

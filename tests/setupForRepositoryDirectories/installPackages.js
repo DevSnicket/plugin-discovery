@@ -1,12 +1,15 @@
-const npm = require("npm");
-
 module.exports =
 	({
 		directory,
+		npmPath,
 		packages,
 	}) =>
 		new Promise(
 			(resolve, reject) => {
+				console.log(`Installing NPM packages ${packages}`);
+
+				const npm = require(npmPath);
+
 				npm.load(
 					{ prefix: directory },
 					afterNpmLoad,

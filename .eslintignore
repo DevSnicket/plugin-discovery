@@ -1,5 +1,0 @@
-/.vs
-/.vscode
-/tests/describeTestsWithBabelInDirectory/repository.transformed.js
-/tests/output
-node_modules/

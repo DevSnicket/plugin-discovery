@@ -1,36 +1,35 @@
 const
 	callModuleInProcess = require("../callModuleInProcess"),
+	deleteDirectoryContents = require("./deleteDirectoryContents"),
 	fs = require("fs"),
 	path = require("path"),
-	writeConfigurationFiles = require("./writeConfigurationFiles"),
 	{ promisify } = require("util");
 
 const
+	fileOrDirectoryExists = promisify(fs.exists),
+	getAbsolutePath = promisify(fs.realpath),
 	makeDirectory = promisify(fs.mkdir),
+	which = promisify(require("which")),
 	writeFile = promisify(fs.writeFile);
 
 module.exports =
 	async({
-		babel,
+		packages,
 		repository,
 	}) => {
-		await makeDirectory(repository.directories.root);
+		if (await fileOrDirectoryExists(repository.directories.root))
+			await deleteDirectoryContents(repository.directories.root);
+		else
+			await makeDirectory(repository.directories.root);
 
-		await writeConfigurationFiles({
-			babelVersion: babel.version,
-			directory: repository.directories.root,
-		});
+		await writePackageJsonFile();
 
 		await callModuleInProcess({
 			argument:
 				{
-					directory:
-						repository.directories.root,
-					packages:
-						[
-							`${babel.corePackage}@${babel.version}`,
-							path.join("..", "..", "..", "create-repository"),
-						],
+					directory: repository.directories.root,
+					npmPath: await getNpmPath(),
+					packages,
 				},
 			directory:
 				__dirname,
@@ -39,6 +38,19 @@ module.exports =
 		});
 
 		await writePlugins();
+
+		async function writePackageJsonFile() {
+			await writeFile(
+				path.join(repository.directories.root, "package.json"),
+				JSON.stringify(
+					{
+						description: "test",
+						license: "UNLICENSED",
+						repository: "none",
+					},
+				),
+			);
+		}
 
 		async function writePlugins() {
 			await writePluginsInDirectory(
@@ -78,3 +90,22 @@ module.exports =
 			}
 		}
 	};
+
+async function getNpmPath() {
+	return (
+		process.env.GLOBAL_NPM_PATH
+		||
+		path.join(
+			await getBinaryPath(),
+			process.platform === 'win32' ? '../node_modules/npm' : '../..'
+		)
+	);
+
+	async function getBinaryPath() {
+		return (
+			process.env.GLOBAL_NPM_BIN
+			||
+			await getAbsolutePath(await which("npm"))
+		);
+	}
+}

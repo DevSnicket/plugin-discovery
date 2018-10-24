@@ -1,22 +1,15 @@
 jobs:
   include:
-    - stage: npm publish
-      before_deploy:
+    - before_install:
         - cd create-repository
-      deploy:
-        api_key: $NPM_TOKEN
-        email: grahamdyson@hotmail.com
-        provider: npm
-        skip_cleanup: true
-    - before_deploy:
+    - before_install:
         - cd commonjs-babel-plugin
-      deploy:
-        api_key: $NPM_TOKEN
-        email: grahamdyson@hotmail.com
-        provider: npm
-        skip_cleanup: true
+deploy:
+  api_key: $NPM_TOKEN
+  email: grahamdyson@hotmail.com
+  provider: npm
+  skip_cleanup: true
 install:
-  - (cd commonjs-babel-plugin && npm install)
   - npm install
 language: node_js
 node_js:
