@@ -59,7 +59,9 @@ The code above alone won't work as there isn't a module require call to import t
 [![NPM](https://img.shields.io/npm/v/@devsnicket/plugin-discovery-commonjs-babel-plugin.svg)](https://www.npmjs.com/package/@devsnicket/plugin-discovery-commonjs-babel-plugin
 )
 
-The CommonJS Babel plug-in package discovers DevSnicket plug-in usage and will automatically add module require calls where the package [@devsnicket/plugin-discovery-create-repository](https://www.npmjs.com/package/@devsnicket/plugin-discovery-create-repository) has been used (see above).
+The CommonJS Babel plug-in package discovers DevSnicket plug-in references and will automatically add module require calls where the package [@devsnicket/plugin-discovery-create-repository](https://www.npmjs.com/package/@devsnicket/plugin-discovery-create-repository) has been used (see above).
+
+The Babel plug-in has a single parameter named ignoreDirectoryNames. When not specified the parameter defaults to node_modules. Scanning of the node_modules directory would be inefficient and likely to take a long time.
 
 Install using [`npm`](https://www.npmjs.com/package/@devsnicket/plugin-discovery-commonjs-babel-plugin):
 
