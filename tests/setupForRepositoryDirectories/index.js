@@ -52,6 +52,15 @@ module.exports =
 			);
 		}
 
+		function getNpmPath() {
+			return (
+				getNpmPathFromProcessEnvironment(
+					// eslint-disable-next-line no-process-env
+					process.env,
+				)
+			);
+		}
+
 		async function writePlugins() {
 			await writePluginsInDirectory(
 				repository.directories.root,
@@ -91,21 +100,27 @@ module.exports =
 		}
 	};
 
-async function getNpmPath() {
+async function getNpmPathFromProcessEnvironment(
+	environment,
+) {
 	return (
-		process.env.GLOBAL_NPM_PATH
+		environment.GLOBAL_NPM_PATH
 		||
 		path.join(
 			await getBinaryPath(),
-			process.platform === 'win32' ? '../node_modules/npm' : '../..'
+			process.platform === "win32" ? "../node_modules/npm" : "../..",
 		)
 	);
 
 	async function getBinaryPath() {
 		return (
-			process.env.GLOBAL_NPM_BIN
+			environment.GLOBAL_NPM_BIN
 			||
-			await getAbsolutePath(await which("npm"))
+			// Removal of await appears to cause subsequent behaviour reliant on result to fail
+			// eslint-disable-next-line no-return-await
+			await getAbsolutePath(
+				await which("npm"),
+			)
 		);
 	}
 }

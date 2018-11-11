@@ -6,8 +6,10 @@ module.exports =
 	}) =>
 		new Promise(
 			(resolve, reject) => {
-				console.log(`Installing NPM packages ${packages}`);
+				log(`Installing NPM packages ${packages}`);
 
+				// require must be called within function as path to NPM is passed into it
+				// eslint-disable-next-line global-require
 				const npm = require(npmPath);
 
 				npm.load(
@@ -23,8 +25,7 @@ module.exports =
 					else
 						npm.on(
 							"log",
-							// eslint-disable-next-line no-console
-							console.log,
+							log,
 						);
 
 					npm.commands.install(
@@ -43,3 +44,11 @@ module.exports =
 				}
 			},
 		);
+
+function log(
+	message,
+) {
+	// Console logging is helpful as this will be run in another process that can be hard to attach a debugger to
+	// eslint-disable-next-line no-console
+	console.log(message);
+}
