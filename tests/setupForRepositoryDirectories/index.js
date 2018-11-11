@@ -1,6 +1,6 @@
 const
 	callModuleInProcess = require("../callModuleInProcess"),
-	deleteDirectoryContents = require("./deleteDirectoryContents"),
+	deleteDirectoryContents = require("../deleteDirectoryContents"),
 	fs = require("fs"),
 	path = require("path"),
 	{ promisify } = require("util");
