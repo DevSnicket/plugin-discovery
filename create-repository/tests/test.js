@@ -1,10 +1,11 @@
 const
 	callModuleInProcess = require("../../tests/callModuleInProcess"),
 	fs = require("fs"),
-	getRepositoryForDirectory = require("../../tests/getRepositoryForDirectory"),
+	getRepository = require("../../tests/getRepository"),
 	path = require("path"),
 	{ promisify } = require("util"),
-	setupForRepositoryDirectories = require("../../tests/setupForRepositoryDirectories");
+	setupDirectoryWithPackages = require("../../tests/setupDirectoryWithPackages"),
+	writePlugins = require("../../tests/writePlugins");
 
 const
 	copyFile = promisify(fs.copyFile),
@@ -12,48 +13,33 @@ const
 
 jest.setTimeout(5 * 60 * 1000);
 
-const iterateRepositoryFilename = "iterateRepository.js";
-
-let repository = null;
-
-beforeAll(
-	async() => {
-		repository =
-			await getRepositoryForDirectory(
-				path.join(__dirname, "output"),
-			);
-
-		await setupForRepositoryDirectories({
-			packages: [ path.join("..", "..", "create-repository") ],
-			repository,
-		});
-
-		await copyFile(
-			path.join(__dirname, iterateRepositoryFilename),
-			path.join(repository.directories.root, iterateRepositoryFilename),
-		);
-	},
-);
-
 test(
-	"in root directory",
-	() =>
-		testRuntimeInDirectory(
-			repository.directories.root,
-		),
+	"iterate repository",
+	testIterateRepository,
 );
 
-test(
-	"in sub-directory",
-	() =>
-		testRuntimeInDirectory(
-			repository.directories.sub,
-		),
-);
+async function testIterateRepository() {
+	const
+		directory = path.join(__dirname, "output"),
+		iterateRepositoryFilename = "iterateRepository.js";
 
-async function testRuntimeInDirectory(
-	directory,
-) {
+	const repository = await getRepository();
+
+	await setupDirectoryWithPackages({
+		directory,
+		packages: [ path.join("..", "..", "create-repository") ],
+	});
+
+	await writePlugins({
+		directory,
+		repositoryFilename: repository.filename,
+	});
+
+	await copyFile(
+		path.join(__dirname, iterateRepositoryFilename),
+		path.join(directory, iterateRepositoryFilename),
+	);
+
 	await writeFile(
 		path.join(directory, repository.filename),
 		repository.transformed,
@@ -63,8 +49,7 @@ async function testRuntimeInDirectory(
 		await callModuleInProcess({
 			argument:
 				path.join(directory, repository.filename),
-			directory:
-				repository.directories.root,
+			directory,
 			moduleFile:
 				iterateRepositoryFilename,
 		}),

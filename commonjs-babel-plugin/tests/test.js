@@ -14,21 +14,15 @@ else
 jest.setTimeout(5 * 60 * 1000);
 
 describeTestsWithBabelInDirectory({
-	babel:
-		{
-			corePackage: "babel-core",
-			transformFunctionName: "transform",
-			version: 6,
-		},
+	corePackage: "babel-core",
 	directory,
+	transformFunctionName: "transform",
+	version: 6,
 });
 
 describeTestsWithBabelInDirectory({
-	babel:
-		{
-			corePackage: "@babel/core",
-			transformFunctionName: "transformSync",
-			version: 7,
-		},
+	corePackage: "@babel/core",
 	directory,
+	transformFunctionName: "transformSync",
+	version: 7,
 });

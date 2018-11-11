@@ -1,47 +1,58 @@
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
 	fs = require("fs"),
-	getRepositoryForDirectory = require("../../../tests/getRepositoryForDirectory"),
+	getRepository = require("../../../tests/getRepository"),
 	path = require("path"),
-	setupForRepositoryDirectories = require("../../../tests/setupForRepositoryDirectories"),
-	{ promisify } = require("util");
+	setupDirectoryWithPackages = require("../../../tests/setupDirectoryWithPackages"),
+	{ promisify } = require("util"),
+	writePlugins = require("../../../tests/writePlugins");
 
 const
 	copyFile = promisify(fs.copyFile),
+	makeDirectory = promisify(fs.mkdir),
 	writeFile = promisify(fs.writeFile);
 
 module.exports =
-	({
-		babel,
-		directory,
-	}) => {
+	babel => {
 		const
 			testDescription = `babel-${babel.version}`,
+			testDirectory = path.join(babel.directory, testDescription),
 			transformRepositoryFilename = "transformRepository.js";
+
+		const repositorySubdirectory = path.join(testDirectory, "repositoryInSubdirectory");
 
 		let repository = null;
 
 		beforeAll(
 			async() => {
-				repository =
-					await getRepositoryForDirectory(
-						path.join(directory, testDescription),
-					);
+				repository = await getRepository();
 
-				await setupForRepositoryDirectories({
+				await setupDirectoryWithPackages({
+					directory: testDirectory,
 					packages:
 						[
 							`${babel.corePackage}@${babel.version}`,
 							path.join("..", "..", "commonjs-babel-plugin"),
 						],
-					repository,
 				});
 
-				await writeBabelrcInDirectory(repository.directories.root);
+				await writePluginsInDirectory(
+					testDirectory,
+				);
+
+				await makeDirectory(
+					repositorySubdirectory,
+				);
+
+				await writePluginsInDirectory(
+					repositorySubdirectory,
+				);
+
+				await writeBabelrcInDirectory(testDirectory);
 
 				await copyFile(
 					path.join(__dirname, transformRepositoryFilename),
-					path.join(repository.directories.root, transformRepositoryFilename),
+					path.join(testDirectory, transformRepositoryFilename),
 				);
 			},
 		);
@@ -51,12 +62,23 @@ module.exports =
 			testWithBabelInDirectory,
 		);
 
+		function writePluginsInDirectory(
+			directory,
+		) {
+			return (
+				writePlugins({
+					directory,
+					repositoryFilename: repository.filename,
+				})
+			);
+		}
+
 		function testWithBabelInDirectory() {
 			test(
 				"in root directory",
 				() =>
 					testInRepositoryDirectory(
-						repository.directories.root,
+						testDirectory,
 					),
 			);
 
@@ -64,7 +86,7 @@ module.exports =
 				"in sub-directory",
 				() =>
 					testInRepositoryDirectory(
-						repository.directories.sub,
+						repositorySubdirectory,
 					),
 			);
 		}
@@ -81,7 +103,7 @@ module.exports =
 							transformFunctionName: babel.transformFunctionName,
 						},
 					directory:
-						repository.directories.root,
+						testDirectory,
 					moduleFile:
 						transformRepositoryFilename,
 				}),

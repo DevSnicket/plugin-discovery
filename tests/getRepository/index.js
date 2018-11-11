@@ -7,13 +7,8 @@ const
 	readFile = promisify(fs.readFile);
 
 module.exports =
-	async directory => (
+	async() => (
 		{
-			directories:
-				{
-					root: directory,
-					sub: path.join(directory, "repositoryInSubdirectory"),
-				},
 			filename:
 				"repository.js",
 			transformed:

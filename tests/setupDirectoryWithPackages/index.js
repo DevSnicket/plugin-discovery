@@ -14,20 +14,20 @@ const
 
 module.exports =
 	async({
+		directory,
 		packages,
-		repository,
 	}) => {
-		if (await fileOrDirectoryExists(repository.directories.root))
-			await deleteDirectoryContents(repository.directories.root);
+		if (await fileOrDirectoryExists(directory))
+			await deleteDirectoryContents(directory);
 		else
-			await makeDirectory(repository.directories.root);
+			await makeDirectory(directory);
 
 		await writePackageJsonFile();
 
 		await callModuleInProcess({
 			argument:
 				{
-					directory: repository.directories.root,
+					directory,
 					npmPath: await getNpmPath(),
 					packages,
 				},
@@ -37,11 +37,9 @@ module.exports =
 				"./installPackages",
 		});
 
-		await writePlugins();
-
 		async function writePackageJsonFile() {
 			await writeFile(
-				path.join(repository.directories.root, "package.json"),
+				path.join(directory, "package.json"),
 				JSON.stringify(
 					{
 						description: "test",
@@ -59,44 +57,6 @@ module.exports =
 					process.env,
 				)
 			);
-		}
-
-		async function writePlugins() {
-			await writePluginsInDirectory(
-				repository.directories.root,
-			);
-
-			await makeDirectory(repository.directories.sub);
-
-			await writePluginsInDirectory(
-				repository.directories.sub,
-			);
-		}
-
-		async function writePluginsInDirectory(
-			directory,
-		) {
-			await writeTestFile({
-				content: `require("./${repository.filename}").plugIn("test plug-in");`,
-				relativePath: "plugin.js",
-			});
-
-			await makeDirectory(path.join(directory, "pluginSubdirectory"));
-
-			await writeTestFile({
-				content: `require("../${repository.filename}").plugIn("test sub-directory plug-in of repository in parent directory");`,
-				relativePath: path.join("pluginSubdirectory", "pluginOfRepositoryInParentDirectory.js"),
-			});
-
-			async function writeTestFile({
-				content,
-				relativePath,
-			}) {
-				await writeFile(
-					path.join(directory, relativePath),
-					content,
-				);
-			}
 		}
 	};
 
