@@ -2,13 +2,13 @@
 
 [![Build Status](https://travis-ci.org/DevSnicket/plugin-discovery.svg?branch=master)](https://travis-ci.org/DevSnicket/plugin-discovery)
 
-Plug-in Discovery is a JavaScript factory function and a Babel plug-in that when used together can invert dependencies between modules and turn them into discovered plug-ins.
+DevSnicket Plug-in Discovery consists of a JavaScript repository object and a Babel plug-in that when used together can invert dependencies between modules and turn them into discovered plug-ins.
 
 before | after
 ------ | -----
 ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/before.svg?sanitize=true) | ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/after.svg?sanitize=true)
 
-There is currently support for file-based CommonJS modules (i.e. not via packages).
+Currently CommonJS modules are only supported (e.g. not ECMAScript ones). There is partial support for modules in packages (see ["CommonJS Babel plug-in / package"](https://www.npmjs.com/package/@devsnicket/plug-discovery-commonjs-babel-plugin)).
 
 ## Create repository factory function / package
 
@@ -53,3 +53,7 @@ for (const plugin require("./someSortOfPlugins"))
 ```
 
 The code above alone won't work as there isn't a module require call to import the 2nd plug-in file from the 3rd file that iterates the plug-ins. The purpose of the repository object is so plug-ins can be identified by the [@devsnicket/plugin-discovery-commonjs-babel-plugin](https://www.npmjs.com/package/@devsnicket/plugin-discovery-commonjs-babel-plugin) package as it will automatically add the missing module require calls.
+
+## Example
+
+An example of Plug-in Discovery in use can be found in [Eunice](https://github.com/DevSnicket/Eunice). A plug-in repository is defined for its test harnesses ([Harnesses/processorPlugins.js](https://github.com/DevSnicket/Eunice/blob/master/Harnesses/processorPlugins.js)) so [processors](https://github.com/DevSnicket/Eunice/tree/master/Processors) can be discovered and included automatically.
