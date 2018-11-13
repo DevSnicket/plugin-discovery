@@ -20,9 +20,10 @@ module.exports =
 			transformRepositoryFilename = "transformRepository.js";
 
 		const
-			repositoryInPackagePath = "@devsnicket/plugin-discovery-test-repository-in-package/repositoryInPackage.js",
-			repositoryInPackagePluginFilename = "pluginOfRepositoryInPackage.js",
-			repositorySubdirectory = path.join(testDirectory, "repositoryInSubdirectory");
+			repositoriesInPackages =
+				createRepositoriesInPackages(),
+			repositorySubdirectory =
+				path.join(testDirectory, "repositoryInSubdirectory");
 
 		let repository = null;
 
@@ -40,33 +41,18 @@ module.exports =
 						],
 				});
 
-				await writePluginsInDirectory(
-					testDirectory,
-				);
-
-				await makeDirectory(
-					repositorySubdirectory,
-				);
-
-				await writePluginsInDirectory(
-					repositorySubdirectory,
-				);
-
-				await writePlugin({
-					filePath:
-						path.join(
+				await Promise.all(
+					[
+						writePluginsInDirectory(
 							testDirectory,
-							repositoryInPackagePluginFilename,
 						),
-					plugin:
-						"test plug-in of repository in package",
-					repositoryPath:
-						repositoryInPackagePath,
-				});
-
-				await copyFile(
-					path.join(__dirname, transformRepositoryFilename),
-					path.join(testDirectory, transformRepositoryFilename),
+						writePluginsOfRespositoryInSubdirectory(),
+						...repositoriesInPackages.map(writeRepositoryInPackagePlugin),
+						copyFile(
+							path.join(__dirname, transformRepositoryFilename),
+							path.join(testDirectory, transformRepositoryFilename),
+						),
+					],
 				);
 			},
 		);
@@ -75,6 +61,49 @@ module.exports =
 			testDescription,
 			testWithBabelInDirectory,
 		);
+
+		function createRepositoriesInPackages() {
+			return (
+				[
+					{
+						packageName:
+							"plugin-discovery-test-repository-in-package",
+						plugin:
+							{
+								filename: "pluginOfRepositoryInPackage.js",
+								toRepositoryPathExpected: "../../",
+							},
+					},
+					{
+						packageName:
+							"@devsnicket/plugin-discovery-test-repository-in-package",
+						plugin:
+							{
+								filename: "pluginOfRepositoryInScopedPackage.js",
+								toRepositoryPathExpected: "../../../",
+							},
+					},
+				]
+				.map(
+					repositoryInPackage => (
+						{
+							...repositoryInPackage,
+							repositoryPath: `${repositoryInPackage.packageName}/repositoryInScopedPackage.js`,
+						}
+					),
+				)
+			);
+		}
+
+		async function writePluginsOfRespositoryInSubdirectory() {
+			await makeDirectory(
+				repositorySubdirectory,
+			);
+
+			await writePluginsInDirectory(
+				repositorySubdirectory,
+			);
+		}
 
 		function writePluginsInDirectory(
 			directory,
@@ -87,45 +116,70 @@ module.exports =
 			);
 		}
 
+		function writeRepositoryInPackagePlugin(
+			repositoryInPackage,
+		) {
+			return (
+				writePlugin({
+					filePath:
+						path.join(
+							testDirectory,
+							repositoryInPackage.plugin.filename,
+						),
+					plugin:
+						`test plug-in of repository in package ${repositoryInPackage.packageName}`,
+					repositoryPath:
+						repositoryInPackage.repositoryPath,
+				})
+			);
+		}
+
 		function testWithBabelInDirectory() {
+			testInDirectory({
+				directory: testDirectory,
+				name: "in root directory",
+			});
+
+			testInDirectory({
+				directory: repositorySubdirectory,
+				name: "in sub-directory",
+			});
+
+			testInPackages();
+		}
+
+		function testInDirectory({
+			directory,
+			name,
+		}) {
 			test(
-				"in root directory",
+				name,
 				async() =>
 					expect(
 						await transformRepositoryWithPath(
-							path.join(testDirectory, repository.filename),
+							path.join(directory, repository.filename),
 						),
 					)
 					.toEqual(
 						repository.transformed,
 					),
 			);
+		}
 
-			test(
-				"in sub-directory",
-				async() =>
-					expect(
-						await transformRepositoryWithPath(
-							path.join(repositorySubdirectory, repository.filename),
+		function testInPackages() {
+			for (const repositoryInPackage of repositoriesInPackages)
+				test(
+					`in package ${repositoryInPackage.packageName}`,
+					async() =>
+						expect(
+							await transformRepositoryWithPath(
+								`${testDirectory}/node_modules/${repositoryInPackage.repositoryPath}`,
+							),
+						)
+						.toEqual(
+							`module.exports = require("@devsnicket/plugin-discovery-create-repository")();\n\nrequire("${repositoryInPackage.plugin.toRepositoryPathExpected}${repositoryInPackage.plugin.filename}")`,
 						),
-					)
-					.toEqual(
-						repository.transformed,
-					),
-			);
-
-			test(
-				"in package",
-				async() =>
-					expect(
-						await transformRepositoryWithPath(
-							`${testDirectory}/node_modules/${repositoryInPackagePath}`,
-						),
-					)
-					.toEqual(
-						`module.exports = require("@devsnicket/plugin-discovery-create-repository")();\n\nrequire("../../../${repositoryInPackagePluginFilename}")`,
-					),
-			);
+				);
 		}
 
 		function transformRepositoryWithPath(

@@ -7,25 +7,23 @@ const
 const makeDirectory = promisify(fs.mkdir);
 
 module.exports =
-	({
+	async({
 		directory,
 		repositoryFilename,
 	}) => {
-		return (
-			Promise.all(
-				[
-					writePluginRelativeToDirectory({
-						plugin:
-							{
-								content: "test plug-in",
-								directory: "./",
-							},
-						relativePath:
-							"plugin.js",
-					}),
-					writeSubdirectoryPlugin(),
-				],
-			)
+		await Promise.all(
+			[
+				writePluginRelativeToDirectory({
+					plugin:
+						{
+							content: "test plug-in",
+							directory: "./",
+						},
+					relativePath:
+						"plugin.js",
+				}),
+				writeSubdirectoryPlugin(),
+			],
 		);
 
 		async function writeSubdirectoryPlugin() {
