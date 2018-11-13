@@ -5,12 +5,12 @@ const
 	path = require("path"),
 	setupDirectoryWithPackages = require("../../../tests/setupDirectoryWithPackages"),
 	{ promisify } = require("util"),
+	writePlugin = require("../../../tests/writePlugin"),
 	writePlugins = require("../../../tests/writePlugins");
 
 const
 	copyFile = promisify(fs.copyFile),
-	makeDirectory = promisify(fs.mkdir),
-	writeFile = promisify(fs.writeFile);
+	makeDirectory = promisify(fs.mkdir);
 
 module.exports =
 	babel => {
@@ -19,7 +19,10 @@ module.exports =
 			testDirectory = path.join(babel.directory, testDescription),
 			transformRepositoryFilename = "transformRepository.js";
 
-		const repositorySubdirectory = path.join(testDirectory, "repositoryInSubdirectory");
+		const
+			repositoryInPackagePath = "@devsnicket/plugin-discovery-test-repository-in-package/repositoryInPackage.js",
+			repositoryInPackagePluginFilename = "pluginOfRepositoryInPackage.js",
+			repositorySubdirectory = path.join(testDirectory, "repositoryInSubdirectory");
 
 		let repository = null;
 
@@ -28,7 +31,8 @@ module.exports =
 				repository = await getRepository();
 
 				await setupDirectoryWithPackages({
-					directory: testDirectory,
+					directory:
+						testDirectory,
 					packages:
 						[
 							`${babel.corePackage}@${babel.version}`,
@@ -48,7 +52,17 @@ module.exports =
 					repositorySubdirectory,
 				);
 
-				await writeBabelrcInDirectory(testDirectory);
+				await writePlugin({
+					filePath:
+						path.join(
+							testDirectory,
+							repositoryInPackagePluginFilename,
+						),
+					plugin:
+						"test plug-in of repository in package",
+					repositoryPath:
+						repositoryInPackagePath,
+				});
 
 				await copyFile(
 					path.join(__dirname, transformRepositoryFilename),
@@ -76,59 +90,62 @@ module.exports =
 		function testWithBabelInDirectory() {
 			test(
 				"in root directory",
-				() =>
-					testInRepositoryDirectory(
-						testDirectory,
+				async() =>
+					expect(
+						await transformRepositoryWithPath(
+							path.join(testDirectory, repository.filename),
+						),
+					)
+					.toEqual(
+						repository.transformed,
 					),
 			);
 
 			test(
 				"in sub-directory",
-				() =>
-					testInRepositoryDirectory(
-						repositorySubdirectory,
+				async() =>
+					expect(
+						await transformRepositoryWithPath(
+							path.join(repositorySubdirectory, repository.filename),
+						),
+					)
+					.toEqual(
+						repository.transformed,
+					),
+			);
+
+			test(
+				"in package",
+				async() =>
+					expect(
+						await transformRepositoryWithPath(
+							`${testDirectory}/node_modules/${repositoryInPackagePath}`,
+						),
+					)
+					.toEqual(
+						`module.exports = require("@devsnicket/plugin-discovery-create-repository")();\n\nrequire("../../../${repositoryInPackagePluginFilename}")`,
 					),
 			);
 		}
 
-		async function testInRepositoryDirectory(
-			repositoryDirectory,
+		function transformRepositoryWithPath(
+			repositoryPath,
 		) {
-			expect(
-				await callModuleInProcess({
+			return (
+				callModuleInProcess({
 					argument:
 						{
-							babelCorePackage: babel.corePackage,
-							repositoryFile: path.join(repositoryDirectory, repository.filename),
-							transformFunctionName: babel.transformFunctionName,
+							babelCorePackage:
+								babel.corePackage,
+							repositoryPath,
+							transformFunctionName:
+								babel.transformFunctionName,
 						},
 					directory:
 						testDirectory,
 					moduleFile:
 						transformRepositoryFilename,
-				}),
-			)
-			.toEqual(
-				repository.transformed,
+				})
 			);
 		}
 	};
-
-async function writeBabelrcInDirectory(
-	directory,
-) {
-	await writeFile(
-		path.join(directory, ".babelrc"),
-		JSON.stringify(
-			{
-				plugins:
-					[
-						[
-							"@devsnicket/plugin-discovery-commonjs-babel-plugin",
-							{ log: "warnings" },
-						],
-					],
-			},
-		),
-	);
-}

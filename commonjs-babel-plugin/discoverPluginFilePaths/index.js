@@ -145,6 +145,7 @@ function discoverPluginFilePaths({
 									getPathFromRequireArguments({
 										arguments: callExpression.arguments,
 										filePath,
+										nodeModulesPath: path.join(directoryPath, "node_modules"),
 									})
 								);
 							}

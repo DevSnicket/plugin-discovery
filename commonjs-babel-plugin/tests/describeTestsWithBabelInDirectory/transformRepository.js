@@ -1,7 +1,7 @@
 module.exports =
 	({
 		babelCorePackage,
-		repositoryFile,
+		repositoryPath,
 		transformFunctionName,
 	}) => {
 		const transform =
@@ -12,8 +12,17 @@ module.exports =
 			transform(
 				"module.exports = require(\"@devsnicket/plugin-discovery-create-repository\")();",
 				{
-					filename: repositoryFile,
-					sourceFileName: repositoryFile,
+					filename:
+						repositoryPath,
+					plugins:
+						[
+							[
+								"@devsnicket/plugin-discovery-commonjs-babel-plugin",
+								{ log: "warnings" },
+							],
+						],
+					sourceFileName:
+						repositoryPath,
 				},
 			)
 			.code

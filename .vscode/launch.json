@@ -6,14 +6,16 @@
 			"type": "node",
 		},
 		{
+			"args": [ "--runInBand" ],
 			"cwd": "${workspaceFolder}/commonjs-babel-plugin",
 			"name": "commonjs-babel-plugin jest",
 			"program": "${workspaceFolder}/commonjs-babel-plugin/node_modules/jest/bin/jest.js",
 			"request": "launch",
 			"type": "node",
 			"useWSL": true
-		}
+		},
 		{
+			"args": [ "--runInBand" ],
 			"cwd": "${workspaceFolder}/create-repository",
 			"name": "create-repository jest",
 			"program": "${workspaceFolder}/create-repository/node_modules/jest/bin/jest.js",

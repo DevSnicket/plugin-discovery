@@ -1,36 +1,57 @@
 const
 	fs = require("fs"),
 	path = require("path"),
-	{ promisify } = require("util");
+	{ promisify } = require("util"),
+	writePlugin = require("./writePlugin");
 
-const
-	makeDirectory = promisify(fs.mkdir),
-	writeFile = promisify(fs.writeFile);
+const makeDirectory = promisify(fs.mkdir);
 
 module.exports =
-	async({
+	({
 		directory,
 		repositoryFilename,
 	}) => {
-		await writeTestFile({
-			content: `require("./${repositoryFilename}").plugIn("test plug-in");`,
-			relativePath: "plugin.js",
-		});
+		return (
+			Promise.all(
+				[
+					writePluginRelativeToDirectory({
+						plugin:
+							{
+								content: "test plug-in",
+								directory: "./",
+							},
+						relativePath:
+							"plugin.js",
+					}),
+					writeSubdirectoryPlugin(),
+				],
+			)
+		);
 
-		await makeDirectory(path.join(directory, "pluginSubdirectory"));
+		async function writeSubdirectoryPlugin() {
+			await makeDirectory(path.join(directory, "pluginSubdirectory"));
 
-		await writeTestFile({
-			content: `require("../${repositoryFilename}").plugIn("test sub-directory plug-in of repository in parent directory");`,
-			relativePath: path.join("pluginSubdirectory", "pluginOfRepositoryInParentDirectory.js"),
-		});
+			await writePluginRelativeToDirectory({
+				plugin:
+					{
+						content: "test sub-directory plug-in of repository in parent directory",
+						directory: "../",
+					},
+				relativePath:
+					path.join("pluginSubdirectory", "pluginOfRepositoryInParentDirectory.js"),
+			});
+		}
 
-		async function writeTestFile({
-			content,
+		function writePluginRelativeToDirectory({
+			plugin,
 			relativePath,
 		}) {
-			await writeFile(
-				path.join(directory, relativePath),
-				content,
+			return (
+				writePlugin({
+					filePath: path.join(directory, relativePath),
+					plugin: plugin.content,
+					repositoryPath: `${plugin.directory}${repositoryFilename}`,
+				})
 			);
 		}
 	};

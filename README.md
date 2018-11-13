@@ -8,7 +8,7 @@ before | after
 ------ | -----
 ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/before.svg?sanitize=true) | ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/after.svg?sanitize=true)
 
-There is currently support for file-based CommonJS modules (i.e. not via packages).
+Currently CommonJS modules are only supported (e.g. not ECMAScript ones). There is partial support for modules in packages (see ["CommonJS Babel plug-in / package"](#commonjs-babel-plug-in--package) below).
 
 ## Create repository factory function / package
 
@@ -72,7 +72,9 @@ module.exports =
 require("./plugin1.js")
 ```
 
-The Babel plug-in has a single parameter named ignoreDirectoryNames. When not specified the parameter defaults to node_modules. Scanning of the node_modules directory would be inefficient and likely to take a long time.
+The Babel plug-in has a single parameter named ignoreDirectoryNames. When not specified the parameter defaults to node_modules. Scanning of the node_modules directory for plug-ins would be inefficient and likely to take a long time.
+
+When using WebPack it will run Babel for the plug-in repository even if its in a node_modules directory. This means plug-ins will be discovered and rewritten into the output plug-in repository file so long as they aren't also in the node_modules directory (see above).
 
 Install using [`npm`](https://www.npmjs.com/package/@devsnicket/plugin-discovery-commonjs-babel-plugin):
 

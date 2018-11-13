@@ -4,6 +4,7 @@ module.exports =
 	({
 		arguments: _arguments,
 		filePath,
+		nodeModulesPath,
 	}) => {
 		return (
 			_arguments.length === 1
@@ -17,11 +18,28 @@ module.exports =
 			return (
 				value
 				&&
-				path.join(
-					path.dirname(filePath),
-					getPathWithoutExtension(),
-				)
+				(getWhenRelative() || getAsPackage())
 			);
+
+			function getWhenRelative() {
+				return (
+					value[0] === "."
+					&&
+					path.join(
+						path.dirname(filePath),
+						getPathWithoutExtension(),
+					)
+				);
+			}
+
+			function getAsPackage() {
+				return (
+					path.join(
+						nodeModulesPath,
+						getPathWithoutExtension(),
+					)
+				);
+			}
 
 			function getPathWithoutExtension() {
 				const extension = ".js";
