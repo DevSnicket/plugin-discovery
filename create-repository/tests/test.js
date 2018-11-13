@@ -1,9 +1,9 @@
 const
 	callModuleInProcess = require("../../tests/callModuleInProcess"),
 	fs = require("fs"),
-	getRepository = require("../../tests/getRepository"),
 	path = require("path"),
 	{ promisify } = require("util"),
+	readRepositoryTransformed = require("../../tests/readRepositoryTransformed"),
 	setupDirectoryWithPackages = require("../../tests/setupDirectoryWithPackages"),
 	writePlugins = require("../../tests/writePlugins");
 
@@ -23,7 +23,11 @@ async function testIterateRepository() {
 		directory = path.join(__dirname, "output"),
 		iterateRepositoryFilename = "iterateRepository.js";
 
-	const repository = await getRepository();
+	const repository =
+		{
+			filename: "repository.js",
+			transformed: await readRepositoryTransformed(),
+		};
 
 	await setupDirectoryWithPackages({
 		directory,

@@ -1,8 +1,8 @@
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
 	fs = require("fs"),
-	getRepository = require("../../../tests/getRepository"),
 	path = require("path"),
+	readRepositoryTransformed = require("../../../tests/readRepositoryTransformed"),
 	setupDirectoryWithPackages = require("../../../tests/setupDirectoryWithPackages"),
 	{ promisify } = require("util"),
 	writePlugin = require("../../../tests/writePlugin"),
@@ -22,14 +22,19 @@ module.exports =
 		const
 			repositoriesInPackages =
 				createRepositoriesInPackages(),
-			repositorySubdirectory =
-				path.join(testDirectory, "repositoryInSubdirectory");
+			repositoryInRootFilename =
+				"repositoryInRoot.js",
+			repositoryInSubdirectory =
+				{
+					directoryPath: path.join(testDirectory, "repositoryInSubdirectory"),
+					filename: "repositoryInSubdirectory.js",
+				};
 
-		let repository = null;
+		let repositoryTransformed = null;
 
 		beforeAll(
 			async() => {
-				repository = await getRepository();
+				repositoryTransformed = await readRepositoryTransformed();
 
 				await setupDirectoryWithPackages({
 					directory:
@@ -43,9 +48,10 @@ module.exports =
 
 				await Promise.all(
 					[
-						writePluginsInDirectory(
-							testDirectory,
-						),
+						writePlugins({
+							directory: testDirectory,
+							repositoryFilename: repositoryInRootFilename,
+						}),
 						writePluginsOfRespositoryInSubdirectory(),
 						...repositoriesInPackages.map(writeRepositoryInPackagePlugin),
 						copyFile(
@@ -97,23 +103,15 @@ module.exports =
 
 		async function writePluginsOfRespositoryInSubdirectory() {
 			await makeDirectory(
-				repositorySubdirectory,
+				repositoryInSubdirectory.directoryPath,
 			);
 
-			await writePluginsInDirectory(
-				repositorySubdirectory,
-			);
-		}
-
-		function writePluginsInDirectory(
-			directory,
-		) {
-			return (
-				writePlugins({
-					directory,
-					repositoryFilename: repository.filename,
-				})
-			);
+			await writePlugins({
+				directory:
+					repositoryInSubdirectory.directoryPath,
+				repositoryFilename:
+					repositoryInSubdirectory.filename,
+			});
 		}
 
 		function writeRepositoryInPackagePlugin(
@@ -135,71 +133,81 @@ module.exports =
 		}
 
 		function testWithBabelInDirectory() {
-			testInDirectory({
-				directory: testDirectory,
-				name: "in root directory",
+			testRepositoryWithPath({
+				name:
+					"in root directory",
+				repositoryPath:
+					path.join(
+						testDirectory,
+						repositoryInRootFilename,
+					),
 			});
 
-			testInDirectory({
-				directory: repositorySubdirectory,
-				name: "in sub-directory",
+			testRepositoryWithPath({
+				name:
+					"in sub-directory",
+				repositoryPath:
+					path.join(
+						repositoryInSubdirectory.directoryPath,
+						repositoryInSubdirectory.filename,
+					),
 			});
 
 			testInPackages();
-		}
 
-		function testInDirectory({
-			directory,
-			name,
-		}) {
-			test(
+			function testRepositoryWithPath({
 				name,
-				async() =>
-					expect(
-						await transformRepositoryWithPath(
-							path.join(directory, repository.filename),
-						),
-					)
-					.toEqual(
-						repository.transformed,
-					),
-			);
-		}
-
-		function testInPackages() {
-			for (const repositoryInPackage of repositoriesInPackages)
+				repositoryPath,
+			}) {
 				test(
-					`in package ${repositoryInPackage.packageName}`,
+					name,
 					async() =>
 						expect(
 							await transformRepositoryWithPath(
-								`${testDirectory}/node_modules/${repositoryInPackage.repositoryPath}`,
+								repositoryPath,
 							),
 						)
 						.toEqual(
-							`module.exports = require("@devsnicket/plugin-discovery-create-repository")();\n\nrequire("${repositoryInPackage.plugin.toRepositoryPathExpected}${repositoryInPackage.plugin.filename}")`,
+							repositoryTransformed,
 						),
 				);
-		}
+			}
 
-		function transformRepositoryWithPath(
-			repositoryPath,
-		) {
-			return (
-				callModuleInProcess({
-					argument:
-						{
-							babelCorePackage:
-								babel.corePackage,
-							repositoryPath,
-							transformFunctionName:
-								babel.transformFunctionName,
-						},
-					directory:
-						testDirectory,
-					moduleFile:
-						transformRepositoryFilename,
-				})
-			);
+			function testInPackages() {
+				for (const repositoryInPackage of repositoriesInPackages)
+					test(
+						`in package ${repositoryInPackage.packageName}`,
+						async() =>
+							expect(
+								await transformRepositoryWithPath(
+									`${testDirectory}/node_modules/${repositoryInPackage.repositoryPath}`,
+								),
+							)
+							.toEqual(
+								`module.exports = require("@devsnicket/plugin-discovery-create-repository")();\n\nrequire("${repositoryInPackage.plugin.toRepositoryPathExpected}${repositoryInPackage.plugin.filename}")`,
+							),
+					);
+			}
+
+			function transformRepositoryWithPath(
+				repositoryPath,
+			) {
+				return (
+					callModuleInProcess({
+						argument:
+							{
+								babelCorePackage:
+									babel.corePackage,
+								repositoryPath,
+								transformFunctionName:
+									babel.transformFunctionName,
+							},
+						directory:
+							testDirectory,
+						moduleFile:
+							transformRepositoryFilename,
+					})
+				);
+			}
 		}
 	};
