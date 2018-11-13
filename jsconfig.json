@@ -6,5 +6,11 @@
 		"module": "commonjs",
 		"noEmit": true,
 		"target": "es2017"
-	}
+	},
+	"exclude": [
+		"**/node_modules",
+		"create-repository/tests/output",
+		"commonjs-babel-plugin/tests/output",
+		"tests/readRepositoryTransformed/repository.transformed.js"
+	]	
 }
