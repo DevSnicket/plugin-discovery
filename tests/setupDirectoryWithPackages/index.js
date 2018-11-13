@@ -1,14 +1,12 @@
 const
 	callModuleInProcess = require("../callModuleInProcess"),
-	deleteDirectoryContents = require("../deleteDirectoryContents"),
+	{ emptyDir } = require("fs-extra"),
 	fs = require("fs"),
 	path = require("path"),
 	{ promisify } = require("util");
 
 const
-	fileOrDirectoryExists = promisify(fs.exists),
 	getAbsolutePath = promisify(fs.realpath),
-	makeDirectory = promisify(fs.mkdir),
 	which = promisify(require("which")),
 	writeFile = promisify(fs.writeFile);
 
@@ -17,10 +15,7 @@ module.exports =
 		directory,
 		packages,
 	}) => {
-		if (await fileOrDirectoryExists(directory))
-			await deleteDirectoryContents(directory);
-		else
-			await makeDirectory(directory);
+		await emptyDir(directory);
 
 		await writePackageJsonFile();
 

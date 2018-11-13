@@ -1,28 +1,39 @@
 const
-	deleteDirectoryContents = require("../../tests/deleteDirectoryContents"),
-	describeTestsWithBabelInDirectory = require("./describeTestsWithBabelInDirectory"),
-	fs = require("fs"),
-	path = require("path");
-
-const directory = path.join(__dirname, "output");
-
-if (fs.existsSync(directory))
-	deleteDirectoryContents(directory);
-else
-	fs.mkdirSync(directory);
+	{ emptyDir } = require("fs-extra"),
+	path = require("path"),
+	testWithBabelVersion = require("./testWithBabelVersion");
 
 jest.setTimeout(5 * 60 * 1000);
 
-describeTestsWithBabelInDirectory({
+const testDirectory = path.join(__dirname, "output");
+
+beforeAll(
+	() => emptyDir(testDirectory),
+);
+
+describeUsingBabelVersion({
 	corePackage: "babel-core",
-	directory,
 	transformFunctionName: "transform",
 	version: 6,
 });
 
-describeTestsWithBabelInDirectory({
+describeUsingBabelVersion({
 	corePackage: "@babel/core",
-	directory,
 	transformFunctionName: "transformSync",
 	version: 7,
 });
+
+function describeUsingBabelVersion(
+	babel,
+) {
+	const testDescription = `babel-${babel.version}`;
+
+	describe(
+		testDescription,
+		() =>
+			testWithBabelVersion({
+				babel,
+				testDirectory: path.join(testDirectory, testDescription),
+			}),
+	);
+}
