@@ -1,7 +1,11 @@
+require("array.prototype.flatmap")
+.shim();
+
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
-	getForDirectories = require("./getForDirectories"),
-	getForPackages = require("./getForPackages"),
+	createSetupAndTestCasesForRelative = require("./createSetupAndTestCases/forRelative"),
+	createSetupAndTestCasesForRepositoriesInPackages = require("./createSetupAndTestCases/forRepositoriesInPackages"),
+	path = require("path"),
 	setupPackagesAndTransform = require("./setupPackagesAndTransform");
 
 module.exports =
@@ -11,16 +15,16 @@ module.exports =
 	}) => {
 		const transformRepositoryFilename = "transformRepository.js";
 
-		const testDescriptions =
+		const testSets =
 			[
-				getForDirectories({
-					testDirectory,
-					transformRepositoryWithPath,
-				}),
-				getForPackages({
-					testDirectory,
-					transformRepositoryWithPath,
-				}),
+				{
+					...createSetupAndTestCasesForRelative(),
+					name: "relative",
+				},
+				{
+					...createSetupAndTestCasesForRepositoriesInPackages(),
+					name: "repositories in packages",
+				},
 			];
 
 		beforeAll(
@@ -33,17 +37,44 @@ module.exports =
 
 				// setup all first incase they affect each other
 				await Promise.all(
-					testDescriptions
-					.map(testDescription => testDescription.setup()),
+					testSets
+					.flatMap(testDescription => testDescription.setupInDirectory(testDirectory)),
 				);
 			},
 		);
 
-		for (const testDescription of testDescriptions)
+		for (const testDescription of testSets)
 			describe(
 				testDescription.name,
-				testDescription.test,
+				() => testTestCases(testDescription.testCases),
 			);
+
+		function testTestCases(
+			testCases,
+		) {
+			for (const testCase of testCases)
+				testTestCase(testCase);
+		}
+
+		function testTestCase(
+			testCase,
+		) {
+			test(
+				testCase.name,
+				async() =>
+					expect(
+						await transformRepositoryWithPath(
+							path.join(
+								testDirectory,
+								testCase.repositoryPath,
+							),
+						),
+					)
+					.toEqual(
+						testCase.expected,
+					),
+			);
+		}
 
 		function transformRepositoryWithPath(
 			repositoryPath,

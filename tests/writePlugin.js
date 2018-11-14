@@ -8,9 +8,9 @@ module.exports =
 	({
 		filePath,
 		plugin,
-		repositoryPath,
+		repositoryRequire,
 	}) =>
 		writeFile(
 			filePath,
-			`require("${repositoryPath}").plugIn("${plugin}");`,
+			`require("${repositoryRequire}").plugIn("${plugin}");`,
 		);

@@ -20,11 +20,17 @@ module.exports =
 					},
 			},
 		]
-		.map(
-			repositoryInPackage => (
-				{
-					...repositoryInPackage,
-					repositoryPath: `${repositoryInPackage.packageName}/repositoryInScopedPackage.js`,
-				}
-			),
-		);
+		.map(addRepository);
+
+function addRepository(
+	testCase,
+) {
+	const repositoryRequire = `${testCase.packageName}/repositoryInScopedPackage.js`;
+
+	return (
+		{
+			...testCase,
+			repositoryRequire,
+		}
+	);
+}

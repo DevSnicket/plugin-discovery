@@ -48,7 +48,7 @@ module.exports =
 				writePlugin({
 					filePath: path.join(directory, relativePath),
 					plugin: plugin.content,
-					repositoryPath: `${plugin.directory}${repositoryFilename}`,
+					repositoryRequire: `${plugin.directory}${repositoryFilename}`,
 				})
 			);
 		}

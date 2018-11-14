@@ -1,24 +1,35 @@
 const
-	createTestCases = require("./createCases"),
+	createTestCases = require("./createTestCases"),
 	path = require("path"),
-	writePlugin = require("../../../../tests/writePlugin");
+	writePlugin = require("../../../../../tests/writePlugin");
 
 module.exports =
-	({
-		testDirectory,
-		transformRepositoryWithPath,
-	}) => {
+	() => {
 		const testCases = createTestCases();
 
 		return (
 			{
-				name: "packages",
-				setup,
-				test: () => testCases.map(testTestCase),
+				setupInDirectory,
+				testCases:
+					testCases
+					.map(
+						testCase => (
+							{
+								expected:
+									getExpectedForPlugin(testCase.plugin),
+								name:
+									testCase.packageName,
+								repositoryPath:
+									`/node_modules/${testCase.repositoryRequire}`,
+							}
+						),
+					),
 			}
 		);
 
-		async function setup() {
+		async function setupInDirectory(
+			directory,
+		) {
 			await Promise.all(testCases.map(writePluginForTestCase));
 
 			function writePluginForTestCase(
@@ -28,33 +39,16 @@ module.exports =
 					writePlugin({
 						filePath:
 							path.join(
-								testDirectory,
+								directory,
 								testCase.plugin.filename,
 							),
 						plugin:
 							`test plug-in of repository in package ${testCase.packageName}`,
-						repositoryPath:
-							testCase.repositoryPath,
+						repositoryRequire:
+							testCase.repositoryRequire,
 					})
 				);
 			}
-		}
-
-		function testTestCase(
-			testCase,
-		) {
-			test(
-				testCase.packageName,
-				async() =>
-					expect(
-						await transformRepositoryWithPath(
-							`${testDirectory}/node_modules/${testCase.repositoryPath}`,
-						),
-					)
-					.toEqual(
-						getExpectedForPlugin(testCase.plugin),
-					),
-			);
 		}
 
 		function getExpectedForPlugin(
