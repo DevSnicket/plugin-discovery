@@ -39,9 +39,39 @@ module.exports =
 require("./plugin1.js")
 ```
 
-The Babel plug-in will need to be specified in your [Babel configuration](https://babeljs.io/docs/en/plugins#plugin-preset-paths), [WebPack Babel Loader configuration](https://github.com/babel/babel-loader#options) or equivalent. It has a single parameter named ignoreDirectoryNames. When not specified the parameter defaults to node_modules. Scanning of the node_modules directory for plug-ins would be inefficient and likely to take a long time.
+The Babel plug-in will need to be specified in your [Babel configuration](https://babeljs.io/docs/en/plugins#plugin-preset-paths), [WebPack Babel Loader configuration](https://github.com/babel/babel-loader#options) or equivalent. It has a single parameter available named ignoreDirectoryNames (see below). 
 
-When using WebPack it will run Babel for the plug-in repository even if its in a node_modules directory. This means plug-ins will be discovered and rewritten into the output plug-in repository file so long as they aren't also in the node_modules directory (see above).
+### Discovery (plug-ins with relative paths)
+
+When the parameter ignoreDirectoryNames is not specified it defaults to node_modules. Scanning of the node_modules directory for plug-ins would be inefficient and likely to take a long time.
+
+When using WebPack it will run Babel for the plug-in repository even if its in a node_modules directory. This means plug-ins will be discovered and rewritten into the output plug-in repository file as long as they aren't also in a package / the node_modules directory (see above).
+
+### Lookup (plug-ins in packages)
+
+To support DevSnicket plug-ins that are in packages and so not discovered by default (see above) the Babel plug-in also looks up inside package / node_module directories for files that can forward onto the plug-ins efficiently. It does this using the following structure:
+
+```
+node_modules
+└─plugin-package
+  └─.devsnicket-plugin-discovery
+    └─repository-package
+      └─repositoryFileName.js (forwarder)
+```
+
+Scoped packages for either/both the plug-in and repository are also supported:
+
+```
+node_modules
+├─@plugin-package-scope
+| └─plugin-package-with-scope
+|   └─.devsnicket-plugin-discovery
+|     └─@plugin-package-scope
+|       └─repository-package
+|         └─repositoryFileName.js (forwarder)
+```
+
+The forwarders are JavaScript files that contain CommonJS require calls for the actual plugin files within the package. These need to be generated when the package is build and included in it when its packed.
 
 ## Example
 
