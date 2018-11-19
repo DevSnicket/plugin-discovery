@@ -8,14 +8,17 @@ const
 	path = require("path"),
 	walk = require("babylon-walk").simple;
 
-module.exports = discoverPluginFilePaths;
+module.exports = discoverRelative;
 
-function discoverPluginFilePaths({
+function discoverRelative({
 	directoryPath,
 	ignoreDirectoryNames,
+	javascriptFileExtension,
 	log,
+	nodeModulesPath,
 	parserOptions,
-	pluginRepositoryFile,
+	repositoryFile,
+	sourceDirectoryPath,
 	syntaxTreeByFilePathCache,
 }) {
 	return (
@@ -24,15 +27,15 @@ function discoverPluginFilePaths({
 	);
 
 	function getPluginFilePathsOfFileOrDirectory(
-		fileOrDirectory,
+		fileOrDirectoryName,
 	) {
 		const fileOrDirectoryPath =
-			path.join(directoryPath, fileOrDirectory);
+			path.join(directoryPath, fileOrDirectoryName);
 
 		return (
 			discoverWhenInDirectory()
 			||
-			(isFilePathPlugin(fileOrDirectoryPath) && [ fileOrDirectoryPath ])
+			(isFilePathPlugin(fileOrDirectoryPath) && [ getRelativePath() ])
 			||
 			[]
 		);
@@ -41,14 +44,17 @@ function discoverPluginFilePaths({
 			return (
 				isDirectory()
 				&&
-				!ignoreDirectoryNames.includes(fileOrDirectory)
+				!ignoreDirectoryNames.includes(fileOrDirectoryName)
 				&&
-				discoverPluginFilePaths({
+				discoverRelative({
 					directoryPath: fileOrDirectoryPath,
 					ignoreDirectoryNames,
+					javascriptFileExtension,
 					log,
+					nodeModulesPath,
 					parserOptions,
-					pluginRepositoryFile,
+					repositoryFile,
+					sourceDirectoryPath,
 					syntaxTreeByFilePathCache,
 				})
 			);
@@ -60,15 +66,26 @@ function discoverPluginFilePaths({
 				);
 			}
 		}
+
+		function getRelativePath() {
+			return (
+				ensureRelativePathPrefix(
+					path.relative(
+						sourceDirectoryPath,
+						fileOrDirectoryPath,
+					),
+				)
+			);
+		}
 	}
 
 	function isFilePathPlugin(
 		filePath,
 	) {
 		return (
-			filePath !== pluginRepositoryFile.path
+			filePath !== repositoryFile.path
 			&&
-			path.extname(filePath) === ".js"
+			path.extname(filePath) === javascriptFileExtension
 			&&
 			hasJavascriptCallOfPlugInTo(
 				fs.readFileSync(
@@ -84,7 +101,7 @@ function discoverPluginFilePaths({
 			return (
 				!javascript.startsWith("// @flow")
 				&&
-				javascript.includes(pluginRepositoryFile.name)
+				javascript.includes(repositoryFile.name)
 				&&
 				isInJavascript()
 			);
@@ -127,13 +144,13 @@ function discoverPluginFilePaths({
 						callExpression,
 					) {
 						if (!found && (found = isRequreOfPluginRepository()))
-							log.discoveredFilePath(filePath);
+							log.requirePath(`plug-in "${filePath}"`);
 
 						function isRequreOfPluginRepository() {
 							return (
 								isRequire()
 								&&
-								pluginRepositoryFile.path === getPathFromRequire()
+								repositoryFile.path === getPathFromRequire()
 							);
 
 							function isRequire() {
@@ -145,7 +162,8 @@ function discoverPluginFilePaths({
 									getPathFromRequireArguments({
 										arguments: callExpression.arguments,
 										filePath,
-										nodeModulesPath: path.join(directoryPath, "node_modules"),
+										javascriptFileExtension,
+										nodeModulesPath,
 									})
 								);
 							}
@@ -173,4 +191,16 @@ function discoverPluginFilePaths({
 			}
 		}
 	}
+}
+
+function ensureRelativePathPrefix(
+	file,
+) {
+	return (
+		file.startsWith(".")
+		?
+		file
+		:
+		`./${file}`
+	);
 }

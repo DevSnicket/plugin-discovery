@@ -8,9 +8,24 @@ const
 	path = require("path"),
 	setupPackagesAndTransform = require("./setupPackagesAndTransform");
 
+/**
+ * @typedef {import('../types').testCase} testCase
+ *
+ * @typedef {Object} pluginPackagesAndTestCases
+ * @property {string[]} pluginPackagesAndTestCases.packages
+ * @property {testCase[]} pluginPackagesAndTestCases.testCases
+*/
+
 module.exports =
+	/**
+	 * @param {object} parameter
+	 * @param {import('../types').babel} parameter.babel
+	 * @param {pluginPackagesAndTestCases} parameter.pluginPackagesAndTestCases
+	 * @param {string} parameter.testDirectory
+	 */
 	({
 		babel,
+		pluginPackagesAndTestCases,
 		testDirectory,
 	}) => {
 		const transformRepositoryFilename = "transformRepository.js";
@@ -31,6 +46,7 @@ module.exports =
 			async() => {
 				await setupPackagesAndTransform({
 					babel,
+					packages: pluginPackagesAndTestCases.packages,
 					testDirectory,
 					transformRepositoryFilename,
 				});
@@ -49,6 +65,12 @@ module.exports =
 				() => testTestCases(testDescription.testCases),
 			);
 
+		describe(
+			"plug-ins in packages",
+			() => testTestCases(pluginPackagesAndTestCases.testCases),
+		);
+
+		/** @param {testCase[]} testCases */
 		function testTestCases(
 			testCases,
 		) {

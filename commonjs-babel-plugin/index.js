@@ -1,7 +1,7 @@
 const
 	addRequireCalls = require("./addRequireCalls"),
 	createConsoleLogFromOption = require("./createConsoleLogFromOption"),
-	discoverPluginFilePaths = require("./discoverPluginFilePaths"),
+	discoverAndLookupPluginPaths = require("./discoverAndLookupPluginPaths"),
 	path = require("path");
 
 module.exports =
@@ -16,55 +16,38 @@ module.exports =
 			nodePath,
 			state,
 		) {
-			const
-				log = createConsoleLogFromOption(state.opts.log),
-				sourceFilePath = path.resolve(state.file.opts.filename),
-				sourceRootPath = path.resolve(state.opts.rootDirectory || state.file.opts.sourceRoot || "./");
+			const sourceFilePath = path.resolve(state.file.opts.filename);
 
 			if (!visitedFilePaths.has(sourceFilePath) && isCallOfRequireCreateRepository(nodePath.node)) {
-				log.detail(`discovery "${sourceFilePath}"`);
+				const log = createConsoleLogFromOption(state.opts.log);
 
-				const sourceDirectoryPath = path.dirname(sourceFilePath);
+				log.detail(`discovery "${state.file.opts.filename}"`);
 
 				visitedFilePaths.add(sourceFilePath);
 
-				const
-					sourceFileNameWithoutExtension = path.basename(sourceFilePath, ".js");
+				const sourceDirectoryPath = path.dirname(sourceFilePath);
 
-				const pluginFiles =
-					discoverPluginFilePaths({
-						directoryPath:
-							sourceRootPath,
-						ignoreDirectoryNames:
-							state.opts.ignoreDirectoryNames || [ "node_modules" ],
-						log:
-							{
-								discoveredFilePath: filePath => log.detail(`discovered "${filePath}"`),
-								warning: log.warning,
-							},
-						parserOptions:
-							state.file.parserOpts,
-						pluginRepositoryFile:
-							{
-								name: sourceFileNameWithoutExtension,
-								path: path.join(sourceDirectoryPath, sourceFileNameWithoutExtension),
-							},
+				const pluginPaths =
+					discoverAndLookupPluginPaths({
+						ignoreDirectoryNames: state.opts.ignoreDirectoryNames,
+						log,
+						parserOptions: state.file.parserOpts,
+						sourceDirectoryPath,
+						sourceFilePath,
+						sourceRootPath: path.resolve(state.opts.rootDirectory || state.file.opts.sourceRoot || "./"),
 						syntaxTreeByFilePathCache,
 					});
 
-				if (pluginFiles.length)
+				if (pluginPaths.length)
 					addRequireCalls({
 						callExpression:
 							types.callExpression,
 						identifier:
 							types.identifier,
-						pluginRepository:
-							{
-								directoryPath: sourceDirectoryPath,
-								nodePath,
-							},
+						pluginRepositoryNodePath:
+							nodePath,
 						requirePaths:
-							pluginFiles,
+							pluginPaths,
 						stringLiteral:
 							types.stringLiteral,
 					});

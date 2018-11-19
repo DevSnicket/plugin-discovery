@@ -4,6 +4,7 @@ module.exports =
 	({
 		arguments: _arguments,
 		filePath,
+		javascriptFileExtension,
 		nodeModulesPath,
 	}) => {
 		return (
@@ -42,12 +43,10 @@ module.exports =
 			}
 
 			function getPathWithoutExtension() {
-				const extension = ".js";
-
 				return (
-					value.endsWith(extension)
+					value.endsWith(javascriptFileExtension)
 					?
-					value.substring(0, value.length - extension.length)
+					value.substring(0, value.length - javascriptFileExtension.length)
 					:
 					value
 				);

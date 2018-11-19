@@ -6,8 +6,7 @@
 	"dependencies": {
 		"array.prototype.flatmap": "1.2.1",
 		"babylon": "6.18.0",
-		"babylon-walk": "1.0.2",
-		"path": "0.12.7"
+		"babylon-walk": "1.0.2"
 	},
 	"devDependencies": {
 		"@types/jest": "23.3.7",

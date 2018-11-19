@@ -4,12 +4,12 @@ module.exports =
 	({
 		callExpression,
 		identifier,
-		pluginRepository,
+		pluginRepositoryNodePath,
 		requirePaths,
 		stringLiteral,
 	}) => {
 		getParentProgramOfNodePath(
-			pluginRepository.nodePath,
+			pluginRepositoryNodePath,
 		)
 		.pushContainer(
 			"body",
@@ -24,15 +24,10 @@ module.exports =
 					identifier("require"),
 					[
 						stringLiteral(
-							ensureRelativePathPrefix(
-								path.relative(
-									pluginRepository.directoryPath,
-									requirePath,
-								)
-								.replace(
-									path.sep,
-									"/",
-								),
+							requirePath
+							.replace(
+								path.sep,
+								"/",
 							),
 						),
 					],
@@ -54,16 +49,4 @@ function getParentProgramOfNodePath(
 		);
 	else
 		throw Error("Could not find parent file.");
-}
-
-function ensureRelativePathPrefix(
-	file,
-) {
-	return (
-		file.startsWith(".")
-		?
-		file
-		:
-		`./${file}`
-	);
 }

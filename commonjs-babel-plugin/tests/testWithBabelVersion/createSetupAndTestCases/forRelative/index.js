@@ -4,6 +4,9 @@ const
 	readRepositoryTransformed = require("../../../../../tests/readRepositoryTransformed");
 
 module.exports =
+	/**
+	 * @returns {import('../../../types').setupAndTestCases}
+	 */
 	() => {
 		const testCases =
 			[

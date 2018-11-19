@@ -1,14 +1,28 @@
+require("./types");
+
 const
+	createPluginPackageSetupAndPackagesAndTestCases = require("./createPluginPackageSetupAndPackagesAndTestCases"),
 	{ emptyDir } = require("fs-extra"),
 	path = require("path"),
 	testWithBabelVersion = require("./testWithBabelVersion");
 
 jest.setTimeout(5 * 60 * 1000);
 
-const testDirectory = path.join(__dirname, "output");
+const directory =
+	path.join(__dirname, "output");
+
+const
+	pluginPackageSetupAndPackagesAndTestCases =
+		createPluginPackageSetupAndPackagesAndTestCases(
+			path.join(directory, "plugin-packages"),
+		);
 
 beforeAll(
-	() => emptyDir(testDirectory),
+	async() => {
+		await emptyDir(directory);
+
+		await pluginPackageSetupAndPackagesAndTestCases.setup();
+	},
 );
 
 describeUsingBabelVersion({
@@ -23,6 +37,9 @@ describeUsingBabelVersion({
 	version: 7,
 });
 
+/**
+ * @param {import("./types").babel} babel
+ */
 function describeUsingBabelVersion(
 	babel,
 ) {
@@ -33,7 +50,8 @@ function describeUsingBabelVersion(
 		() =>
 			testWithBabelVersion({
 				babel,
-				testDirectory: path.join(testDirectory, testDescription),
+				pluginPackagesAndTestCases: pluginPackageSetupAndPackagesAndTestCases,
+				testDirectory: path.join(directory, testDescription),
 			}),
 	);
 }

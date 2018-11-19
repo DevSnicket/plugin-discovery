@@ -1,59 +1,42 @@
 const
+	createPackageNamesAndPlugins = require("./createPackageNamesAndPlugins"),
 	createTestCases = require("./createTestCases"),
-	path = require("path"),
-	writePlugin = require("../../../../../tests/writePlugin");
+	setup = require("./setup");
 
 module.exports =
+	/**
+	 * @returns {import('../../../types').setupAndTestCases}
+	 */
 	() => {
-		const testCases = createTestCases();
+		const packageNamesAndPluginsAndRepositoryRequires =
+			createPackageNamesAndPlugins()
+			.map(addRepositoryRequireFromPackageName);
 
 		return (
 			{
-				setupInDirectory,
+				setupInDirectory:
+					directory =>
+						setup({
+							directory,
+							packageNamesAndPluginsAndRepositoryRequires,
+						}),
 				testCases:
-					testCases
-					.map(
-						testCase => (
-							{
-								expected:
-									getExpectedForPlugin(testCase.plugin),
-								name:
-									testCase.packageName,
-								repositoryPath:
-									`/node_modules/${testCase.repositoryRequire}`,
-							}
-						),
+					createTestCases(
+						packageNamesAndPluginsAndRepositoryRequires,
 					),
 			}
 		);
 
-		async function setupInDirectory(
-			directory,
-		) {
-			await Promise.all(testCases.map(writePluginForTestCase));
-
-			function writePluginForTestCase(
-				testCase,
-			) {
-				return (
-					writePlugin({
-						filePath:
-							path.join(
-								directory,
-								testCase.plugin.filename,
-							),
-						plugin:
-							`test plug-in of repository in package ${testCase.packageName}`,
-						repositoryRequire:
-							testCase.repositoryRequire,
-					})
-				);
-			}
-		}
-
-		function getExpectedForPlugin(
+		function addRepositoryRequireFromPackageName({
+			packageName,
 			plugin,
-		) {
-			return `module.exports = require("@devsnicket/plugin-discovery-create-repository")();\n\nrequire("${plugin.toRepositoryPathExpected}${plugin.filename}")`;
+		}) {
+			return (
+				{
+					packageName,
+					plugin,
+					repositoryRequire: `${packageName}/repositoryInPackage.js`,
+				}
+			);
 		}
 	};

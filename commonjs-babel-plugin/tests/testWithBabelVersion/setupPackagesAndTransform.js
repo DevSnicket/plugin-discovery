@@ -10,6 +10,7 @@ const
 module.exports =
 	async({
 		babel,
+		packages,
 		testDirectory,
 		transformRepositoryFilename,
 	}) => {
@@ -19,7 +20,8 @@ module.exports =
 			packages:
 				[
 					`${babel.corePackage}@${babel.version}`,
-					path.join("..", "..", "commonjs-babel-plugin"),
+					path.join(__dirname, "..", ".."),
+					...packages,
 				],
 		});
 

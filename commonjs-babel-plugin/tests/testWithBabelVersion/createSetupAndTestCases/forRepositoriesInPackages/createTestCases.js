@@ -1,36 +1,26 @@
 module.exports =
-	() =>
-		[
-			{
-				packageName:
-					"plugin-discovery-test-repository-in-package",
-				plugin:
-					{
-						filename: "pluginOfRepositoryInPackage.js",
-						toRepositoryPathExpected: "../../",
-					},
-			},
-			{
-				packageName:
-					"@devsnicket/plugin-discovery-test-repository-in-package",
-				plugin:
-					{
-						filename: "pluginOfRepositoryInScopedPackage.js",
-						toRepositoryPathExpected: "../../../",
-					},
-			},
-		]
-		.map(addRepository);
+	packageNamesAndPluginsAndRepositoryRequires =>
+		packageNamesAndPluginsAndRepositoryRequires
+		.map(
+			({
+				packageName,
+				plugin,
+				repositoryRequire,
+			}) => (
+				{
+					expected:
+						formatExpectedForPlugin(plugin),
+					name:
+						packageName,
+					repositoryPath:
+						`/node_modules/${repositoryRequire}`,
+				}
+			),
+		);
 
-function addRepository(
-	testCase,
-) {
-	const repositoryRequire = `${testCase.packageName}/repositoryInScopedPackage.js`;
-
-	return (
-		{
-			...testCase,
-			repositoryRequire,
-		}
-	);
+function formatExpectedForPlugin({
+	filename,
+	toRepositoryPathExpected,
+}) {
+	return `module.exports = require("@devsnicket/plugin-discovery-create-repository")();\n\nrequire("${toRepositoryPathExpected}${filename}")`;
 }

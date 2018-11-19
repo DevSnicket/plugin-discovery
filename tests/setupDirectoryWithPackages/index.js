@@ -3,12 +3,12 @@ const
 	{ emptyDir } = require("fs-extra"),
 	fs = require("fs"),
 	path = require("path"),
-	{ promisify } = require("util");
+	{ promisify } = require("util"),
+	writePackageJsonFile = require("../writePackageJsonFile");
 
 const
 	getAbsolutePath = promisify(fs.realpath),
-	which = promisify(require("which")),
-	writeFile = promisify(fs.writeFile);
+	which = promisify(require("which"));
 
 module.exports =
 	async({
@@ -17,7 +17,9 @@ module.exports =
 	}) => {
 		await emptyDir(directory);
 
-		await writePackageJsonFile();
+		await writePackageJsonFile(
+			{ directory },
+		);
 
 		await callModuleInProcess({
 			argument:
@@ -31,19 +33,6 @@ module.exports =
 			moduleFile:
 				"./installPackages",
 		});
-
-		async function writePackageJsonFile() {
-			await writeFile(
-				path.join(directory, "package.json"),
-				JSON.stringify(
-					{
-						description: "test",
-						license: "UNLICENSED",
-						repository: "none",
-					},
-				),
-			);
-		}
 
 		function getNpmPath() {
 			return (
