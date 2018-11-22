@@ -1,8 +1,8 @@
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
 	path = require("path"),
-	setupAndCreateTestCasesForRelative = require("./setupAndCreateTestCases/forRelative"),
-	setupAndCreateTestCasesForRepositoriesInPackages = require("./setupAndCreateTestCases/forRepositoriesInPackages"),
+	setupAndCreateTestCasesForRelative = require("./setupAndCreateTestCasesForRelative"),
+	setupAndCreateTestCasesForRepositoriesInPackages = require("./setupAndCreateTestCasesForRepositoriesInPackages"),
 	setupPackagesAndTransform = require("./setupPackagesAndTransform");
 
 module.exports =
@@ -35,7 +35,7 @@ module.exports =
 				}),
 		);
 
-		// setup all tests first to their recreate potential to affect each other
+		// setup all tests first to recreate their potential to affect each others behaviour
 		const
 			relativeTestCases =
 				setupAndCreateTestCasesForRelative({

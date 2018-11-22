@@ -1,4 +1,4 @@
-const writePlugins = require("../../../../../tests/writePlugins");
+const writePlugins = require("../../../../tests/writePlugins");
 
 module.exports =
 	() => {

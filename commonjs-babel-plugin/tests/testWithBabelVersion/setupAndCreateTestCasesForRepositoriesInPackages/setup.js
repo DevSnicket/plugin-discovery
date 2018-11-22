@@ -5,8 +5,8 @@ const
 	fs = require("fs"),
 	path = require("path"),
 	{ promisify } = require("util"),
-	writePackageJsonFile = require("../../../../../tests/writePackageJsonFile"),
-	writePlugin = require("../../../../../tests/writePlugin");
+	writePackageJsonFile = require("../../../../tests/writePackageJsonFile"),
+	writePlugin = require("../../../../tests/writePlugin");
 
 const
 	makeDirectory = promisify(fs.mkdir),

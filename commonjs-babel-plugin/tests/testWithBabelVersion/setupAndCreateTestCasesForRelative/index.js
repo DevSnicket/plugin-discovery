@@ -4,14 +4,14 @@ const
 	fs = require("fs"),
 	path = require("path"),
 	{ promisify } = require("util"),
-	readRepositoryTransformed = require("../../../../../tests/readRepositoryTransformed");
+	readRepositoryTransformed = require("../../../../tests/readRepositoryTransformed");
 
 const
 	writeFile = promisify(fs.writeFile);
 
 module.exports =
 	/**
-	 * @returns {import('../../../types').testCase[]}
+	 * @returns {import('../../types').testCase[]}
 	 */
 	({
 		directory,

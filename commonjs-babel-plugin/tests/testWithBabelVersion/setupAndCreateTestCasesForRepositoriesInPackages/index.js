@@ -5,7 +5,7 @@ const
 
 module.exports =
 	/**
-	 * @returns {import('../../../types').testCase[]}
+	 * @returns {import('../../types').testCase[]}
 	 */
 	({
 		directory,
