@@ -11,9 +11,12 @@ const
 
 module.exports =
 	/**
-	 * @returns {import('../../../types').setupAndTestCases}
+	 * @returns {import('../../../types').testCase[]}
 	 */
-	() => {
+	({
+		directory,
+		repositoryJavascript,
+	}) => {
 		const testCases =
 			[
 				createTestCaseForRoot(),
@@ -22,28 +25,23 @@ module.exports =
 
 		let expected = null;
 
+		beforeAll(setup);
+
 		return (
-			{
-				setup,
-				testCases:
-					testCases.map(
-						testCase => (
-							{
-								get expected() {
-									return expected;
-								},
-								name: testCase.name,
-								repositoryPath: testCase.repositoryPath,
-							}
-						),
-					),
-			}
+			testCases.map(
+				testCase => (
+					{
+						get expected() {
+							return expected;
+						},
+						name: testCase.name,
+						repositoryPath: testCase.repositoryPath,
+					}
+				),
+			)
 		);
 
-		async function setup({
-			directory,
-			repositoryJavascript,
-		}) {
+		async function setup() {
 			expected = await readRepositoryTransformed();
 
 			await Promise.all(

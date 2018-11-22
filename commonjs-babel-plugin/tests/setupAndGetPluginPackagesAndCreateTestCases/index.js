@@ -28,10 +28,11 @@ module.exports =
 
 		const packagePluginDirectoryName = ".devsnicket-plugin-discovery";
 
+		beforeAll(setup);
+
 		return (
 			{
 				packages: getPackageDirectories(),
-				setup,
 				testCases: packageCombinations.map(createTestCase),
 			}
 		);

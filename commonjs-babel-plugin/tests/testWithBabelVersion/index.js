@@ -1,20 +1,16 @@
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
-	createSetupAndTestCasesForRelative = require("./createSetupAndTestCases/forRelative"),
-	createSetupAndTestCasesForRepositoriesInPackages = require("./createSetupAndTestCases/forRepositoriesInPackages"),
 	path = require("path"),
+	setupAndCreateTestCasesForRelative = require("./setupAndCreateTestCases/forRelative"),
+	setupAndCreateTestCasesForRepositoriesInPackages = require("./setupAndCreateTestCases/forRepositoriesInPackages"),
 	setupPackagesAndTransform = require("./setupPackagesAndTransform");
-
-/**
- * @typedef {import('../types').testCase} testCase
- *
- * @typedef {Object} pluginPackagesAndTestCases
- * @property {string[]} pluginPackagesAndTestCases.packages
- * @property {testCase[]} pluginPackagesAndTestCases.testCases
-*/
 
 module.exports =
 	/**
+	 * @typedef {Object} pluginPackagesAndTestCases
+	 * @property {string[]} pluginPackagesAndTestCases.packages
+	 * @property {import('../types').testCase[]} pluginPackagesAndTestCases.testCases
+	 *
 	 * @param {object} parameter
 	 * @param {import('../types').babel} parameter.babel
 	 * @param {pluginPackagesAndTestCases} parameter.pluginPackagesAndTestCases
@@ -29,52 +25,44 @@ module.exports =
 	}) => {
 		const transformRepositoryFilename = "transformRepository.js";
 
-		const testSets =
-			[
-				{
-					...createSetupAndTestCasesForRelative(),
-					name: "relative",
-				},
-				{
-					...createSetupAndTestCasesForRepositoriesInPackages(),
-					name: "repositories in packages",
-				},
-			];
-
 		beforeAll(
-			async() => {
-				await setupPackagesAndTransform({
+			() =>
+				setupPackagesAndTransform({
 					babel,
 					packages: pluginPackagesAndTestCases.packages,
 					testDirectory,
 					transformRepositoryFilename,
-				});
-
-				// setup all tests together incase they affect each other
-				await Promise.all(
-					testSets.map(
-						testSet =>
-							testSet.setup({
-								directory: testDirectory,
-								repositoryJavascript,
-							}),
-					),
-				);
-			},
+				}),
 		);
 
-		for (const testSet of testSets)
-			describe(
-				testSet.name,
-				() => testTestCases(testSet.testCases),
-			);
+		// setup all tests first to their recreate potential to affect each other
+		const
+			relativeTestCases =
+				setupAndCreateTestCasesForRelative({
+					directory: testDirectory,
+					repositoryJavascript,
+				}),
+			repositoriesInPackagesTestCases =
+				setupAndCreateTestCasesForRepositoriesInPackages({
+					directory: testDirectory,
+					repositoryJavascript,
+				});
+
+		describe(
+			"relative",
+			() => testTestCases(relativeTestCases),
+		);
+
+		describe(
+			"repositories in packages",
+			() => testTestCases(repositoriesInPackagesTestCases),
+		);
 
 		describe(
 			"plug-ins in packages",
 			() => testTestCases(pluginPackagesAndTestCases.testCases),
 		);
 
-		/** @param {testCase[]} testCases */
 		function testTestCases(
 			testCases,
 		) {

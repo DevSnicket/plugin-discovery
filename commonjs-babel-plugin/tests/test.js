@@ -1,7 +1,7 @@
 const
-	createPluginPackageSetupAndPackagesAndTestCases = require("./createPluginPackageSetupAndPackagesAndTestCases"),
 	{ emptyDir } = require("fs-extra"),
 	path = require("path"),
+	setupAndGetPluginPackagesAndCreateTestCases = require("./setupAndGetPluginPackagesAndCreateTestCases"),
 	testWithBabelVersion = require("./testWithBabelVersion");
 
 jest.setTimeout(5 * 60 * 1000);
@@ -9,31 +9,24 @@ jest.setTimeout(5 * 60 * 1000);
 const directory =
 	path.join(__dirname, "output");
 
+beforeAll(() => emptyDir(directory));
+
 const repositoryJavascript =
 	"module.exports = require(\"@devsnicket/plugin-discovery-create-repository\")();";
 
-const
-	pluginPackageSetupAndPackagesAndTestCases =
-		createPluginPackageSetupAndPackagesAndTestCases({
-			directory: path.join(directory, "node_modules"),
-			repositoryJavascript,
-		});
+const pluginPackagesAndTestCases =
+	setupAndGetPluginPackagesAndCreateTestCases({
+		directory: path.join(directory, "node_modules"),
+		repositoryJavascript,
+	});
 
-beforeAll(
-	async() => {
-		await emptyDir(directory);
-
-		await pluginPackageSetupAndPackagesAndTestCases.setup();
-	},
-);
-
-describeUsingBabelVersion({
+describeTestsUsingBabelVersion({
 	corePackage: "babel-core",
 	transformFunctionName: "transform",
 	version: 6,
 });
 
-describeUsingBabelVersion({
+describeTestsUsingBabelVersion({
 	corePackage: "@babel/core",
 	transformFunctionName: "transformSync",
 	version: 7,
@@ -42,7 +35,7 @@ describeUsingBabelVersion({
 /**
  * @param {import("./types").babel} babel
  */
-function describeUsingBabelVersion(
+function describeTestsUsingBabelVersion(
 	babel,
 ) {
 	const testDescription = `babel-${babel.version}`;
@@ -52,7 +45,7 @@ function describeUsingBabelVersion(
 		() =>
 			testWithBabelVersion({
 				babel,
-				pluginPackagesAndTestCases: pluginPackageSetupAndPackagesAndTestCases,
+				pluginPackagesAndTestCases,
 				repositoryJavascript,
 				testDirectory: path.join(directory, testDescription),
 			}),
