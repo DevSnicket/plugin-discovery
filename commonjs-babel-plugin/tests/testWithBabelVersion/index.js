@@ -1,6 +1,3 @@
-require("array.prototype.flatmap")
-.shim();
-
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
 	createSetupAndTestCasesForRelative = require("./createSetupAndTestCases/forRelative"),
@@ -21,11 +18,13 @@ module.exports =
 	 * @param {object} parameter
 	 * @param {import('../types').babel} parameter.babel
 	 * @param {pluginPackagesAndTestCases} parameter.pluginPackagesAndTestCases
+	 * @param {string} parameter.repositoryJavascript
 	 * @param {string} parameter.testDirectory
 	 */
 	({
 		babel,
 		pluginPackagesAndTestCases,
+		repositoryJavascript,
 		testDirectory,
 	}) => {
 		const transformRepositoryFilename = "transformRepository.js";
@@ -51,18 +50,23 @@ module.exports =
 					transformRepositoryFilename,
 				});
 
-				// setup all first incase they affect each other
+				// setup all tests together incase they affect each other
 				await Promise.all(
-					testSets
-					.flatMap(testDescription => testDescription.setupInDirectory(testDirectory)),
+					testSets.map(
+						testSet =>
+							testSet.setup({
+								directory: testDirectory,
+								repositoryJavascript,
+							}),
+					),
 				);
 			},
 		);
 
-		for (const testDescription of testSets)
+		for (const testSet of testSets)
 			describe(
-				testDescription.name,
-				() => testTestCases(testDescription.testCases),
+				testSet.name,
+				() => testTestCases(testSet.testCases),
 			);
 
 		describe(

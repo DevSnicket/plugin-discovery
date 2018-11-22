@@ -17,13 +17,19 @@ module.exports =
 		);
 
 		const directoryWithScope =
-			path.join(directory, repository.package.scope);
+			path.join(
+				directory,
+				repository.package.scope || "",
+			);
 
 		if (repository.package.scope)
 			await makeDirectory(directoryWithScope);
 
 		const packageDirectory =
-			path.join(directoryWithScope, repository.package.name);
+			path.join(
+				directoryWithScope,
+				repository.package.nameInScope,
+			);
 
 		await makeDirectory(packageDirectory);
 

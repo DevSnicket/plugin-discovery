@@ -1,22 +1,25 @@
 module.exports =
-	packageNamesAndPluginsAndRepositoryRequires =>
-		packageNamesAndPluginsAndRepositoryRequires
-		.map(
-			({
-				packageName,
-				plugin,
-				repositoryRequire,
-			}) => (
+	pluginsAndRepositories => {
+		return (
+			pluginsAndRepositories.map(createTestCase)
+		);
+
+		function createTestCase({
+			plugin,
+			repository,
+		}) {
+			return (
 				{
 					expected:
 						formatExpectedForPlugin(plugin),
 					name:
-						packageName,
+						repository.package.name,
 					repositoryPath:
-						`/node_modules/${repositoryRequire}`,
+						`/node_modules/${repository.require}`,
 				}
-			),
-		);
+			);
+		}
+	};
 
 function formatExpectedForPlugin({
 	filename,

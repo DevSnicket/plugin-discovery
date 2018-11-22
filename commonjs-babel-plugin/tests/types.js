@@ -13,13 +13,19 @@
  */
 
 /**
- * @callback setupInDirectory
- * @param {string} directory
+ * @typedef {Object} setupParameter
+ * @property {string} parameter.directory
+ * @property {string} parameter.repositoryJavascript
+ */
+
+/**
+ * @callback setup
+ * @param {setupParameter} parameter
  */
 
 /**
  * @typedef {Object} setupAndTestCases
- * @property {setupInDirectory} setupAndTestCases.setupInDirectory
+ * @property {setup} setupAndTestCases.setup
  * @property {testCase[]} setupAndTestCases.testCases
 */
 

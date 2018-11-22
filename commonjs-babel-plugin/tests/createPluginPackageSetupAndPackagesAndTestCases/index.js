@@ -1,19 +1,27 @@
+require("array.prototype.flatmap")
+.shim();
+
 const
-	createPluginPackagesFromScopeCombinations = require("./createPluginPackagesFromScopeCombinations"),
+	createPackageCombinationsFromScope = require("./createPackageCombinationsFromScope"),
 	fs = require("fs"),
 	path = require("path"),
 	{ promisify } = require("util"),
-	writePluginPackage = require("./writePluginPackage");
+	writeForwarder = require("./writeForwarder"),
+	writePackage = require("./writePackage");
 
 const
-	makeDirectory = promisify(fs.mkdir);
+	makeDirectory = promisify(fs.mkdir),
+	writeFile = promisify(fs.writeFile);
 
 module.exports =
-	directory => {
+	({
+		directory,
+		repositoryJavascript,
+	}) => {
 		const scope = "@devsnicket";
 
-		const pluginPackages =
-			createPluginPackagesFromScopeCombinations({
+		const packageCombinations =
+			createPackageCombinationsFromScope({
 				directory,
 				scope,
 			});
@@ -24,12 +32,20 @@ module.exports =
 			{
 				packages: getPackageDirectories(),
 				setup,
-				testCases: createTestCases(),
+				testCases: packageCombinations.map(createTestCase),
 			}
 		);
 
 		function getPackageDirectories() {
-			return pluginPackages.map(pluginPackage => pluginPackage.directory);
+			return (
+				packageCombinations.flatMap(
+					packageCombination =>
+						[
+							packageCombination.plugin.directory,
+							packageCombination.repository.package.directory,
+						],
+				)
+			);
 		}
 
 		async function setup() {
@@ -42,51 +58,70 @@ module.exports =
 			);
 
 			await Promise.all(
-				pluginPackages.map(
-					pluginPackage =>
-						writePluginPackage({
-							...pluginPackage,
-							packagePluginDirectoryName,
-						}),
-				),
+				packageCombinations.map(writePackages),
 			);
 		}
 
-		function createTestCases() {
+		function writePackages(
+			packageCombination,
+		) {
 			return (
-				pluginPackages.map(
-					pluginPackage => {
-						const repositoryRelativePath = getRepositoryPath(pluginPackage.repository);
-
-						return (
-							{
-								expected:
-									`module.exports = require("@devsnicket/plugin-discovery-create-repository")();\n\nrequire("${getPackageRepositoryPath()}")`,
-								name:
-									pluginPackage.name,
-								repositoryPath:
-									path.join("node_modules", repositoryRelativePath),
-							}
-						);
-
-						function getPackageRepositoryPath() {
-							return `${pluginPackage.name}/${packagePluginDirectoryName}/${repositoryRelativePath}`;
-						}
-					},
+				Promise.all(
+					[ writePluginPackage(), writeRepositoryPackage() ],
 				)
 			);
+
+			async function writePluginPackage() {
+				await writePackage(
+					packageCombination.plugin,
+				);
+
+				await writeForwarder({
+					directory: path.join(packageCombination.plugin.directory, packagePluginDirectoryName),
+					repository: packageCombination.repository,
+				});
+			}
+
+			async function writeRepositoryPackage() {
+				await writePackage(
+					packageCombination.repository.package,
+				);
+
+				await writeFile(
+					path.join(
+						packageCombination.repository.package.directory,
+						packageCombination.repository.filename,
+					),
+					repositoryJavascript,
+				);
+			}
 		}
 
-		function getRepositoryPath({
-			filename,
-			package: _package,
-		}) {
-			return `${getScopeAsRelativePath(_package.scope)}${_package.name}/${filename}`;
+		function createTestCase(
+			packageCombination,
+		) {
+			const repositoryRelativePath = getRepositoryPath(packageCombination.repository);
+
+			return (
+				{
+					expected:
+						`${repositoryJavascript}\n\nrequire("${getPackageRepositoryPath()}")`,
+					name:
+						packageCombination.plugin.name,
+					repositoryPath:
+						path.join("node_modules", repositoryRelativePath),
+				}
+			);
+
+			function getPackageRepositoryPath() {
+				return `${packageCombination.plugin.name}/${packagePluginDirectoryName}/${repositoryRelativePath}`;
+			}
 		}
 	};
 
-function getScopeAsRelativePath(
-	scope,
-) {
-	return scope && `${scope}/`;
+function getRepositoryPath({
+	filename,
+	package: _package,
+}) {
+	return `${_package.name}/${filename}`;
 }

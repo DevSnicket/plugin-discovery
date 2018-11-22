@@ -1,5 +1,5 @@
 const
-	createPackageNamesAndPlugins = require("./createPackageNamesAndPlugins"),
+	createPluginsAndRepositories = require("./createPluginsAndRepositories"),
 	createTestCases = require("./createTestCases"),
 	setup = require("./setup");
 
@@ -8,35 +8,25 @@ module.exports =
 	 * @returns {import('../../../types').setupAndTestCases}
 	 */
 	() => {
-		const packageNamesAndPluginsAndRepositoryRequires =
-			createPackageNamesAndPlugins()
-			.map(addRepositoryRequireFromPackageName);
+		const pluginsAndRepositories =
+			createPluginsAndRepositories();
 
 		return (
 			{
-				setupInDirectory:
-					directory =>
+				setup:
+					({
+						directory,
+						repositoryJavascript,
+					}) =>
 						setup({
 							directory,
-							packageNamesAndPluginsAndRepositoryRequires,
+							pluginsAndRepositories,
+							repositoryJavascript,
 						}),
 				testCases:
 					createTestCases(
-						packageNamesAndPluginsAndRepositoryRequires,
+						pluginsAndRepositories,
 					),
 			}
 		);
-
-		function addRepositoryRequireFromPackageName({
-			packageName,
-			plugin,
-		}) {
-			return (
-				{
-					packageName,
-					plugin,
-					repositoryRequire: `${packageName}/repositoryInPackage.js`,
-				}
-			);
-		}
 	};

@@ -1,5 +1,3 @@
-require("./types");
-
 const
 	createPluginPackageSetupAndPackagesAndTestCases = require("./createPluginPackageSetupAndPackagesAndTestCases"),
 	{ emptyDir } = require("fs-extra"),
@@ -11,11 +9,15 @@ jest.setTimeout(5 * 60 * 1000);
 const directory =
 	path.join(__dirname, "output");
 
+const repositoryJavascript =
+	"module.exports = require(\"@devsnicket/plugin-discovery-create-repository\")();";
+
 const
 	pluginPackageSetupAndPackagesAndTestCases =
-		createPluginPackageSetupAndPackagesAndTestCases(
-			path.join(directory, "plugin-packages"),
-		);
+		createPluginPackageSetupAndPackagesAndTestCases({
+			directory: path.join(directory, "node_modules"),
+			repositoryJavascript,
+		});
 
 beforeAll(
 	async() => {
@@ -51,6 +53,7 @@ function describeUsingBabelVersion(
 			testWithBabelVersion({
 				babel,
 				pluginPackagesAndTestCases: pluginPackageSetupAndPackagesAndTestCases,
+				repositoryJavascript,
 				testDirectory: path.join(directory, testDescription),
 			}),
 	);

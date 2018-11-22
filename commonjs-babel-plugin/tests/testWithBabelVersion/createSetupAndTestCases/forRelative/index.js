@@ -1,7 +1,13 @@
 const
 	createTestCaseForRoot = require("./createTestCaseForRoot"),
 	createTestCaseForSubdirectory = require("./createTestCaseForSubdirectory"),
+	fs = require("fs"),
+	path = require("path"),
+	{ promisify } = require("util"),
 	readRepositoryTransformed = require("../../../../../tests/readRepositoryTransformed");
+
+const
+	writeFile = promisify(fs.writeFile);
 
 module.exports =
 	/**
@@ -18,7 +24,7 @@ module.exports =
 
 		return (
 			{
-				setupInDirectory,
+				setup,
 				testCases:
 					testCases.map(
 						testCase => (
@@ -34,13 +40,25 @@ module.exports =
 			}
 		);
 
-		async function setupInDirectory(
+		async function setup({
 			directory,
-		) {
+			repositoryJavascript,
+		}) {
 			expected = await readRepositoryTransformed();
 
 			await Promise.all(
-				testCases.map(testCase => testCase.setupInDirectory(directory)),
+				testCases.map(setupTestCase),
 			);
+
+			async function setupTestCase(
+				testCase,
+			) {
+				await testCase.setupInDirectory(directory);
+
+				await writeFile(
+					path.join(directory, testCase.repositoryPath),
+					repositoryJavascript,
+				);
+			}
 		}
 	};

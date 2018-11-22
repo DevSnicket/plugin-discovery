@@ -1,3 +1,5 @@
+const { readFileSync } = require("fs");
+
 module.exports =
 	({
 		babelCorePackage,
@@ -10,7 +12,10 @@ module.exports =
 
 		return (
 			transform(
-				"module.exports = require(\"@devsnicket/plugin-discovery-create-repository\")();",
+				readFileSync(
+					repositoryPath,
+					"utf-8",
+				),
 				{
 					filename:
 						repositoryPath,
