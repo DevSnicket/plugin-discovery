@@ -15,7 +15,7 @@ module.exports =
 					name:
 						repository.package.name,
 					repositoryPath:
-						`/node_modules/${repository.require}`,
+						`node_modules/${repository.require}`,
 				}
 			);
 		}

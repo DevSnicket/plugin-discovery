@@ -22,12 +22,14 @@ const pluginPackagesAndTestCases =
 
 describeTestsUsingBabelVersion({
 	corePackage: "babel-core",
+	loaderVersion: 7,
 	transformFunctionName: "transform",
 	version: 6,
 });
 
 describeTestsUsingBabelVersion({
 	corePackage: "@babel/core",
+	loaderVersion: 8,
 	transformFunctionName: "transformSync",
 	version: 7,
 });

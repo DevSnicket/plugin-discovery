@@ -2,15 +2,9 @@ require("array.prototype.flatmap")
 .shim();
 
 const
-	fs = require("fs"),
 	path = require("path"),
-	{ promisify } = require("util"),
-	writePackageJsonFile = require("../../../../tests/writePackageJsonFile"),
-	writePlugin = require("../../../../tests/writePlugin");
-
-const
-	makeDirectory = promisify(fs.mkdir),
-	writeFile = promisify(fs.writeFile);
+	writePlugin = require("../../../../tests/writePlugin"),
+	writeRepositoryPackage = require("../../writeRepositoryPackage");
 
 module.exports =
 	async({
@@ -23,8 +17,21 @@ module.exports =
 			.flatMap(
 				pluginAndRepository =>
 					[
-						writePluginForRepository(pluginAndRepository),
-						writeRepositoryPackage(pluginAndRepository.repository),
+						writePluginForRepository(
+							pluginAndRepository,
+						),
+						writeRepositoryPackage({
+							directory:
+								getDirectoryForPackage(
+									pluginAndRepository.repository.package,
+								),
+							filename:
+								pluginAndRepository.repository.filename,
+							javascript:
+								repositoryJavascript,
+							name:
+								pluginAndRepository.repository.package.name,
+						}),
 					],
 			),
 		);
@@ -48,35 +55,16 @@ module.exports =
 			);
 		}
 
-		async function writeRepositoryPackage({
-			filename,
-			package: _package,
-		}) {
-			const packageDirectory =
+		function getDirectoryForPackage(
+			_package,
+		) {
+			return (
 				path.join(
 					directory,
 					"node_modules",
 					_package.scope || "",
 					_package.nameInScope,
-				);
-
-			await makeDirectory(packageDirectory);
-
-			await Promise.all(
-				[
-					writePackageJsonFile({
-						directory:
-							packageDirectory,
-						name:
-							_package.name,
-						version:
-							"0.0.0",
-					}),
-					writeFile(
-						path.join(packageDirectory, filename),
-						repositoryJavascript,
-					),
-				],
+				)
 			);
 		}
 	};

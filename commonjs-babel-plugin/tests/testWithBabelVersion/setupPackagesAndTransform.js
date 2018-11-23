@@ -20,7 +20,11 @@ module.exports =
 			packages:
 				[
 					`${babel.corePackage}@${babel.version}`,
+					`babel-loader@${babel.loaderVersion}`,
+					"webpack@4",
+					"webpack-cli@3",
 					path.join(__dirname, "..", ".."),
+					path.join(__dirname, "..", "..", "..", "create-repository"),
 					...packages,
 				],
 		});

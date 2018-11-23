@@ -3,7 +3,8 @@ const
 	path = require("path"),
 	setupAndCreateTestCasesForRelative = require("./setupAndCreateTestCasesForRelative"),
 	setupAndCreateTestCasesForRepositoriesInPackages = require("./setupAndCreateTestCasesForRepositoriesInPackages"),
-	setupPackagesAndTransform = require("./setupPackagesAndTransform");
+	setupPackagesAndTransform = require("./setupPackagesAndTransform"),
+	testWebpack = require("./testWebpack");
 
 module.exports =
 	/**
@@ -62,6 +63,17 @@ module.exports =
 			"plug-ins in packages",
 			() => testTestCases(pluginPackagesAndTestCases.testCases),
 		);
+
+		testWebpack({
+			directory:
+				testDirectory,
+			testCases:
+				[
+					...relativeTestCases,
+					...repositoriesInPackagesTestCases,
+					...pluginPackagesAndTestCases.testCases,
+				],
+		});
 
 		function testTestCases(
 			testCases,

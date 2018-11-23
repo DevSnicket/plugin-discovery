@@ -7,11 +7,11 @@ const
 	path = require("path"),
 	{ promisify } = require("util"),
 	writeForwarder = require("./writeForwarder"),
-	writePackage = require("./writePackage");
+	writePackage = require("./writePackage"),
+	writeRepositoryPackage = require("../writeRepositoryPackage");
 
 const
-	makeDirectory = promisify(fs.mkdir),
-	writeFile = promisify(fs.writeFile);
+	makeDirectory = promisify(fs.mkdir);
 
 module.exports =
 	({
@@ -68,7 +68,15 @@ module.exports =
 		) {
 			return (
 				Promise.all(
-					[ writePluginPackage(), writeRepositoryPackage() ],
+					[
+						writePluginPackage(),
+						writeRepositoryPackage({
+							directory: packageCombination.repository.package.directory,
+							filename: packageCombination.repository.filename,
+							javascript: repositoryJavascript,
+							name: packageCombination.repository.package.name,
+						}),
+					],
 				)
 			);
 
@@ -81,20 +89,6 @@ module.exports =
 					directory: path.join(packageCombination.plugin.directory, packagePluginDirectoryName),
 					repository: packageCombination.repository,
 				});
-			}
-
-			async function writeRepositoryPackage() {
-				await writePackage(
-					packageCombination.repository.package,
-				);
-
-				await writeFile(
-					path.join(
-						packageCombination.repository.package.directory,
-						packageCombination.repository.filename,
-					),
-					repositoryJavascript,
-				);
 			}
 		}
 
