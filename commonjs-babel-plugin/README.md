@@ -39,13 +39,13 @@ module.exports =
 require("./plugin1.js")
 ```
 
-The Babel plug-in will need to be specified in your [Babel configuration](https://babeljs.io/docs/en/plugins#plugin-preset-paths), [WebPack Babel Loader configuration](https://github.com/babel/babel-loader#options) or equivalent. It has a single parameter available named ignoreDirectoryNames (see below). 
+The Babel plug-in will need to be specified in your [Babel configuration](https://babeljs.io/docs/en/plugins#plugin-preset-paths), [Webpack Babel Loader configuration](https://github.com/babel/babel-loader#options) or equivalent.
 
 ### Discovery (plug-ins with relative paths)
 
-When the parameter ignoreDirectoryNames is not specified it defaults to node_modules. Scanning of the node_modules directory for plug-ins would be inefficient and likely to take a long time.
+The Babel plug-in has a parameter ignoreDirectoryNames, when not specified this defaults to node_modules. Scanning of the node_modules directory for plug-ins would be inefficient and likely to take a long time.
 
-When using WebPack it will run Babel for the plug-in repository even if its in a node_modules directory. This means plug-ins will be discovered and rewritten into the output plug-in repository file as long as they aren't also in a package / the node_modules directory (see above).
+Webpack can be configured to run Babel for plug-in repositories even when they are in a package and so in the node_modules directory. So long as the plug-ins for these repositories aren't also in packages/node_modules, they can be discovered and rewritten by Webpack/Babel in the output. Webpack is often also configured to not include or to exclude running Babel for the node_modules directory. So you will need to ensure that your Webpack configuration still includes the paths to repositories in packages/node_modules for this to work.
 
 ### Lookup (plug-ins in packages)
 
