@@ -1,7 +1,6 @@
 const
 	{ emptyDir } = require("fs-extra"),
 	path = require("path"),
-	setupAndGetPluginPackagesAndCreateTestCases = require("./setupAndGetPluginPackagesAndCreateTestCases"),
 	testWithBabelVersion = require("./testWithBabelVersion");
 
 jest.setTimeout(5 * 60 * 1000);
@@ -13,12 +12,6 @@ beforeAll(() => emptyDir(directory));
 
 const repositoryJavascript =
 	"module.exports = require(\"@devsnicket/plugin-discovery-create-repository\")();";
-
-const pluginPackagesAndTestCases =
-	setupAndGetPluginPackagesAndCreateTestCases({
-		directory: path.join(directory, "node_modules"),
-		repositoryJavascript,
-	});
 
 describeTestsUsingBabelVersion({
 	corePackage: "babel-core",
@@ -47,7 +40,6 @@ function describeTestsUsingBabelVersion(
 		() =>
 			testWithBabelVersion({
 				babel,
-				pluginPackagesAndTestCases,
 				repositoryJavascript,
 				testDirectory: path.join(directory, testDescription),
 			}),

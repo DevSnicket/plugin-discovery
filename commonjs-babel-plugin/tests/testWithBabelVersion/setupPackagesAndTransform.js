@@ -10,7 +10,6 @@ const
 module.exports =
 	async({
 		babel,
-		packages,
 		testDirectory,
 		transformRepositoryFilename,
 	}) => {
@@ -25,7 +24,6 @@ module.exports =
 					"webpack-cli@3",
 					path.join(__dirname, "..", ".."),
 					path.join(__dirname, "..", "..", "..", "create-repository"),
-					...packages,
 				],
 		});
 

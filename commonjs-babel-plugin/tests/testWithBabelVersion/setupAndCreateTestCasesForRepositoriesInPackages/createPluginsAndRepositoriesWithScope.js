@@ -1,5 +1,5 @@
 module.exports =
-	() =>
+	scope =>
 		[
 			{
 				plugin:
@@ -22,7 +22,7 @@ module.exports =
 				repository:
 					createRepositoryForPackage({
 						nameInScope: "repository-with-scope",
-						scope: "@devsnicket",
+						scope,
 					}),
 			},
 		];

@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports =
 	({
-		directory,
+		nodeModulesDirectory,
 		scope,
 	}) => {
 		return (
@@ -57,7 +57,7 @@ module.exports =
 					{
 						directory:
 							path.join(
-								directory,
+								nodeModulesDirectory,
 								pluginHasScope ? path.join(scope, nameInScope) : nameInScope,
 							),
 						name:
@@ -78,7 +78,7 @@ module.exports =
 							{
 								directory:
 									path.join(
-										directory,
+										nodeModulesDirectory,
 										repositoryHasScope ? path.join(scope, nameInScope) : nameInScope,
 									),
 								name:

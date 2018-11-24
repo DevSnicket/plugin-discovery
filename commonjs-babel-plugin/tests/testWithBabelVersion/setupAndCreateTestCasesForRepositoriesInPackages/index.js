@@ -1,5 +1,5 @@
 const
-	createPluginsAndRepositories = require("./createPluginsAndRepositories"),
+	createPluginsAndRepositoriesWithScope = require("./createPluginsAndRepositoriesWithScope"),
 	createTestCases = require("./createTestCases"),
 	setup = require("./setup");
 
@@ -10,9 +10,12 @@ module.exports =
 	({
 		directory,
 		repositoryJavascript,
+		scope,
 	}) => {
 		const pluginsAndRepositories =
-			createPluginsAndRepositories();
+			createPluginsAndRepositoriesWithScope(
+				scope,
+			);
 
 		beforeAll(
 			() =>

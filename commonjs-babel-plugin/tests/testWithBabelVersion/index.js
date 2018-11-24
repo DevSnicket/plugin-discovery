@@ -1,6 +1,7 @@
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
 	path = require("path"),
+	setupAndCreateTestCasesForPluginsInPackages = require("./setupAndCreateTestCasesForPluginsInPackages"),
 	setupAndCreateTestCasesForRelative = require("./setupAndCreateTestCasesForRelative"),
 	setupAndCreateTestCasesForRepositoriesInPackages = require("./setupAndCreateTestCasesForRepositoriesInPackages"),
 	setupPackagesAndTransform = require("./setupPackagesAndTransform"),
@@ -8,19 +9,13 @@ const
 
 module.exports =
 	/**
-	 * @typedef {Object} pluginPackagesAndTestCases
-	 * @property {string[]} pluginPackagesAndTestCases.packages
-	 * @property {import('../types').testCase[]} pluginPackagesAndTestCases.testCases
-	 *
 	 * @param {object} parameter
 	 * @param {import('../types').babel} parameter.babel
-	 * @param {pluginPackagesAndTestCases} parameter.pluginPackagesAndTestCases
 	 * @param {string} parameter.repositoryJavascript
 	 * @param {string} parameter.testDirectory
 	 */
 	({
 		babel,
-		pluginPackagesAndTestCases,
 		repositoryJavascript,
 		testDirectory,
 	}) => {
@@ -30,14 +25,21 @@ module.exports =
 			() =>
 				setupPackagesAndTransform({
 					babel,
-					packages: pluginPackagesAndTestCases.packages,
 					testDirectory,
 					transformRepositoryFilename,
 				}),
 		);
 
+		const scope = "@devsnicket";
+
 		// setup all tests first to recreate their potential to affect each others behaviour
 		const
+			pluginsInPackagesTestCases =
+				setupAndCreateTestCasesForPluginsInPackages({
+					directory: testDirectory,
+					repositoryJavascript,
+					scope,
+				}),
 			relativeTestCases =
 				setupAndCreateTestCasesForRelative({
 					directory: testDirectory,
@@ -47,6 +49,7 @@ module.exports =
 				setupAndCreateTestCasesForRepositoriesInPackages({
 					directory: testDirectory,
 					repositoryJavascript,
+					scope,
 				});
 
 		describe(
@@ -61,7 +64,7 @@ module.exports =
 
 		describe(
 			"plug-ins in packages",
-			() => testTestCases(pluginPackagesAndTestCases.testCases),
+			() => testTestCases(pluginsInPackagesTestCases),
 		);
 
 		testWebpack({
@@ -71,7 +74,7 @@ module.exports =
 				[
 					...relativeTestCases,
 					...repositoriesInPackagesTestCases,
-					...pluginPackagesAndTestCases.testCases,
+					...pluginsInPackagesTestCases,
 				],
 		});
 

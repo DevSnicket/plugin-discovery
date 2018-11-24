@@ -1,67 +1,32 @@
-require("array.prototype.flatmap")
-.shim();
-
 const
 	createPackageCombinationsFromScope = require("./createPackageCombinationsFromScope"),
-	fs = require("fs"),
 	path = require("path"),
-	{ promisify } = require("util"),
 	writeForwarder = require("./writeForwarder"),
 	writePackage = require("./writePackage"),
 	writeRepositoryPackage = require("../writeRepositoryPackage");
-
-const
-	makeDirectory = promisify(fs.mkdir);
 
 module.exports =
 	({
 		directory,
 		repositoryJavascript,
+		scope,
 	}) => {
-		const scope = "@devsnicket";
-
 		const packageCombinations =
 			createPackageCombinationsFromScope({
-				directory,
+				nodeModulesDirectory: path.join(directory, "node_modules"),
 				scope,
 			});
 
 		const packagePluginDirectoryName = ".devsnicket-plugin-discovery";
 
-		beforeAll(setup);
-
-		return (
-			{
-				packages: getPackageDirectories(),
-				testCases: packageCombinations.map(createTestCase),
-			}
+		beforeAll(
+			() =>
+				Promise.all(
+					packageCombinations.map(writePackages),
+				),
 		);
 
-		function getPackageDirectories() {
-			return (
-				packageCombinations.flatMap(
-					packageCombination =>
-						[
-							packageCombination.plugin.directory,
-							packageCombination.repository.package.directory,
-						],
-				)
-			);
-		}
-
-		async function setup() {
-			await makeDirectory(
-				directory,
-			);
-
-			await makeDirectory(
-				path.join(directory, scope),
-			);
-
-			await Promise.all(
-				packageCombinations.map(writePackages),
-			);
-		}
+		return packageCombinations.map(createTestCase);
 
 		function writePackages(
 			packageCombination,
