@@ -1,3 +1,5 @@
+const path = require("path");
+
 require("webpack")(
 	{
 		devtool:
@@ -8,30 +10,12 @@ require("webpack")(
 		mode:
 			"development",
 		module:
+			{ rules: [ createBabelRule() ] },
+		output:
 			{
-				rules:
-					[
-						{
-							exclude:
-								/(node_modules\/(?!repository.*|@devsnicket\/repository.*)|plugin-discovery\/create-repository\/)/,
-							test:
-								/\.js$/,
-							use:
-								{
-									loader:
-										"babel-loader",
-									options:
-										{
-											plugins:
-												[
-													// A const will be prepended to this file is written into the test output
-													// eslint-disable-next-line no-undef
-													babelPluginPath,
-												],
-										},
-								},
-						},
-					],
+				filename: "webpack-output.js",
+				path: path.resolve("."),
+				pathinfo: false,
 			},
 	},
 	(error, statistics) => {
@@ -43,3 +27,28 @@ require("webpack")(
 			console.log(statistics.toString());
 	},
 );
+
+function createBabelRule() {
+	return (
+		{
+			exclude:
+				/(node_modules\/(?!repository.*|@devsnicket\/repository.*)|plugin-discovery\/create-repository\/)/,
+			test:
+				/\.js$/,
+			use:
+				{
+					loader:
+						"babel-loader",
+					options:
+						{
+							plugins:
+								[
+									// A const will be prepended to this file is written into the test output
+									// eslint-disable-next-line no-undef
+									babelPluginPath,
+								],
+						},
+				},
+		}
+	);
+}
