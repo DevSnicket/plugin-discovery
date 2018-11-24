@@ -73,7 +73,7 @@ module.exports =
 				return (
 					{
 						filename:
-							"repository.js",
+							`${nameInScope}.js`,
 						package:
 							{
 								directory:

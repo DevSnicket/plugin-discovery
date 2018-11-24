@@ -34,7 +34,7 @@ module.exports =
 		await makeDirectory(packageDirectory);
 
 		await writeFile(
-			path.join(packageDirectory, "repository.js"),
+			path.join(packageDirectory, repository.filename),
 			`// ${repository.filename}`,
 		);
 	};
