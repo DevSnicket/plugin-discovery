@@ -1,6 +1,6 @@
 # Plug-in Discovery ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/icon.svg?sanitize=true)
 
-[![Build Status](https://travis-ci.org/DevSnicket/plugin-discovery.svg?branch=master)](https://travis-ci.org/DevSnicket/plugin-discovery)
+[![Build Status](https://travis-ci.org/DevSnicket/plugin-discovery.svg?branch=master)](https://travis-ci.org/DevSnicket/plugin-discovery) [![Gitter chat](https://badges.gitter.im/devsnicket-plugin-discovery/gitter.png)](https://gitter.im/devsnicket-plugin-discovery)
 
 DevSnicket Plug-in Discovery consists of a JavaScript repository object and a Babel plug-in that when used together can invert dependencies between modules and turn them into discovered plug-ins.
 
