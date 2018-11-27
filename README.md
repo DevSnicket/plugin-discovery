@@ -119,7 +119,11 @@ The forwarders are JavaScript files that contain CommonJS require calls for the 
 
 ### Tests
 
-There are automated tests that run Babel with the plug-in and check the transformed output. The tests are run for the latest versions of Babel 6 and 7. NPM is run by the tests to install Babel and test case packages which are generated. To isolate Babel it is run in a separate process. Code coverage is not currently being run because of the additional work required to analyse across multiple processes.
+There are automated tests that run Babel with the plug-in and check the transformed output. The tests are run for the latest versions of Babel 6 and 7. NPM is run by the tests to install Babel and test case packages which are generated. To isolate Babel it is run in a separate process.
+
+For each version of Babel tested (see above), all test cases are repeated but with Babel run by Webpack 4.
+
+Code coverage is not currently being run because of the additional work required to analyse across multiple processes.
 
 ## Example
 
