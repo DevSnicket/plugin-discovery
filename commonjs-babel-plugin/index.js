@@ -1,14 +1,12 @@
 const
-	addRequireCalls = require("./addRequireCalls"),
+	addCreateRepositoryRequireCalls = require("./addCreateRepositoryRequireCalls"),
 	createConsoleLogFromOption = require("./createConsoleLogFromOption"),
-	discoverAndLookupPluginPaths = require("./discoverAndLookupPluginPaths"),
+	createWalkCallExpressions = require("./createWalkCallExpressions"),
 	path = require("path");
 
 module.exports =
 	({ types }) => {
-		const
-			syntaxTreeByFilePathCache = new Map(),
-			visitedFilePaths = new Set();
+		const visitedRepositoryFilePaths = new Set();
 
 		return { visitor: { CallExpression: visitCallExpression } };
 
@@ -16,51 +14,31 @@ module.exports =
 			nodePath,
 			state,
 		) {
-			const sourceFilePath = path.resolve(state.file.opts.filename);
+			const log = createConsoleLogFromOption(state.opts.log);
 
-			if (!visitedFilePaths.has(sourceFilePath) && isCallOfRequireCreateRepository(nodePath.node)) {
-				const log = createConsoleLogFromOption(state.opts.log);
+			const walkCallExpressions =
+				createWalkCallExpressions({
+					babylonParserOptions: state.file.parserOpts,
+					logWarning: log.warning,
+				});
 
-				log.detail(`discovery "${state.file.opts.filename}"`);
+			if (nodePath.node.callee.name === "require") {
+				const requireArgument = nodePath.node.arguments[0].value;
 
-				visitedFilePaths.add(sourceFilePath);
+				const sourceFilePath = path.resolve(state.file.opts.filename);
 
-				const sourceDirectoryPath = path.dirname(sourceFilePath);
+				if (!visitedRepositoryFilePaths.has(sourceFilePath) && requireArgument === "@devsnicket/plugin-discovery-create-repository") {
+					visitedRepositoryFilePaths.add(sourceFilePath);
 
-				const pluginPaths =
-					discoverAndLookupPluginPaths({
-						ignoreDirectoryNames: state.opts.ignoreDirectoryNames,
+					addCreateRepositoryRequireCalls({
 						log,
-						parserOptions: state.file.parserOpts,
-						sourceDirectoryPath,
+						nodePath,
 						sourceFilePath,
-						sourceRootPath: path.resolve(state.opts.rootDirectory || state.file.opts.sourceRoot || "./"),
-						syntaxTreeByFilePathCache,
+						state,
+						types,
+						walkCallExpressions,
 					});
-
-				if (pluginPaths.length)
-					addRequireCalls({
-						callExpression:
-							types.callExpression,
-						identifier:
-							types.identifier,
-						pluginRepositoryNodePath:
-							nodePath,
-						requirePaths:
-							pluginPaths,
-						stringLiteral:
-							types.stringLiteral,
-					});
+				}
 			}
 		}
 	};
-
-function isCallOfRequireCreateRepository(
-	callExpression,
-) {
-	return (
-		callExpression.callee.name === "require"
-		&&
-		callExpression.arguments[0].value === "@devsnicket/plugin-discovery-create-repository"
-	);
-}

@@ -9,11 +9,10 @@ module.exports =
 	({
 		ignoreDirectoryNames = [ nodeModulesDirectoryName ],
 		log,
-		parserOptions,
 		sourceDirectoryPath,
 		sourceFilePath,
 		sourceRootPath,
-		syntaxTreeByFilePathCache,
+		walkCallExpressions,
 	}) => {
 		const javascriptFileExtension = ".js";
 
@@ -39,16 +38,11 @@ module.exports =
 						sourceRootPath,
 					ignoreDirectoryNames,
 					javascriptFileExtension,
-					log:
-						{
-							requirePath: logRequirePath,
-							warning: log.warning,
-						},
+					logRequirePath,
 					nodeModulesPath,
-					parserOptions,
 					repositoryFile,
 					sourceDirectoryPath,
-					syntaxTreeByFilePathCache,
+					walkCallExpressions,
 				}),
 				...lookupForwardersInPackages({
 					javascriptFileExtension,

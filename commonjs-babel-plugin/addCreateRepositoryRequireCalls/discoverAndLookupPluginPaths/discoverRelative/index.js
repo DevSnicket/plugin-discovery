@@ -2,11 +2,9 @@ require("array.prototype.flatmap")
 .shim();
 
 const
-	{ parse } = require("babylon"),
 	fs = require("fs"),
 	getPathFromRequireArguments = require("./getPathFromRequireArguments"),
-	path = require("path"),
-	walk = require("babylon-walk").simple;
+	path = require("path");
 
 module.exports = discoverRelative;
 
@@ -14,12 +12,11 @@ function discoverRelative({
 	directoryPath,
 	ignoreDirectoryNames,
 	javascriptFileExtension,
-	log,
+	logRequirePath,
 	nodeModulesPath,
-	parserOptions,
 	repositoryFile,
 	sourceDirectoryPath,
-	syntaxTreeByFilePathCache,
+	walkCallExpressions,
 }) {
 	return (
 		fs.readdirSync(directoryPath)
@@ -50,12 +47,11 @@ function discoverRelative({
 					directoryPath: fileOrDirectoryPath,
 					ignoreDirectoryNames,
 					javascriptFileExtension,
-					log,
+					logRequirePath,
 					nodeModulesPath,
-					parserOptions,
 					repositoryFile,
 					sourceDirectoryPath,
-					syntaxTreeByFilePathCache,
+					walkCallExpressions,
 				})
 			);
 
@@ -107,86 +103,44 @@ function discoverRelative({
 			);
 
 			function isInJavascript() {
-				const syntaxTree = cacheSyntaxTree(parseJavascriptOrLogError);
+				let found = false;
 
-				return syntaxTree && isInSyntaxTree();
+				walkCallExpressions({
+					filePath,
+					javascript,
+					visit: visitCallExpression,
+				});
 
-				function parseJavascriptOrLogError() {
-					try {
+				return found;
+
+				function visitCallExpression(
+					callExpression,
+				) {
+					if (!found && (found = isRequreOfPluginRepository()))
+						logRequirePath(`plug-in "${filePath}"`);
+
+					function isRequreOfPluginRepository() {
 						return (
-							parse(
-								javascript,
-								parserOptions,
-							)
+							isRequire()
+							&&
+							repositoryFile.path === getPathFromRequire()
 						);
-					} catch (error) {
-						if (error instanceof SyntaxError) {
-							log.warning(`${filePath}: ${error.message}`);
 
-							return null;
-						} else
-							throw error;
-					}
-				}
+						function isRequire() {
+							return callExpression.callee.name === "require";
+						}
 
-				function isInSyntaxTree() {
-					let found = false;
-
-					walk(
-						syntaxTree,
-						{ CallExpression: visitCallExpression },
-						null,
-					);
-
-					return found;
-
-					function visitCallExpression(
-						callExpression,
-					) {
-						if (!found && (found = isRequreOfPluginRepository()))
-							log.requirePath(`plug-in "${filePath}"`);
-
-						function isRequreOfPluginRepository() {
+						function getPathFromRequire() {
 							return (
-								isRequire()
-								&&
-								repositoryFile.path === getPathFromRequire()
+								getPathFromRequireArguments({
+									arguments: callExpression.arguments,
+									filePath,
+									javascriptFileExtension,
+									nodeModulesPath,
+								})
 							);
-
-							function isRequire() {
-								return callExpression.callee.name === "require";
-							}
-
-							function getPathFromRequire() {
-								return (
-									getPathFromRequireArguments({
-										arguments: callExpression.arguments,
-										filePath,
-										javascriptFileExtension,
-										nodeModulesPath,
-									})
-								);
-							}
 						}
 					}
-				}
-			}
-
-			function cacheSyntaxTree(
-				action,
-			) {
-				return (
-					syntaxTreeByFilePathCache.get(filePath)
-					||
-					callAndCache()
-				);
-
-				function callAndCache() {
-					const syntaxTree = action();
-
-					syntaxTreeByFilePathCache.set(filePath, syntaxTree);
-
-					return syntaxTree;
 				}
 			}
 		}
