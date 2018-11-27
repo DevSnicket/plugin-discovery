@@ -14,6 +14,7 @@ const repositoryJavascript =
 	"module.exports = require(\"@devsnicket/plugin-discovery-create-repository\")();";
 
 describeTestsUsingBabelVersion({
+	cliPackage: "babel-cli",
 	corePackage: "babel-core",
 	loaderVersion: 7,
 	transformFunctionName: "transform",
@@ -21,6 +22,7 @@ describeTestsUsingBabelVersion({
 });
 
 describeTestsUsingBabelVersion({
+	cliPackage: "@babel/cli",
 	corePackage: "@babel/core",
 	loaderVersion: 8,
 	transformFunctionName: "transformSync",
