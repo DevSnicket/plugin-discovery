@@ -51,7 +51,8 @@ module.exports =
 			}
 
 			function createPlugin() {
-				const nameInScope = `${nameElementsWithScope.plugin}-of-${nameElementsWithScope.repository}`;
+				const nameInScope =
+					`${nameElementsWithScope.plugin}-of-${nameElementsWithScope.repository}`;
 
 				return (
 					{
@@ -60,6 +61,8 @@ module.exports =
 								nodeModulesDirectory,
 								pluginHasScope ? path.join(scope, nameInScope) : nameInScope,
 							),
+						filename:
+							`${nameInScope}.js`,
 						name:
 							pluginHasScope ? `${scope}/${nameInScope}` : nameInScope,
 					}

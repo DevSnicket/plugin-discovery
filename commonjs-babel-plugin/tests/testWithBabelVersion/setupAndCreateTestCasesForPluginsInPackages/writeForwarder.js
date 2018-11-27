@@ -10,6 +10,7 @@ const
 module.exports =
 	async({
 		directory,
+		pluginFilename,
 		repository,
 	}) => {
 		await makeDirectory(
@@ -35,6 +36,16 @@ module.exports =
 
 		await writeFile(
 			path.join(packageDirectory, repository.filename),
-			`require("${repository.package.name}/${repository.filename}");`,
+			`require("${getPluginDirectoryPath()}${pluginFilename}");`,
 		);
+
+		function getPluginDirectoryPath() {
+			return (
+				repository.package.scope
+				?
+				"../../../"
+				:
+				"../../"
+			);
+		}
 	};
