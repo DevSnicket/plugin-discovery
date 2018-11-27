@@ -3,18 +3,32 @@
 		{
 			"name": "attach",
 			"request": "attach",
-			"type": "node",
+			"type": "node"
 		},
 		{
 			"args":
 				[
-					"node_modules/repository-for-plugin/repository.js",
+					"repositoryInRoot.js",
 					"--plugins",
 					"@devsnicket/plugin-discovery-commonjs-babel-plugin"
 				],
 			"cwd": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-6",
-			"name": "commonjs-babel-plugin babel 6 test output",
+			"name": "commonjs-babel-plugin babel 6 CLI in test output",
 			"program": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-6/node_modules/babel-cli/bin/babel.js",
+			"request": "launch",
+			"type": "node",
+			"useWSL": true
+		},
+		{
+			"args":
+				[
+					"repositoryInRoot.js",
+					"--plugins",
+					"@devsnicket/plugin-discovery-commonjs-babel-plugin"
+				],
+			"cwd": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-7",
+			"name": "commonjs-babel-plugin babel 7 CLI in test output",
+			"program": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-7/node_modules/@babel/cli/bin/babel.js",
 			"request": "launch",
 			"type": "node",
 			"useWSL": true
