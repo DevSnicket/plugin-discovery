@@ -9,9 +9,7 @@ const
 	writeFile = promisify(fs.writeFile);
 
 module.exports =
-	/**
-	 * @returns {import('../../types').testCase[]}
-	 */
+	/** @returns {import('../TestCase').TestCase[]} */
 	({
 		directory,
 		repositoryJavascript,

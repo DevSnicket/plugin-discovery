@@ -4,9 +4,7 @@ const
 	setup = require("./setup");
 
 module.exports =
-	/**
-	 * @returns {import('../../types').testCase[]}
-	 */
+	/** @returns {import('../TestCase').TestCase[]} */
 	({
 		directory,
 		repositoryJavascript,

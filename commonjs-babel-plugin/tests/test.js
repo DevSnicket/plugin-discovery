@@ -28,7 +28,7 @@ describeTestsUsingBabelVersion({
 });
 
 /**
- * @param {import("./types").babel} babel
+ * @param {import("./Babel").Babel} babel
  */
 function describeTestsUsingBabelVersion(
 	babel,

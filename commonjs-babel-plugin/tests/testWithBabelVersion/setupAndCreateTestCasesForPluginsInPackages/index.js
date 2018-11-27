@@ -7,6 +7,7 @@ const
 	writeRepositoryPackage = require("../writeRepositoryPackage");
 
 module.exports =
+	/** @returns {import('../TestCase').TestCase[]} */
 	({
 		directory,
 		repositoryJavascript,

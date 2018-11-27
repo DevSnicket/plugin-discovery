@@ -10,7 +10,7 @@ const
 module.exports =
 	/**
 	 * @param {object} parameter
-	 * @param {import('../types').babel} parameter.babel
+	 * @param {import('../Babel').Babel} parameter.babel
 	 * @param {string} parameter.repositoryJavascript
 	 * @param {string} parameter.testDirectory
 	 */
