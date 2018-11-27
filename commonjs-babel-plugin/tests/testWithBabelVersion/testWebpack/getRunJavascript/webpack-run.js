@@ -47,7 +47,7 @@ function createBabelRule() {
 								[
 									// A const will be prepended to this file is written into the test output
 									// eslint-disable-next-line no-undef
-									babelPluginPath,
+									[ babelPluginPath, { log: "warnings" } ],
 								],
 						},
 				},
