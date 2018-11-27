@@ -10,8 +10,8 @@ module.exports =
 		}) {
 			return (
 				{
-					expected:
-						formatExpectedForPlugin(plugin),
+					expectedRequirePaths:
+						[ `${plugin.toRepositoryPathExpected}${plugin.filename}` ],
 					name:
 						repository.package.name,
 					repositoryPath:
@@ -20,10 +20,3 @@ module.exports =
 			);
 		}
 	};
-
-function formatExpectedForPlugin({
-	filename,
-	toRepositoryPathExpected,
-}) {
-	return `module.exports = require("@devsnicket/plugin-discovery-create-repository")();\n\nrequire("${toRepositoryPathExpected}${filename}")`;
-}

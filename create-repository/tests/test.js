@@ -3,7 +3,7 @@ const
 	fs = require("fs"),
 	path = require("path"),
 	{ promisify } = require("util"),
-	readRepositoryTransformed = require("../../tests/readRepositoryTransformed"),
+	readRepositoryTransformed = require("./readRepositoryTransformed"),
 	setupDirectoryWithPackages = require("../../tests/setupDirectoryWithPackages"),
 	writePlugins = require("../../tests/writePlugins");
 

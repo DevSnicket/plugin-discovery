@@ -13,7 +13,9 @@ require("webpack")(
 			{ rules: [ createBabelRule() ] },
 		output:
 			{
-				filename: "webpack-output.js",
+				// A const will be prepended to this file is written into the test output
+				// eslint-disable-next-line no-undef
+				filename: outputFileName,
 				path: path.resolve("."),
 				pathinfo: false,
 			},

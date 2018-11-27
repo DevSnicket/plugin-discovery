@@ -60,12 +60,16 @@ module.exports =
 		function createTestCase(
 			packageCombination,
 		) {
-			const repositoryRelativePath = getRepositoryPath(packageCombination.repository);
+			const repositoryRelativePath =
+				getRepositoryPath(packageCombination.repository);
+
+			const requirePath =
+				getPackageRepositoryPath();
 
 			return (
 				{
-					expected:
-						`${repositoryJavascript}\n\nrequire("${getPackageRepositoryPath()}")`,
+					expectedRequirePaths:
+						[ requirePath ],
 					name:
 						packageCombination.plugin.name,
 					repositoryPath:

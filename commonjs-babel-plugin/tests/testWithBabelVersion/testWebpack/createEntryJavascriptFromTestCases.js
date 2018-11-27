@@ -5,9 +5,9 @@ module.exports =
 		.join("\n");
 
 function getRequireCallFromTestCase(
-	testCase,
+	{ repositoryPath },
 ) {
-	return `require("${getRequirePathFromRepositoryPath(testCase.repositoryPath)}");`;
+	return `require("${getRequirePathFromRepositoryPath(repositoryPath)}");`;
 }
 
 function getRequirePathFromRepositoryPath(

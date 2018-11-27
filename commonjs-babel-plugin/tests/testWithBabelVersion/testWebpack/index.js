@@ -1,6 +1,9 @@
 const
 	createEntryJavascriptFromTestCases = require("./createEntryJavascriptFromTestCases"),
+	forkChildProcess = require("child_process").fork,
 	fs = require("fs"),
+	getModulesFromOutput = require("./getModulesFromOutput"),
+	getRunJavascript = require("./getRunJavascript"),
 	path = require("path"),
 	{ promisify } = require("util");
 
@@ -13,74 +16,145 @@ module.exports =
 		directory,
 		testCases,
 	}) => {
-		const entryFilename = "webpack-entry.js";
+		const
+			entryFilename = "webpack-entry.js",
+			outputFileName = "webpack-output.js",
+			runFilename = "webpack-run.js";
 
-		test(
+		describe(
 			"Webpack",
-			async() => {
-				await Promise.all(
-					[
-						writeEntryFile(),
-						writeRunFile(),
-					],
+			() => {
+				let modulesInOutput = null;
+
+				beforeAll(
+					async() => {
+						await setup();
+
+						modulesInOutput =
+							getModulesFromOutput(
+								await readOutput(),
+							);
+					},
 				);
 
-				expect(true)
-				.toBe(true);
+				for (const testCase of testCases)
+					testTestCase(testCase);
+
+				function testTestCase(
+					testCase,
+				) {
+					test(
+						testCase.name,
+						() =>
+							expect(
+								getActual(
+									testCase,
+								),
+							)
+							.toEqual(
+								getExpected(
+									testCase,
+								),
+							),
+					);
+				}
+
+				function getActual(
+					{ repositoryPath },
+				) {
+					return (
+						modulesInOutput
+						.find(module => module.path === `./${repositoryPath}`)
+						.requirePaths
+						.filter(requirePath => requirePath !== "./webpack-entry.js")
+					);
+				}
+
+				function getExpected({
+					expectedRequirePaths,
+					repositoryPath,
+				}) {
+					const repositoryDirectory = path.dirname(repositoryPath);
+
+					return (
+						expectedRequirePaths.map(
+							requirePath =>
+								requirePath.startsWith(".")
+								?
+								`./${path.join(repositoryDirectory, requirePath)}`
+								:
+								`./node_modules/${requirePath}`,
+						)
+					);
+				}
 			},
 		);
 
+		function setup() {
+			return (
+				Promise.all(
+					[
+						writeEntryFile(),
+						writeRunFile(),
+						run(),
+					],
+				)
+			);
+		}
+
 		async function writeEntryFile() {
 			await writeFile(
-				path.join(directory, entryFilename),
-				createEntryJavascriptFromTestCases(testCases),
+				path.join(
+					directory,
+					entryFilename,
+				),
+				createEntryJavascriptFromTestCases(
+					testCases,
+				),
 			);
 		}
 
 		async function writeRunFile() {
 			await writeFile(
-				path.join(directory, "webpack-run.js"),
-				await getRunJavascript(),
+				path.join(
+					directory,
+					runFilename,
+				),
+				await getRunJavascript({
+					directory,
+					entryFilename,
+					outputFileName,
+				}),
 			);
+		}
 
-			async function getRunJavascript() {
-				return (
-					[
-						...formatValuesAsConsts({
-							babelPluginPath: getBabelPluginPath(),
-							entry: `./${entryFilename}`,
-						}),
-						await readRunJavascriptTemplate(),
-					]
-					.join("\n")
+		function run() {
+			const childProcess =
+				forkChildProcess(
+					runFilename,
+					[],
+					{
+						cwd: directory,
+						execArgv: [],
+					},
 				);
 
-				function getBabelPluginPath() {
-					return (
-						path.relative(
-							directory,
-							path.join(__dirname, "..", "..", ".."),
-						)
-					);
-				}
+			return (
+				new Promise(
+					(resolve, reject) => {
+						childProcess.addListener("error", reject);
+						childProcess.addListener("exit", resolve);
+					},
+				)
+			);
+		}
 
-				function formatValuesAsConsts(
-					constants,
-				) {
-					return (
-						Object.entries(constants)
-						.map(
-							([ name, value ]) =>
-								`const ${name} = "${value}";`,
-						)
-					);
-				}
-
-				function readRunJavascriptTemplate() {
-					return readFile(
-						path.join(__dirname, "webpack-run.js"),
-					);
-				}
-			}
+		function readOutput() {
+			return (
+				readFile(
+					path.join(directory, outputFileName),
+					"UTF8",
+				)
+			);
 		}
 	};

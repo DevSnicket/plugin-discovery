@@ -35,6 +35,6 @@ module.exports =
 
 		await writeFile(
 			path.join(packageDirectory, repository.filename),
-			`// ${repository.filename}`,
+			`require("${repository.package.name}/${repository.filename}");`,
 		);
 	};

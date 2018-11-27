@@ -3,8 +3,7 @@ const
 	createTestCaseForSubdirectory = require("./createTestCaseForSubdirectory"),
 	fs = require("fs"),
 	path = require("path"),
-	{ promisify } = require("util"),
-	readRepositoryTransformed = require("../../../../tests/readRepositoryTransformed");
+	{ promisify } = require("util");
 
 const
 	writeFile = promisify(fs.writeFile);
@@ -23,27 +22,27 @@ module.exports =
 				createTestCaseForSubdirectory(),
 			];
 
-		let expected = null;
-
 		beforeAll(setup);
 
 		return (
 			testCases.map(
 				testCase => (
 					{
-						get expected() {
-							return expected;
-						},
-						name: testCase.name,
-						repositoryPath: testCase.repositoryPath,
+						expectedRequirePaths:
+							[
+								"./plugin.js",
+								"./pluginSubdirectory/pluginOfRepositoryInParentDirectory.js",
+							],
+						name:
+							testCase.name,
+						repositoryPath:
+							testCase.repositoryPath,
 					}
 				),
 			)
 		);
 
 		async function setup() {
-			expected = await readRepositoryTransformed();
-
 			await Promise.all(
 				testCases.map(setupTestCase),
 			);

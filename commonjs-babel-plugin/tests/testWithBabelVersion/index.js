@@ -100,7 +100,10 @@ module.exports =
 						),
 					)
 					.toEqual(
-						testCase.expected,
+						getExpected({
+							repositoryJavascript,
+							requirePaths: testCase.expectedRequirePaths,
+						}),
 					),
 			);
 		}
@@ -126,3 +129,16 @@ module.exports =
 			);
 		}
 	};
+
+function getExpected({
+	repositoryJavascript,
+	requirePaths,
+}) {
+	return (
+		[
+			repositoryJavascript,
+			...requirePaths.map(requirePath => `require("${requirePath}")`),
+		]
+		.join("\n\n")
+	);
+}

@@ -8,7 +8,7 @@
 
 /**
  * @typedef {Object} testCase
- * @property {string} expected
+ * @property {string[]} expectedRequirePaths
  * @property {string} name
  * @property {string} repositoryPath
  */
