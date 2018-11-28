@@ -3,7 +3,7 @@ require("array.prototype.flatmap")
 
 const
 	fs = require("fs"),
-	getPathFromRequireArguments = require("./getPathFromRequireArguments"),
+	getPathFromRequireArgument = require("../../../getPathFromRequireArgument"),
 	path = require("path");
 
 module.exports = discoverRelative;
@@ -123,24 +123,28 @@ function discoverRelative({
 						return (
 							isRequire()
 							&&
-							repositoryFile.path === getPathFromRequire()
+							repositoryFile.path === getPathFromRequireArguments(callExpression.arguments)
 						);
 
 						function isRequire() {
 							return callExpression.callee.name === "require";
 						}
-
-						function getPathFromRequire() {
-							return (
-								getPathFromRequireArguments({
-									arguments: callExpression.arguments,
-									filePath,
-									javascriptFileExtension,
-									nodeModulesPath,
-								})
-							);
-						}
 					}
+				}
+
+				function getPathFromRequireArguments(
+					_arguments,
+				) {
+					return (
+						_arguments.length === 1
+						&&
+						getPathFromRequireArgument({
+							argument: _arguments[0].value,
+							filePath,
+							javascriptFileExtension,
+							nodeModulesPath,
+						})
+					);
 				}
 			}
 		}
