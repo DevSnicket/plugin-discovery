@@ -8,7 +8,9 @@ before | after
 ------ | -----
 ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/before.svg?sanitize=true) | ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/after.svg?sanitize=true)
 
-Currently CommonJS modules are only supported (e.g. not ECMAScript ones). There is partial support for modules in packages (see ["CommonJS Babel plug-in / package"](#commonjs-babel-plug-in--package) below).
+Currently only CommonJS modules are supported (e.g. not ECMAScript ones).
+
+Plug-in and repository files/modules in packages are supported (see "Forwarder lookup" below).
 
 ## Create repository factory function / package
 
@@ -91,16 +93,16 @@ The Babel plug-in has a parameter ignoreDirectoryNames, when not specified this 
 
 Webpack can be configured to run Babel for plug-in repositories even when they are in a package and so in the node_modules directory. So long as the plug-ins for these repositories aren't also in packages/node_modules, they can be discovered and rewritten by Webpack/Babel in the output. Webpack is often also configured to not include or to exclude running Babel for the node_modules directory. So you will need to ensure that your Webpack configuration still includes the paths to repositories in packages/node_modules for this to work.
 
-### Lookup (plug-ins in packages)
+### Forwarder lookup (respositories and plug-ins in packages)
 
-To support DevSnicket plug-ins that are in packages and so not discovered by default (see above) the Babel plug-in also looks up inside package / node_module directories. It does this using the following structure:
+To support packages that contain DevSnicket plug-ins that won't be discovered by default (see above), the Babel plug-in also does a lookup inside the node_module directory. It expectes the following structure:
 
 ```
 node_modules
-└─plugin-package
-  └─.devsnicket-plugin-discovery
-    └─repository-package
-      └─repositoryFileName.js (forwarder)
+├─plugin-package
+| └─.devsnicket-plugin-discovery
+|   ├─repository-package
+|   | ├─repositoryFileName.js (forwarder)
 ```
 
 Scoped packages for either/both the plug-in and repository are also supported:
@@ -108,17 +110,17 @@ Scoped packages for either/both the plug-in and repository are also supported:
 ```
 node_modules
 ├─@plugin-package-scope
-| └─plugin-package-with-scope
-|   └─.devsnicket-plugin-discovery
-|     └─@plugin-package-scope
-|       └─repository-package
-|         └─repositoryFileName.js (forwarder)
+| ├─plugin-package-with-scope
+| | └─.devsnicket-plugin-discovery
+| |   ├─@plugin-package-scope
+| |   | ├─repository-package
+| |   | | ├─repositoryFileName.js (forwarder)
 ```
 
 Forwarders:
-* are JavaScript files that contain CommonJS require calls for the actual plug-in files within the package
-* need to be generated when upon build (i.e. when Babel is run)
-* included in the package when its packed
+* JavaScript files that contain CommonJS require calls to the actual plug-in files within the package
+* generated upon build (i.e. when Babel is run)
+* included in the package
   
 When Babel is run with the -d / --out-dir parameter the forwarder directories and files described above will be created automatically. Forwarders are written for plug-ins when the repository is both in a package and not transformed by Babel<sup>[[1]](#footnote1)</sup>. The following Babel plug-in parameters can override the default behavour:
 

@@ -8,7 +8,9 @@ before | after
 ------ | -----
 ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/before.svg?sanitize=true) | ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/after.svg?sanitize=true)
 
-Currently CommonJS modules are only supported (e.g. not ECMAScript ones). There is partial support for modules in packages (see ["CommonJS Babel plug-in / package"](https://www.npmjs.com/package/@devsnicket/plug-discovery-commonjs-babel-plugin)).
+Currently only CommonJS modules are supported (e.g. not ECMAScript ones).
+
+Plug-in and repository files/modules in packages are supported (see "Forwarder lookup" in [@devsnicket/plugin-discovery-commonjs-babel-plugin](https://www.npmjs.com/package/@devsnicket/plugin-discovery-commonjs-babel-plugin)).
 
 ## Create repository factory function / package
 

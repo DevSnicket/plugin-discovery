@@ -8,7 +8,9 @@ before | after
 ------ | -----
 ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/before.svg?sanitize=true) | ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/after.svg?sanitize=true)
 
-Currently CommonJS modules are only supported (e.g. not ECMAScript ones). There is partial support for modules in packages (see below).
+Currently only CommonJS modules are supported (e.g. not ECMAScript ones).
+
+Plug-in and repository files/modules in packages are supported (see "Forwarder lookup" below).
 
 ## CommonJS Babel plug-in / package
 
@@ -43,20 +45,20 @@ The Babel plug-in will need to be specified in your [Babel configuration](https:
 
 ### Discovery (plug-ins with relative paths)
 
-The Babel plug-in has a parameter ignoreDirectoryNames, when not specified this defaults to node_modules. Scanning of the node_modules directory for plug-ins would be inefficient and likely to take a long time.
+The Babel plug-in has a parameter ignoreDirectoryNames, when not specified this defaults to node_modules. Scanning of the node_modules directory for Devsnicket plug-ins would be inefficient and likely to take a long time.
 
 Webpack can be configured to run Babel for plug-in repositories even when they are in a package and so in the node_modules directory. So long as the plug-ins for these repositories aren't also in packages/node_modules, they can be discovered and rewritten by Webpack/Babel in the output. Webpack is often also configured to not include or to exclude running Babel for the node_modules directory. So you will need to ensure that your Webpack configuration still includes the paths to repositories in packages/node_modules for this to work.
 
-### Lookup (plug-ins in packages)
+### Forwarder lookup (respositories and plug-ins in packages)
 
-To support DevSnicket plug-ins that are in packages and so not discovered by default (see above) the Babel plug-in also looks up inside package / node_module directories for files that can forward onto the plug-ins efficiently. It does this using the following structure:
+To support packages that contain DevSnicket plug-ins that won't be discovered by default (see above), the Babel plug-in also does a lookup inside the node_module directory. It expectes the following structure:
 
 ```
 node_modules
-└─plugin-package
-  └─.devsnicket-plugin-discovery
-    └─repository-package
-      └─repositoryFileName.js (forwarder)
+├─plugin-package
+| └─.devsnicket-plugin-discovery
+|   ├─repository-package
+|   | ├─repositoryFileName.js (forwarder)
 ```
 
 Scoped packages for either/both the plug-in and repository are also supported:
@@ -64,18 +66,35 @@ Scoped packages for either/both the plug-in and repository are also supported:
 ```
 node_modules
 ├─@plugin-package-scope
-| └─plugin-package-with-scope
-|   └─.devsnicket-plugin-discovery
-|     └─@plugin-package-scope
-|       └─repository-package
-|         └─repositoryFileName.js (forwarder)
+| ├─plugin-package-with-scope
+| | └─.devsnicket-plugin-discovery
+| |   ├─@plugin-package-scope
+| |   | ├─repository-package
+| |   | | ├─repositoryFileName.js (forwarder)
 ```
 
-The forwarders are JavaScript files that contain CommonJS require calls for the actual plugin files within the package. These need to be generated when the package is build and included in it when its packed.
+Forwarders:
+* JavaScript files that contain CommonJS require calls to the actual plug-in files within the package
+* generated upon build (i.e. when Babel is run)
+* included in the package
+  
+When Babel is run with the -d / --out-dir parameter the forwarder directories and files described above will be created automatically. Forwarders are written for plug-ins when the repository is both in a package and not transformed by Babel<sup>[[1]](#footnote1)</sup>. The following Babel plug-in parameters can override the default behavour:
+
+| parameter | description | default 
+| - | - | - |
+| forwarderParentDirectoryPath | the parent directory of .devsnicket-plugin-discovery | current directory |
+| forwarderDirectoryClean | will the .devsnicket-plugin-discovery directory be deleted / cleaned | true
+| outputDirectoryPath | directory where Babel transformed files are being outputted to | Babel -d / --out-dir parameters if specified
+
+<a name="footnote1"><sup>1</sup></a> If a plug-in is transformed by Babel first, a forwarder will be written for it, if its repository is transformed afterwards, the forwarder will be deleted (as its redundant).
 
 ### Tests
 
-There are automated tests that run Babel with the plug-in and check the transformed output. The tests are run for the latest versions of Babel 6 and 7. NPM is run by the tests to install Babel and test case packages which are generated. To isolate Babel it is run in a separate process. Code coverage is not currently being run because of the additional work required to analyse across multiple processes.
+There are automated tests that run Babel with the plug-in and check the transformed output. The tests are run for the latest versions of Babel 6 and 7. NPM is run by the tests to install Babel and test case packages which are generated. To isolate Babel it is run in a separate process.
+
+For each version of Babel tested (see above), all test cases are repeated but with Babel run by Webpack 4.
+
+Code coverage is not currently being run because of the additional work required to analyse across multiple processes.
 
 ## Example
 
