@@ -1,7 +1,7 @@
 /**
  * @typedef {Object} TestCase
- * @property {string[]} expectedRequirePaths
  * @property {string} name
+ * @property {string[]} pluginPaths
  * @property {string} repositoryPath
  */
 

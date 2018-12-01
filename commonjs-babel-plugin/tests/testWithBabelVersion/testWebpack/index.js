@@ -71,19 +71,19 @@ module.exports =
 				}
 
 				function getExpected({
-					expectedRequirePaths,
 					repositoryPath,
+					pluginPaths,
 				}) {
 					const repositoryDirectory = path.dirname(repositoryPath);
 
 					return (
-						expectedRequirePaths.map(
-							requirePath =>
-								requirePath.startsWith(".")
+						pluginPaths.map(
+							pluginPath =>
+								pluginPath.startsWith(".")
 								?
-								`./${path.join(repositoryDirectory, requirePath)}`
+								`./${path.join(repositoryDirectory, pluginPath)}`
 								:
-								`./node_modules/${requirePath}`,
+								`./node_modules/${pluginPath}`,
 						)
 					);
 				}

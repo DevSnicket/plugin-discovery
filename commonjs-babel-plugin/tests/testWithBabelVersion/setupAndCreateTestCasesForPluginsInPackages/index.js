@@ -76,21 +76,18 @@ module.exports =
 			const repositoryRelativePath =
 				getRepositoryPath(packageCombination.repository);
 
-			const requirePath =
-				getPackageRepositoryPath();
-
 			return (
 				{
-					expectedRequirePaths:
-						[ requirePath ],
 					name:
 						packageCombination.plugin.name,
+					pluginPaths:
+						[ getPluginPath() ],
 					repositoryPath:
 						path.join("node_modules", repositoryRelativePath),
 				}
 			);
 
-			function getPackageRepositoryPath() {
+			function getPluginPath() {
 				return `${packageCombination.plugin.name}/${packagePluginDirectoryName}/${repositoryRelativePath}`;
 			}
 		}

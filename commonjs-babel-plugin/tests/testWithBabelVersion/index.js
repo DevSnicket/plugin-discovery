@@ -101,8 +101,8 @@ module.exports =
 					)
 					.toEqual(
 						getExpected({
+							pluginPaths: testCase.pluginPaths,
 							repositoryJavascript,
-							requirePaths: testCase.expectedRequirePaths,
 						}),
 					),
 			);
@@ -132,12 +132,12 @@ module.exports =
 
 function getExpected({
 	repositoryJavascript,
-	requirePaths,
+	pluginPaths,
 }) {
 	return (
 		[
 			repositoryJavascript,
-			...requirePaths.map(requirePath => `require("${requirePath}")`),
+			...pluginPaths.map(pluginPath => `require("${pluginPath}")`),
 		]
 		.join("\n\n")
 	);

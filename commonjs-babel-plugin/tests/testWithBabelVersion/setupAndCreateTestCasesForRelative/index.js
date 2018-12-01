@@ -26,13 +26,13 @@ module.exports =
 			testCases.map(
 				testCase => (
 					{
-						expectedRequirePaths:
+						name:
+							testCase.name,
+						pluginPaths:
 							[
 								"./plugin.js",
 								"./pluginSubdirectory/pluginOfRepositoryInParentDirectory.js",
 							],
-						name:
-							testCase.name,
 						repositoryPath:
 							testCase.repositoryPath,
 					}
