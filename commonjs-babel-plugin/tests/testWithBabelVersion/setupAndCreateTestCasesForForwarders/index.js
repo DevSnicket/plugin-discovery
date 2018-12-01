@@ -3,7 +3,7 @@ const
 	path = require("path"),
 	writeForwarder = require("./writeForwarder"),
 	writePackage = require("./writePackage"),
-	writePluginFile = require("./writePluginFile"),
+	writePluginFiles = require("./writePluginFiles"),
 	writeRepositoryPackage = require("../writeRepositoryPackage");
 
 module.exports =
@@ -54,14 +54,14 @@ module.exports =
 
 				await Promise.all(
 					[
-						writePluginFile(
+						writePluginFiles(
 							packageCombination,
 						),
 						writeForwarder({
 							directory:
 								path.join(packageCombination.plugin.directory, packagePluginDirectoryName),
-							pluginFilename:
-								packageCombination.plugin.filename,
+							pluginFilePathsRelativeToPackage:
+								packageCombination.plugin.filePathsRelativeToPackage,
 							repository:
 								packageCombination.repository,
 						}),

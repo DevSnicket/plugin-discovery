@@ -10,7 +10,7 @@ const
 module.exports =
 	async({
 		directory,
-		pluginFilename,
+		pluginFilePathsRelativeToPackage,
 		repository,
 	}) => {
 		await makeDirectory(
@@ -36,7 +36,9 @@ module.exports =
 
 		await writeFile(
 			path.join(packageDirectory, repository.filename),
-			`require("${getPluginDirectoryPath()}${pluginFilename}");`,
+			getRequireCallsWithPath(
+				getPluginDirectoryPath(),
+			),
 		);
 
 		function getPluginDirectoryPath() {
@@ -46,6 +48,19 @@ module.exports =
 				"../../../"
 				:
 				"../../"
+			);
+		}
+
+		function getRequireCallsWithPath(
+			requirePath,
+		) {
+			return (
+				pluginFilePathsRelativeToPackage
+				.map(
+					pluginFilePathRelativeToPackage =>
+						`require("${requirePath}${pluginFilePathRelativeToPackage}");`,
+				)
+				.join("\n")
 			);
 		}
 	};
