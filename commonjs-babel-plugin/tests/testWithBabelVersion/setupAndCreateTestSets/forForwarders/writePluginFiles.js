@@ -1,6 +1,6 @@
 const
-	fsExtra = require("fs-extra"),
-	path = require("path");
+	path = require("path"),
+	writePlugin = require("../../../../../tests/writePlugin");
 
 module.exports =
 	({
@@ -9,10 +9,10 @@ module.exports =
 	}) =>
 		writePluginFilesWithRequirePath({
 			plugin,
-			requirePath: getRequirePath(repository),
+			repositoryRequire: getRepositoryRequire(repository),
 		});
 
-function getRequirePath({
+function getRepositoryRequire({
 	filename,
 	package: _package,
 }) {
@@ -21,28 +21,17 @@ function getRequirePath({
 
 async function writePluginFilesWithRequirePath({
 	plugin,
-	requirePath,
+	repositoryRequire,
 }) {
 	await Promise.all(
 		plugin.filePathsRelativeToPackage
 		.map(
 			filePathRelativeToPackage =>
-				writePluginFile(
-					path.join(plugin.directory, filePathRelativeToPackage),
-				),
+				writePlugin({
+					filePath: path.join(plugin.directory, filePathRelativeToPackage),
+					plugin: plugin.name,
+					repositoryRequire,
+				}),
 		),
 	);
-
-	async function writePluginFile(
-		pluginFilePath,
-	) {
-		await fsExtra.ensureDir(
-			path.dirname(pluginFilePath),
-		);
-
-		await fsExtra.writeFile(
-			pluginFilePath,
-			`require("${requirePath}").plugIn("${plugin.name}");`,
-		);
-	}
 }

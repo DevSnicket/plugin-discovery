@@ -1,16 +1,19 @@
 const
-	fs = require("fs"),
-	{ promisify } = require("util");
-
-const writeFile = promisify(fs.writeFile);
+	{ ensureDir, writeFile } = require("fs-extra"),
+	path = require("path");
 
 module.exports =
-	({
+	async({
 		filePath,
 		plugin,
 		repositoryRequire,
-	}) =>
-		writeFile(
+	}) => {
+		await ensureDir(
+			path.dirname(filePath),
+		);
+
+		await writeFile(
 			filePath,
 			`require("${repositoryRequire}").plugIn("${plugin}");`,
 		);
+	};
