@@ -6,12 +6,12 @@
 	"dependencies": {
 		"array.prototype.flatmap": "1.2.1",
 		"babylon": "6.18.0",
-		"babylon-walk": "1.0.2"
+		"babylon-walk": "1.0.2",
+		"fs-extra": "7.0.1"
 	},
 	"devDependencies": {
 		"@types/jest": "23.3.7",
 		"eslint": "5.7.0",
-		"fs-extra": "7.0.1",
 		"jest": "23.6.0"
 	},
 	"description": "A Babel plug-in that adds CommonJS require calls to import modules that use @devsnicket/plugin-discovery-create-repository.",

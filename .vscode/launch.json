@@ -1,20 +1,23 @@
 {
 	"configurations": [
 		{
+			"localRoot": "${workspaceFolder}",
 			"name": "attach",
+			"remoteRoot": "${command:extension.vscode-wsl-workspaceFolder}",
 			"request": "attach",
 			"type": "node"
 		},
 		{
 			"args":
 				[
-					"repositoryInRoot.js",
 					"--plugins",
 					"@devsnicket/plugin-discovery-commonjs-babel-plugin"
 				],
 			"cwd": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-6",
-			"name": "commonjs-babel-plugin babel 6 CLI in test output",
+			"localRoot": "${workspaceFolder}",
+			"name": "commonjs-babel-plugin Babel 6 CLI in test output",
 			"program": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-6/node_modules/babel-cli/bin/babel.js",
+			"remoteRoot": "${command:extension.vscode-wsl-workspaceFolder}",
 			"request": "launch",
 			"type": "node",
 			"useWSL": true
@@ -22,13 +25,14 @@
 		{
 			"args":
 				[
-					"repositoryInRoot.js",
 					"--plugins",
 					"@devsnicket/plugin-discovery-commonjs-babel-plugin"
 				],
 			"cwd": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-7",
-			"name": "commonjs-babel-plugin babel 7 CLI in test output",
+			"localRoot": "${workspaceFolder}",
+			"name": "commonjs-babel-plugin Babel 7 CLI in test output",
 			"program": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-7/node_modules/@babel/cli/bin/babel.js",
+			"remoteRoot": "${command:extension.vscode-wsl-workspaceFolder}",
 			"request": "launch",
 			"type": "node",
 			"useWSL": true
@@ -36,8 +40,30 @@
 		{
 			"args": [ "--runInBand" ],
 			"cwd": "${workspaceFolder}/commonjs-babel-plugin",
+			"localRoot": "${workspaceFolder}",
 			"name": "commonjs-babel-plugin jest",
 			"program": "${workspaceFolder}/commonjs-babel-plugin/node_modules/jest/bin/jest.js",
+			"remoteRoot": "${command:extension.vscode-wsl-workspaceFolder}",
+			"request": "launch",
+			"type": "node",
+			"useWSL": true
+		},
+		{
+			"cwd": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-6",
+			"localRoot": "${workspaceFolder}",
+			"name": "commonjs-babel-plugin Webpack with Babel 6 CLI in test output",
+			"program": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-6/webpack-run.js",
+			"remoteRoot": "${command:extension.vscode-wsl-workspaceFolder}",
+			"request": "launch",
+			"type": "node",
+			"useWSL": true
+		},
+		{
+			"cwd": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-7",
+			"localRoot": "${workspaceFolder}",
+			"name": "commonjs-babel-plugin Webpack with Babel 7 CLI in test output",
+			"program": "${workspaceFolder}/commonjs-babel-plugin/tests/output/babel-7/webpack-run.js",
+			"remoteRoot": "${command:extension.vscode-wsl-workspaceFolder}",
 			"request": "launch",
 			"type": "node",
 			"useWSL": true
@@ -45,8 +71,10 @@
 		{
 			"args": [ "--runInBand" ],
 			"cwd": "${workspaceFolder}/create-repository",
+			"localRoot": "${workspaceFolder}",
 			"name": "create-repository jest",
 			"program": "${workspaceFolder}/create-repository/node_modules/jest/bin/jest.js",
+			"remoteRoot": "${command:extension.vscode-wsl-workspaceFolder}",
 			"request": "launch",
 			"type": "node",
 			"useWSL": true

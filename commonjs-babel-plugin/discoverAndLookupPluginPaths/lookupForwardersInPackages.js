@@ -4,8 +4,9 @@ const
 
 module.exports =
 	({
+		forwarderDirectoryName,
 		javascriptFileExtension,
-		logRequirePath,
+		logForwarder,
 		nodeModulesPath,
 		repositoryFile,
 	}) => {
@@ -13,9 +14,10 @@ module.exports =
 			isRepositoryInPackage()
 			?
 			lookupPackageRepository({
+				forwarderDirectoryName,
 				getRelativePathWithScope:
 					relativePath => relativePath,
-				logRequirePath,
+				logForwarder,
 				nodeModulesPath,
 				repositoryPathRelativeToNodeModules:
 					getRepositoryPathRelativeToNodeModules(),
@@ -49,8 +51,9 @@ module.exports =
 	};
 
 function * lookupPackageRepository({
+	forwarderDirectoryName,
 	getRelativePathWithScope,
-	logRequirePath,
+	logForwarder,
 	nodeModulesPath,
 	repositoryPathRelativeToNodeModules,
 }) {
@@ -72,9 +75,10 @@ function * lookupPackageRepository({
 				nodeModuleDirectoryName.startsWith("@")
 				&&
 				lookupPackageRepository({
+					forwarderDirectoryName,
 					getRelativePathWithScope:
 						relativePath => `${nodeModuleDirectoryName}/${relativePath}`,
-					logRequirePath,
+					logForwarder,
 					nodeModulesPath:
 						path.join(nodeModulesPath, nodeModuleDirectoryName),
 					repositoryPathRelativeToNodeModules,
@@ -86,7 +90,7 @@ function * lookupPackageRepository({
 			const forwarderPathRelativeToNodeModules =
 				path.join(
 					nodeModuleDirectoryName,
-					".devsnicket-plugin-discovery",
+					forwarderDirectoryName,
 					repositoryPathRelativeToNodeModules,
 				);
 
@@ -94,7 +98,7 @@ function * lookupPackageRepository({
 				const forwarderPathWithScope =
 					getRelativePathWithScope(forwarderPathRelativeToNodeModules);
 
-				logRequirePath(`forwarder "${forwarderPathWithScope}"`);
+				logForwarder(`forwarder ${forwarderPathWithScope}`);
 
 				yield forwarderPathWithScope;
 			}

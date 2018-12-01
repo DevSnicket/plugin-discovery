@@ -3,28 +3,22 @@ const
 	lookupForwardersInPackages = require("./lookupForwardersInPackages"),
 	path = require("path");
 
-const nodeModulesDirectoryName = "node_modules";
-
 module.exports =
 	({
-		ignoreDirectoryNames = [ nodeModulesDirectoryName ],
-		log,
-		sourceDirectoryPath,
+		forwarderDirectoryName,
+		ignoreDirectoryNames,
+		javascriptFileExtension,
+		log: { detail: logDetail },
+		nodeModulesDirectory,
 		sourceFilePath,
 		sourceRootPath,
 		walkCallExpressions,
 	}) => {
-		const javascriptFileExtension = ".js";
+		const
+			sourceDirectoryPath = path.dirname(sourceFilePath),
+			sourceFileNameWithoutExtension = path.basename(sourceFilePath, javascriptFileExtension);
 
 		const
-			nodeModulesPath =
-				path.join(sourceRootPath, nodeModulesDirectoryName),
-			sourceFileNameWithoutExtension =
-				path.basename(sourceFilePath, javascriptFileExtension);
-
-		const
-			logRequirePath =
-				log.detail,
 			repositoryFile =
 				{
 					name: sourceFileNameWithoutExtension,
@@ -34,20 +28,27 @@ module.exports =
 		return (
 			[
 				...discoverRelative({
-					directoryPath:
+					discoverInDirectoryPath:
 						sourceRootPath,
-					ignoreDirectoryNames,
+					ignoreDirectoryNames:
+						ignoreDirectoryNames || [ nodeModulesDirectory.name ],
 					javascriptFileExtension,
-					logRequirePath,
-					nodeModulesPath,
+					logPlugin:
+						logDetail,
+					nodeModulesPath:
+						nodeModulesDirectory.path,
 					repositoryFile,
 					sourceDirectoryPath,
+					sourceRootPath,
 					walkCallExpressions,
 				}),
 				...lookupForwardersInPackages({
+					forwarderDirectoryName,
 					javascriptFileExtension,
-					logRequirePath,
-					nodeModulesPath,
+					logForwarder:
+						logDetail,
+					nodeModulesPath:
+						nodeModulesDirectory.path,
 					repositoryFile,
 				}),
 			]

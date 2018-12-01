@@ -87,13 +87,13 @@ The Babel plug-in will need to be specified in your [Babel configuration](https:
 
 ### Discovery (plug-ins with relative paths)
 
-The Babel plug-in has a parameter ignoreDirectoryNames, when not specified this defaults to node_modules. Scanning of the node_modules directory for plug-ins would be inefficient and likely to take a long time.
+The Babel plug-in has a parameter ignoreDirectoryNames, when not specified this defaults to node_modules. Scanning of the node_modules directory for Devsnicket plug-ins would be inefficient and likely to take a long time.
 
 Webpack can be configured to run Babel for plug-in repositories even when they are in a package and so in the node_modules directory. So long as the plug-ins for these repositories aren't also in packages/node_modules, they can be discovered and rewritten by Webpack/Babel in the output. Webpack is often also configured to not include or to exclude running Babel for the node_modules directory. So you will need to ensure that your Webpack configuration still includes the paths to repositories in packages/node_modules for this to work.
 
 ### Lookup (plug-ins in packages)
 
-To support DevSnicket plug-ins that are in packages and so not discovered by default (see above) the Babel plug-in also looks up inside package / node_module directories for files that can forward onto the plug-ins efficiently. It does this using the following structure:
+To support DevSnicket plug-ins that are in packages and so not discovered by default (see above) the Babel plug-in also looks up inside package / node_module directories. It does this using the following structure:
 
 ```
 node_modules
@@ -115,7 +115,20 @@ node_modules
 |         └─repositoryFileName.js (forwarder)
 ```
 
-The forwarders are JavaScript files that contain CommonJS require calls for the actual plugin files within the package. These need to be generated when the package is build and included in it when its packed.
+Forwarders:
+* are JavaScript files that contain CommonJS require calls for the actual plug-in files within the package
+* need to be generated when upon build (i.e. when Babel is run)
+* included in the package when its packed
+  
+When Babel is run with the -d / --out-dir parameter the forwarder directories and files described above will be created automatically. Forwarders are written for plug-ins when the repository is both in a package and not transformed by Babel<sup>[[1]](#footnote1)</sup>. The following Babel plug-in parameters can override the default behavour:
+
+| parameter | description | default 
+| - | - | - |
+| forwarderParentDirectoryPath | the parent directory of .devsnicket-plugin-discovery | current directory |
+| forwarderDirectoryClean | will the .devsnicket-plugin-discovery directory be deleted / cleaned | true
+| outputDirectoryPath | directory where Babel transformed files are being outputted to | Babel -d / --out-dir parameters if specified
+
+<a name="footnote1"><sup>1</sup></a> If a plug-in is transformed by Babel first, a forwarder will be written for it, if its repository is transformed afterwards, the forwarder will be deleted (as its redundant).
 
 ### Tests
 

@@ -2,19 +2,18 @@ const path = require("path");
 
 module.exports =
 	({
-		callExpression,
-		identifier,
-		pluginRepositoryNodePath,
+		nodePath,
 		requirePaths,
-		stringLiteral,
+		types: { callExpression, identifier, stringLiteral },
 	}) => {
-		getParentProgramOfNodePath(
-			pluginRepositoryNodePath,
-		)
-		.pushContainer(
-			"body",
-			requirePaths.map(createRequireCallForPath),
-		);
+		if (requirePaths.length)
+			getParentProgramOfNodePath(
+				nodePath,
+			)
+			.pushContainer(
+				"body",
+				requirePaths.map(createRequireCallForPath),
+			);
 
 		function createRequireCallForPath(
 			requirePath,
@@ -24,15 +23,23 @@ module.exports =
 					identifier("require"),
 					[
 						stringLiteral(
-							requirePath
-							.replace(
-								path.sep,
-								"/",
-							),
+							getRequirePathWithForwardSlashes(),
 						),
 					],
 				)
 			);
+
+			function getRequirePathWithForwardSlashes() {
+				const forwardSlash = "/";
+
+				return (
+					path.sep === forwardSlash
+					?
+					requirePath
+					:
+					requirePath.replace(path.sep, forwardSlash)
+				);
+			}
 		}
 	};
 

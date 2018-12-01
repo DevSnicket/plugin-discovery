@@ -17,5 +17,5 @@ module.exports =
 function formatLogMessage(
 	message,
 ) {
-	return `DevSnicket plug-in ${message}`;
+	return `DevSnicket plug-in discovery ${message}`;
 }

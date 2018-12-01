@@ -3,23 +3,26 @@ require("array.prototype.flatmap")
 
 const
 	fs = require("fs"),
-	getPathFromRequireArgument = require("../../../getPathFromRequireArgument"),
+	getPathOfRequire = require("./getPathOfRequire"),
+	getSingleRequireArgument = require("../../getSingleRequireArgument"),
+	isRequireCall = require("../../isRequireCall"),
 	path = require("path");
 
 module.exports = discoverRelative;
 
 function discoverRelative({
-	directoryPath,
+	discoverInDirectoryPath,
 	ignoreDirectoryNames,
 	javascriptFileExtension,
-	logRequirePath,
+	logPlugin,
 	nodeModulesPath,
 	repositoryFile,
 	sourceDirectoryPath,
+	sourceRootPath,
 	walkCallExpressions,
 }) {
 	return (
-		fs.readdirSync(directoryPath)
+		fs.readdirSync(discoverInDirectoryPath)
 		.flatMap(getPluginFilePathsOfFileOrDirectory)
 	);
 
@@ -27,7 +30,7 @@ function discoverRelative({
 		fileOrDirectoryName,
 	) {
 		const fileOrDirectoryPath =
-			path.join(directoryPath, fileOrDirectoryName);
+			path.join(discoverInDirectoryPath, fileOrDirectoryName);
 
 		return (
 			discoverWhenInDirectory()
@@ -44,13 +47,14 @@ function discoverRelative({
 				!ignoreDirectoryNames.includes(fileOrDirectoryName)
 				&&
 				discoverRelative({
-					directoryPath: fileOrDirectoryPath,
+					discoverInDirectoryPath: fileOrDirectoryPath,
 					ignoreDirectoryNames,
 					javascriptFileExtension,
-					logRequirePath,
+					logPlugin,
 					nodeModulesPath,
 					repositoryFile,
 					sourceDirectoryPath,
+					sourceRootPath,
 					walkCallExpressions,
 				})
 			);
@@ -117,33 +121,37 @@ function discoverRelative({
 					callExpression,
 				) {
 					if (!found && (found = isRequreOfPluginRepository()))
-						logRequirePath(`plug-in "${filePath}"`);
+						logPlugin(`plug-in "${path.relative(sourceRootPath, filePath)}"`);
 
 					function isRequreOfPluginRepository() {
 						return (
-							isRequire()
+							isRequireCall(callExpression)
 							&&
-							repositoryFile.path === getPathFromRequireArguments(callExpression.arguments)
+							repositoryFile.path === getPathFromRequireArguments()
 						);
 
-						function isRequire() {
-							return callExpression.callee.name === "require";
+						function getPathFromRequireArguments() {
+							return (
+								getJavascriptPathWithoutExtension(
+									getPathOfRequire({
+										argument: getSingleRequireArgument(callExpression),
+										filePath,
+										nodeModulesPath,
+									}),
+								)
+							);
 						}
 					}
 				}
 
-				function getPathFromRequireArguments(
-					_arguments,
+				function getJavascriptPathWithoutExtension(
+					javascriptPath,
 				) {
 					return (
-						_arguments.length === 1
-						&&
-						getPathFromRequireArgument({
-							argument: _arguments[0].value,
-							filePath,
-							javascriptFileExtension,
-							nodeModulesPath,
-						})
+						path.join(
+							path.dirname(javascriptPath),
+							path.basename(javascriptPath, javascriptFileExtension),
+						)
 					);
 				}
 			}
