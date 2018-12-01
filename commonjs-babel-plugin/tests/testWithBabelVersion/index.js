@@ -1,7 +1,7 @@
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
 	path = require("path"),
-	setupAndCreateTestCasesForPluginsInPackages = require("./setupAndCreateTestCasesForPluginsInPackages"),
+	setupAndCreateTestCasesForForwarders = require("./setupAndCreateTestCasesForForwarders"),
 	setupAndCreateTestCasesForRelative = require("./setupAndCreateTestCasesForRelative"),
 	setupAndCreateTestCasesForRepositoriesInPackages = require("./setupAndCreateTestCasesForRepositoriesInPackages"),
 	setupPackagesAndTransform = require("./setupPackagesAndTransform"),
@@ -34,8 +34,8 @@ module.exports =
 
 		// setup all tests first to recreate their potential to affect each others behaviour
 		const
-			pluginsInPackagesTestCases =
-				setupAndCreateTestCasesForPluginsInPackages({
+			forwardersTestCases =
+				setupAndCreateTestCasesForForwarders({
 					directory: testDirectory,
 					repositoryJavascript,
 					scope,
@@ -53,18 +53,23 @@ module.exports =
 				});
 
 		describe(
-			"relative",
-			() => testTestCases(relativeTestCases),
-		);
+			"transform repository",
+			() => {
+				describe(
+					"relative",
+					() => testRepositoryTransforms(relativeTestCases),
+				);
 
-		describe(
-			"repositories in packages",
-			() => testTestCases(repositoriesInPackagesTestCases),
-		);
+				describe(
+					"repositories in packages",
+					() => testRepositoryTransforms(repositoriesInPackagesTestCases),
+				);
 
-		describe(
-			"plug-ins in packages",
-			() => testTestCases(pluginsInPackagesTestCases),
+				describe(
+					"forwarders",
+					() => testRepositoryTransforms(forwardersTestCases),
+				);
+			},
 		);
 
 		testWebpack({
@@ -74,18 +79,18 @@ module.exports =
 				[
 					...relativeTestCases,
 					...repositoriesInPackagesTestCases,
-					...pluginsInPackagesTestCases,
+					...forwardersTestCases,
 				],
 		});
 
-		function testTestCases(
+		function testRepositoryTransforms(
 			testCases,
 		) {
 			for (const testCase of testCases)
-				testTestCase(testCase);
+				testRepositoryTransform(testCase);
 		}
 
-		function testTestCase(
+		function testRepositoryTransform(
 			testCase,
 		) {
 			test(
