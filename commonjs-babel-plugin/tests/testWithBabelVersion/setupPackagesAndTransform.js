@@ -11,7 +11,7 @@ module.exports =
 	async({
 		babel,
 		testDirectory,
-		transformRepositoryFilename,
+		transformFilename,
 	}) => {
 		await setupDirectoryWithPackages({
 			directory:
@@ -29,7 +29,7 @@ module.exports =
 		});
 
 		await copyFile(
-			path.join(__dirname, transformRepositoryFilename),
-			path.join(testDirectory, transformRepositoryFilename),
+			path.join(__dirname, transformFilename),
+			path.join(testDirectory, transformFilename),
 		);
 	};

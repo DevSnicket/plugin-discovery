@@ -3,7 +3,7 @@ const { readFileSync } = require("fs");
 module.exports =
 	({
 		babelCorePackage,
-		repositoryPath,
+		sourceFilePath,
 		transformFunctionName,
 	}) => {
 		const transform =
@@ -13,12 +13,12 @@ module.exports =
 		return (
 			transform(
 				readFileSync(
-					repositoryPath,
+					sourceFilePath,
 					"utf-8",
 				),
 				{
 					filename:
-						repositoryPath,
+						sourceFilePath,
 					plugins:
 						[
 							[
@@ -27,7 +27,7 @@ module.exports =
 							],
 						],
 					sourceFileName:
-						repositoryPath,
+						sourceFilePath,
 				},
 			)
 			.code

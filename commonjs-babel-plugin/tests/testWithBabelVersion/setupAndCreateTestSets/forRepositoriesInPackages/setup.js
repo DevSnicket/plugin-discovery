@@ -3,8 +3,8 @@ require("array.prototype.flatmap")
 
 const
 	path = require("path"),
-	writePlugin = require("../../../../tests/writePlugin"),
-	writeRepositoryPackage = require("../writeRepositoryPackage");
+	writePlugin = require("../../../../../tests/writePlugin"),
+	writeRepositoryPackage = require("../../writeRepositoryPackage");
 
 module.exports =
 	async({

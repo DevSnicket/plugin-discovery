@@ -1,10 +1,11 @@
+require("array.prototype.flatmap")
+.shim();
+
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
-	path = require("path"),
-	setupAndCreateTestCasesForForwarders = require("./setupAndCreateTestCasesForForwarders"),
-	setupAndCreateTestCasesForRelative = require("./setupAndCreateTestCasesForRelative"),
-	setupAndCreateTestCasesForRepositoriesInPackages = require("./setupAndCreateTestCasesForRepositoriesInPackages"),
+	setupAndCreateTestSets = require("./setupAndCreateTestSets"),
 	setupPackagesAndTransform = require("./setupPackagesAndTransform"),
+	testRepositoryTransform = require("./testRepositoryTransform"),
 	testWebpack = require("./testWebpack");
 
 module.exports =
@@ -19,102 +20,43 @@ module.exports =
 		repositoryJavascript,
 		testDirectory,
 	}) => {
-		const transformRepositoryFilename = "transformRepository.js";
+		const transformFilename = "transform.js";
 
 		beforeAll(
 			() =>
 				setupPackagesAndTransform({
 					babel,
 					testDirectory,
-					transformRepositoryFilename,
+					transformFilename,
 				}),
 		);
 
 		const scope = "@devsnicket";
 
 		// setup all tests first to recreate their potential to affect each others behaviour
-		const
-			forwardersTestCases =
-				setupAndCreateTestCasesForForwarders({
-					directory: testDirectory,
-					repositoryJavascript,
-					scope,
-				}),
-			relativeTestCases =
-				setupAndCreateTestCasesForRelative({
-					directory: testDirectory,
-					repositoryJavascript,
-				}),
-			repositoriesInPackagesTestCases =
-				setupAndCreateTestCasesForRepositoriesInPackages({
-					directory: testDirectory,
-					repositoryJavascript,
-					scope,
-				});
+		const testCaseSets =
+			setupAndCreateTestSets({
+				directory: testDirectory,
+				repositoryJavascript,
+				scope,
+			});
 
-		describe(
-			"transform repository",
-			() => {
-				describe(
-					"relative",
-					() => testRepositoryTransforms(relativeTestCases),
-				);
-
-				describe(
-					"repositories in packages",
-					() => testRepositoryTransforms(repositoriesInPackagesTestCases),
-				);
-
-				describe(
-					"forwarders",
-					() => testRepositoryTransforms(forwardersTestCases),
-				);
-			},
-		);
+		testRepositoryTransform({
+			repositoryJavascript,
+			testCaseSets,
+			testDirectory,
+			transformSourceFileWithPath,
+		});
 
 		testWebpack({
 			directory:
 				testDirectory,
 			testCases:
-				[
-					...relativeTestCases,
-					...repositoriesInPackagesTestCases,
-					...forwardersTestCases,
-				],
+				testCaseSets.flatMap(testCaseSet => testCaseSet.testCases),
 		});
 
-		function testRepositoryTransforms(
-			testCases,
-		) {
-			for (const testCase of testCases)
-				testRepositoryTransform(testCase);
-		}
-
-		function testRepositoryTransform(
-			testCase,
-		) {
-			test(
-				testCase.name,
-				async() =>
-					expect(
-						await transformRepositoryWithPath(
-							path.join(
-								testDirectory,
-								testCase.repositoryPath,
-							),
-						),
-					)
-					.toEqual(
-						getExpected({
-							forwarderOrPluginPaths: testCase.forwarderOrPluginPaths,
-							repositoryJavascript,
-						}),
-					),
-			);
-		}
-
-		function transformRepositoryWithPath(
-			repositoryPath,
+		function transformSourceFileWithPath(
+			sourceFilePath,
 		) {
 			return (
 				callModuleInProcess({
@@ -122,28 +64,15 @@ module.exports =
 						{
 							babelCorePackage:
 								babel.corePackage,
-							repositoryPath,
+							sourceFilePath,
 							transformFunctionName:
 								babel.transformFunctionName,
 						},
 					directory:
 						testDirectory,
 					moduleFile:
-						transformRepositoryFilename,
+						transformFilename,
 				})
 			);
 		}
 	};
-
-function getExpected({
-	forwarderOrPluginPaths,
-	repositoryJavascript,
-}) {
-	return (
-		[
-			repositoryJavascript,
-			...forwarderOrPluginPaths.map(forwarderOrPluginPath => `require("${forwarderOrPluginPath}")`),
-		]
-		.join("\n\n")
-	);
-}

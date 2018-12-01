@@ -2,7 +2,7 @@ const
 	fs = require("fs"),
 	path = require("path"),
 	{ promisify } = require("util"),
-	writePlugins = require("../../../../tests/writePlugins");
+	writePlugins = require("../../../../../tests/writePlugins");
 
 const makeDirectory = promisify(fs.mkdir);
 
