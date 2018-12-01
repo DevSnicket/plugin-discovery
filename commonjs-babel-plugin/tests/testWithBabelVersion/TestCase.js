@@ -1,7 +1,7 @@
 /**
  * @typedef {Object} TestCase
+ * @property {string[]} forwarderOrPluginPaths
  * @property {string} name
- * @property {string[]} pluginPaths
  * @property {string} repositoryPath
  */
 

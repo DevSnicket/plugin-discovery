@@ -106,7 +106,7 @@ module.exports =
 					)
 					.toEqual(
 						getExpected({
-							pluginPaths: testCase.pluginPaths,
+							forwarderOrPluginPaths: testCase.forwarderOrPluginPaths,
 							repositoryJavascript,
 						}),
 					),
@@ -136,13 +136,13 @@ module.exports =
 	};
 
 function getExpected({
+	forwarderOrPluginPaths,
 	repositoryJavascript,
-	pluginPaths,
 }) {
 	return (
 		[
 			repositoryJavascript,
-			...pluginPaths.map(pluginPath => `require("${pluginPath}")`),
+			...forwarderOrPluginPaths.map(forwarderOrPluginPath => `require("${forwarderOrPluginPath}")`),
 		]
 		.join("\n\n")
 	);

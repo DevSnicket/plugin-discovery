@@ -10,10 +10,10 @@ module.exports =
 		}) {
 			return (
 				{
+					forwarderOrPluginPaths:
+						[ `${plugin.toRepositoryPathExpected}${plugin.filename}` ],
 					name:
 						repository.package.name,
-					pluginPaths:
-						[ `${plugin.toRepositoryPathExpected}${plugin.filename}` ],
 					repositoryPath:
 						`node_modules/${repository.require}`,
 				}

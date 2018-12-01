@@ -78,16 +78,16 @@ module.exports =
 
 			return (
 				{
+					forwarderOrPluginPaths:
+						[ getForwarderPath() ],
 					name:
 						packageCombination.plugin.name,
-					pluginPaths:
-						[ getPluginPath() ],
 					repositoryPath:
 						path.join("node_modules", repositoryRelativePath),
 				}
 			);
 
-			function getPluginPath() {
+			function getForwarderPath() {
 				return `${packageCombination.plugin.name}/${packagePluginDirectoryName}/${repositoryRelativePath}`;
 			}
 		}
