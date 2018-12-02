@@ -47,10 +47,10 @@ module.exports =
 							directory,
 							plugin.filename,
 						),
-					plugin:
-						`test plug-in of repository in package ${repository.package.name}`,
 					repositoryRequire:
 						repository.require,
+					value:
+							`test plug-in of repository in package ${repository.package.name}`,
 				})
 			);
 		}

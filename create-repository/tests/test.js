@@ -1,11 +1,12 @@
 const
 	callModuleInProcess = require("../../tests/callModuleInProcess"),
+	createRelativePluginsOfRepositoryFilename = require("../../tests/createRelativePluginsOfRepositoryFilename"),
 	fs = require("fs"),
 	path = require("path"),
 	{ promisify } = require("util"),
 	readRepositoryTransformed = require("./readRepositoryTransformed"),
 	setupDirectoryWithPackages = require("../../tests/setupDirectoryWithPackages"),
-	writePlugins = require("../../tests/writePlugins");
+	writePlugin = require("../../tests/writePlugin");
 
 const
 	copyFile = promisify(fs.copyFile),
@@ -29,15 +30,29 @@ async function testIterateRepository() {
 			transformed: await readRepositoryTransformed(),
 		};
 
+	const plugins =
+		createRelativePluginsOfRepositoryFilename(
+			repository.filename,
+		);
+
 	await setupDirectoryWithPackages({
 		directory,
 		packages: [ path.join("..", "..", "create-repository") ],
 	});
 
-	await writePlugins({
-		directory,
-		repositoryFilename: repository.filename,
-	});
+	await Promise.all(
+		plugins.map(
+			plugin =>
+				writePlugin({
+					filePath:
+						path.join(directory, plugin.filePath),
+					repositoryRequire:
+						plugin.repositoryRequire,
+					value:
+						plugin.value,
+				}),
+		),
+	);
 
 	await copyFile(
 		path.join(__dirname, iterateRepositoryFilename),
@@ -59,9 +74,6 @@ async function testIterateRepository() {
 		}),
 	)
 	.toEqual(
-		[
-			"test plug-in",
-			"test sub-directory plug-in of repository in parent directory",
-		],
+		plugins.map(plugin => plugin.value),
 	);
 }

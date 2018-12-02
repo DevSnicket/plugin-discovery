@@ -5,8 +5,8 @@ const
 module.exports =
 	async({
 		filePath,
-		plugin,
 		repositoryRequire,
+		value,
 	}) => {
 		await ensureDir(
 			path.dirname(filePath),
@@ -14,6 +14,6 @@ module.exports =
 
 		await writeFile(
 			filePath,
-			`require("${repositoryRequire}").plugIn("${plugin}");`,
+			`require("${repositoryRequire}").plugIn("${value}");`,
 		);
 	};

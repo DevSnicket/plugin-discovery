@@ -29,8 +29,8 @@ async function writePluginFilesWithRequirePath({
 			filePathRelativeToPackage =>
 				writePlugin({
 					filePath: path.join(plugin.directory, filePathRelativeToPackage),
-					plugin: plugin.name,
 					repositoryRequire,
+					value: plugin.name,
 				}),
 		),
 	);
