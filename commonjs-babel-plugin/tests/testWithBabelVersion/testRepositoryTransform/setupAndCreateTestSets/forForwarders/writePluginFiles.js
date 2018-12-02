@@ -1,6 +1,6 @@
 const
 	path = require("path"),
-	writePlugin = require("../../../../../tests/writePlugin");
+	writePlugin = require("../../../../../../tests/writePlugin");
 
 module.exports =
 	({

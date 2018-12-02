@@ -1,12 +1,23 @@
-const path = require("path");
+const
+	path = require("path"),
+	setupAndCreateTestSets = require("./setupAndCreateTestSets"),
+	testWebpack = require("./testWebpack");
 
 module.exports =
 	({
 		repositoryJavascript,
-		testCaseSets,
+		scope,
 		testDirectory,
 		transformSourceFileWithPath,
 	}) => {
+		// setup all tests first to recreate their potential to affect each others behaviour
+		const testCaseSets =
+			setupAndCreateTestSets({
+				directory: testDirectory,
+				repositoryJavascript,
+				scope,
+			});
+
 		describe(
 			"transform repository",
 			() => {
@@ -15,6 +26,13 @@ module.exports =
 						testCaseSet.name,
 						() => testTestCases(testCaseSet.testCases),
 					);
+
+				testWebpack({
+					directory:
+						testDirectory,
+					testCases:
+						testCaseSets.flatMap(testCaseSet => testCaseSet.testCases),
+				});
 			},
 		);
 

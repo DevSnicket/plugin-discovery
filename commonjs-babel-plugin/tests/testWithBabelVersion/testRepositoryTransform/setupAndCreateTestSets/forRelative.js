@@ -1,9 +1,9 @@
 const
-	createRelativePluginsOfRepositoryFilename = require("../../../../tests/createRelativePluginsOfRepositoryFilename"),
+	createRelativePluginsOfRepositoryFilename = require("../../../../../tests/createRelativePluginsOfRepositoryFilename"),
 	fs = require("fs"),
 	path = require("path"),
 	{ promisify } = require("util"),
-	writePlugin = require("../../../../tests/writePlugin");
+	writePlugin = require("../../../../../tests/writePlugin");
 
 const
 	writeFile = promisify(fs.writeFile);

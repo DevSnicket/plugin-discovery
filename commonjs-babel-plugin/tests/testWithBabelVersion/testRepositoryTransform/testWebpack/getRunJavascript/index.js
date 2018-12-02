@@ -28,7 +28,7 @@ module.exports =
 			return (
 				path.relative(
 					directory,
-					path.join(__dirname, "..", "..", "..", ".."),
+					path.join(__dirname, "..", "..", "..", "..", ".."),
 				)
 			);
 		}

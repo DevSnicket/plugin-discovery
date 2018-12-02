@@ -11,6 +11,13 @@ const
 	readFile = promisify(fs.readFile),
 	writeFile = promisify(fs.writeFile);
 
+/** @typedef {import("../TestCase.js").TestCase} TestCase */
+
+/**
+ * @param {object} parameter
+ * @param {string} parameter.directory
+ * @param {TestCase[]} parameter.testCases
+*/
 module.exports =
 	({
 		directory,
@@ -40,6 +47,7 @@ module.exports =
 				for (const testCase of testCases)
 					testTestCase(testCase);
 
+				/** @param {TestCase} testCase */
 				function testTestCase(
 					testCase,
 				) {

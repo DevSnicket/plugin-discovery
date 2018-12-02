@@ -4,7 +4,7 @@ const
 	writeForwarder = require("./writeForwarder"),
 	writePackage = require("./writePackage"),
 	writePluginFiles = require("./writePluginFiles"),
-	writeRepositoryPackage = require("../../writeRepositoryPackage");
+	writeRepositoryPackage = require("../../../writeRepositoryPackage");
 
 module.exports =
 	/** @returns {import('../../TestCase').TestCase[]} */

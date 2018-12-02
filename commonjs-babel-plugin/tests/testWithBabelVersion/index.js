@@ -3,10 +3,8 @@ require("array.prototype.flatmap")
 
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
-	setupAndCreateTestSets = require("./setupAndCreateTestSets"),
 	setupPackagesAndTransform = require("./setupPackagesAndTransform"),
-	testRepositoryTransform = require("./testRepositoryTransform"),
-	testWebpack = require("./testWebpack");
+	testRepositoryTransform = require("./testRepositoryTransform");
 
 module.exports =
 	/**
@@ -33,26 +31,11 @@ module.exports =
 
 		const scope = "@devsnicket";
 
-		// setup all tests first to recreate their potential to affect each others behaviour
-		const testCaseSets =
-			setupAndCreateTestSets({
-				directory: testDirectory,
-				repositoryJavascript,
-				scope,
-			});
-
 		testRepositoryTransform({
 			repositoryJavascript,
-			testCaseSets,
+			scope,
 			testDirectory,
 			transformSourceFileWithPath,
-		});
-
-		testWebpack({
-			directory:
-				testDirectory,
-			testCases:
-				testCaseSets.flatMap(testCaseSet => testCaseSet.testCases),
 		});
 
 		function transformSourceFileWithPath(
