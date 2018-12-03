@@ -4,24 +4,24 @@ module.exports =
 			{
 				plugin:
 					{
-						filename: "pluginOfRepositoryInPackage.js",
+						filename: "pluginOfRepositoryInPackageTransformed.js",
 						toRepositoryPathExpected: "../../",
 					},
 				repository:
 					createRepositoryForPackage({
-						nameInScope: "repository",
+						nameInScope: "repository-transformed",
 						scope: null,
 					}),
 			},
 			{
 				plugin:
 					{
-						filename: "pluginOfRepositoryInPackageWithScope.js",
+						filename: "pluginOfRepositoryInPackageWithScopeTransformed.js",
 						toRepositoryPathExpected: "../../../",
 					},
 				repository:
 					createRepositoryForPackage({
-						nameInScope: "repository-with-scope",
+						nameInScope: "repository-transformed-for-plugin-with-scope",
 						scope,
 					}),
 			},
@@ -38,7 +38,7 @@ function createRepositoryForPackage({
 		:
 		nameInScope;
 
-	const filename = "repositoryInPackage.js";
+	const filename = `${nameInScope}.js`;
 
 	return (
 		{

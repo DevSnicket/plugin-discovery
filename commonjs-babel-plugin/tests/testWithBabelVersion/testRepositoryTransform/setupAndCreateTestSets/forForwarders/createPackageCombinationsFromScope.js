@@ -73,7 +73,7 @@ module.exports =
 
 			function createRepository() {
 				const nameInScope =
-					`${nameElementsWithScope.repository}-for-${nameElementsWithScope.plugin}`;
+					`${nameElementsWithScope.repository}-transformed-for-${nameElementsWithScope.plugin}`;
 
 				return (
 					{

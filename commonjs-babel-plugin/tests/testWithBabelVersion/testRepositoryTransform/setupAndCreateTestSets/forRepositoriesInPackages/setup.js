@@ -37,20 +37,19 @@ module.exports =
 		);
 
 		function writePluginForRepository({
-			plugin,
-			repository,
+			plugin: { filename: pluginFilename },
+			repository: { require: repositoryRequire },
 		}) {
 			return (
 				writePlugin({
 					filePath:
 						path.join(
 							directory,
-							plugin.filename,
+							pluginFilename,
 						),
-					repositoryRequire:
-						repository.require,
+					repositoryRequire,
 					value:
-							`test plug-in of repository in package ${repository.package.name}`,
+						"test plug-in of repository in package transformed",
 				})
 			);
 		}
