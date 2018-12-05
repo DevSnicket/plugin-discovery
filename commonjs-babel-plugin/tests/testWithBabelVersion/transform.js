@@ -24,6 +24,7 @@ module.exports =
 							[
 								"@devsnicket/plugin-discovery-commonjs-babel-plugin",
 								{
+									forwarderDirectoryClean: false,
 									log: "warnings",
 									outputDirectoryPath: process.cwd(),
 								},

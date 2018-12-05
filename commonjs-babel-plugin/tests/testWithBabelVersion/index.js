@@ -4,6 +4,7 @@ require("array.prototype.flatmap")
 const
 	callModuleInProcess = require("../../../tests/callModuleInProcess"),
 	setupPackagesAndTransform = require("./setupPackagesAndTransform"),
+	testForwarderWrite = require("./testForwarderWrite"),
 	testRepositoryTransform = require("./testRepositoryTransform");
 
 module.exports =
@@ -18,7 +19,9 @@ module.exports =
 		repositoryJavascript,
 		testDirectory,
 	}) => {
-		const transformFilename = "transform.js";
+		const
+			packagePluginDirectoryName = ".devsnicket-plugin-discovery",
+			transformFilename = "transform.js";
 
 		beforeAll(
 			() =>
@@ -32,13 +35,21 @@ module.exports =
 		const scope = "@devsnicket";
 
 		testRepositoryTransform({
+			packagePluginDirectoryName,
 			repositoryJavascript,
 			scope,
 			testDirectory,
-			transformSourceFileWithPath,
+			transformFilePath,
 		});
 
-		function transformSourceFileWithPath(
+		testForwarderWrite({
+			packagePluginDirectoryName,
+			repositoryJavascript,
+			testDirectory,
+			transformFilePath,
+		});
+
+		function transformFilePath(
 			sourceFilePath,
 		) {
 			return (

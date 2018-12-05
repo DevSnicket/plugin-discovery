@@ -5,15 +5,17 @@ const
 
 module.exports =
 	({
+		packagePluginDirectoryName,
 		repositoryJavascript,
 		scope,
 		testDirectory,
-		transformSourceFileWithPath,
+		transformFilePath,
 	}) => {
-		// setup all tests first to recreate their potential to affect each others behaviour
+		// setup outside of describe and so setup all tests first, to recreate their potential to affect each others behaviour
 		const testCaseSets =
 			setupAndCreateTestSets({
 				directory: testDirectory,
+				packagePluginDirectoryName,
 				repositoryJavascript,
 				scope,
 			});
@@ -50,7 +52,7 @@ module.exports =
 				testCase.name,
 				async() =>
 					expect(
-						await transformSourceFileWithPath(
+						await transformFilePath(
 							path.join(
 								testDirectory,
 								testCase.repositoryPath,

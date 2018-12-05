@@ -6,6 +6,7 @@ const
 module.exports =
 	({
 		directory,
+		packagePluginDirectoryName,
 		repositoryJavascript,
 		scope,
 	}) =>
@@ -35,6 +36,7 @@ module.exports =
 				testCases:
 					forForwarders({
 						directory,
+						packagePluginDirectoryName,
 						repositoryJavascript,
 						scope,
 					}),

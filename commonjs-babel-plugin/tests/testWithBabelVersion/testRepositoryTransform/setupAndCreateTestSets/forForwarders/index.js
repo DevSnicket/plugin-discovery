@@ -10,6 +10,7 @@ module.exports =
 	/** @returns {import('../../TestCase').TestCase[]} */
 	({
 		directory,
+		packagePluginDirectoryName,
 		repositoryJavascript,
 		scope,
 	}) => {
@@ -18,8 +19,6 @@ module.exports =
 				nodeModulesDirectory: path.join(directory, "node_modules"),
 				scope,
 			});
-
-		const packagePluginDirectoryName = ".devsnicket-plugin-discovery";
 
 		beforeAll(
 			() =>
