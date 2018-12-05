@@ -1,1 +1,3 @@
-jsconfig.json
+/.eslintignore
+/devsnicket-plugin-discovery-commonjs-babel-plugin-*.tgz
+/tests/
