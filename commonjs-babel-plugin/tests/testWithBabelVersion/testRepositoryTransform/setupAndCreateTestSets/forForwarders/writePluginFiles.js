@@ -1,4 +1,5 @@
 const
+	getPluginJavascript = require("../../../../../../tests/getPluginJavascript"),
 	path = require("path"),
 	writePlugin = require("../../../../../../tests/writePlugin");
 
@@ -28,9 +29,13 @@ async function writePluginFilesWithRequirePath({
 		.map(
 			filePathRelativeToPackage =>
 				writePlugin({
-					filePath: path.join(plugin.directory, filePathRelativeToPackage),
-					repositoryRequire,
-					value: plugin.name,
+					filePath:
+						path.join(plugin.directory, filePathRelativeToPackage),
+					javascript:
+						getPluginJavascript({
+							repositoryRequire,
+							value: plugin.name,
+						}),
 				}),
 		),
 	);

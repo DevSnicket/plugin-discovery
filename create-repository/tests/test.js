@@ -2,6 +2,7 @@ const
 	callModuleInProcess = require("../../tests/callModuleInProcess"),
 	createRelativePluginsOfRepositoryFilename = require("../../tests/createRelativePluginsOfRepositoryFilename"),
 	fs = require("fs"),
+	getPluginJavascript = require("../../tests/getPluginJavascript"),
 	path = require("path"),
 	{ promisify } = require("util"),
 	readRepositoryTransformed = require("./readRepositoryTransformed"),
@@ -46,10 +47,13 @@ async function testIterateRepository() {
 				writePlugin({
 					filePath:
 						path.join(directory, plugin.filePath),
-					repositoryRequire:
-						plugin.repositoryRequire,
-					value:
-						plugin.value,
+					javascript:
+						getPluginJavascript({
+							repositoryRequire:
+								plugin.repositoryRequire,
+							value:
+								plugin.value,
+						}),
 				}),
 		),
 	);

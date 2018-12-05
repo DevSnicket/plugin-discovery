@@ -2,6 +2,7 @@ require("array.prototype.flatmap")
 .shim();
 
 const
+	getPluginJavascript = require("../../../../../../tests/getPluginJavascript"),
 	path = require("path"),
 	writePlugin = require("../../../../../../tests/writePlugin"),
 	writeRepositoryPackage = require("../../../writeRepositoryPackage");
@@ -36,22 +37,23 @@ module.exports =
 			),
 		);
 
-		function writePluginForRepository({
+		async function writePluginForRepository({
 			plugin: { filename: pluginFilename },
 			repository: { require: repositoryRequire },
 		}) {
-			return (
-				writePlugin({
-					filePath:
-						path.join(
-							directory,
-							pluginFilename,
-						),
-					repositoryRequire,
-					value:
-						"test plug-in of repository in package transformed",
-				})
-			);
+			await writePlugin({
+				filePath:
+					path.join(
+						directory,
+						pluginFilename,
+					),
+				javascript:
+					getPluginJavascript({
+						repositoryRequire,
+						value:
+							"test plug-in of repository in package transformed",
+					}),
+			});
 		}
 
 		function getDirectoryForPackage(

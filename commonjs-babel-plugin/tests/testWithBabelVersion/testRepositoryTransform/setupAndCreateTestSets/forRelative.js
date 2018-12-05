@@ -1,6 +1,7 @@
 const
 	createRelativePluginsOfRepositoryFilename = require("../../../../../tests/createRelativePluginsOfRepositoryFilename"),
 	fs = require("fs"),
+	getPluginJavascript = require("../../../../../tests/getPluginJavascript"),
 	path = require("path"),
 	{ promisify } = require("util"),
 	writePlugin = require("../../../../../tests/writePlugin");
@@ -75,10 +76,13 @@ module.exports =
 				await writePlugin({
 					filePath:
 						path.join(directory, repository.directory, plugin.filePath),
-					repositoryRequire:
-						plugin.repositoryRequire,
-					value:
-						plugin.value,
+					javascript:
+						getPluginJavascript({
+							repositoryRequire:
+								plugin.repositoryRequire,
+							value:
+								plugin.value,
+						}),
 				});
 			}
 		}
