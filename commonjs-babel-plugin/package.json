@@ -10,8 +10,8 @@
 		"fs-extra": "7.0.1"
 	},
 	"devDependencies": {
-		"@types/jest": "23.3.7",
-		"eslint": "5.7.0",
+		"@types/jest": "23.3.10",
+		"eslint": "5.9.0",
 		"jest": "23.6.0"
 	},
 	"description": "A Babel plug-in that adds CommonJS require calls to import modules that use @devsnicket/plugin-discovery-create-repository.",

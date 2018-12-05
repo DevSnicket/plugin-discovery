@@ -6,8 +6,8 @@
   "description": "A factory function that creates a repository to which functions/objects etc can be plugged into and discovered from elsewhere.\nDiscovery requires a Babel plug-in to add module imports @devsnicket/plugin-discovery-commonjs-babel-plugin.",
   "discovery": "https://github.com/DevSnicket/plugin-discovery/create-repository",
   "devDependencies": {
-    "@types/jest": "23.3.7",
-    "eslint": "5.7.0",
+    "@types/jest": "23.3.10",
+    "eslint": "5.9.0",
     "jest": "23.6.0"
   },
   "homepage": "https://github.com/DevSnicket/plugin-discovery#readme",
