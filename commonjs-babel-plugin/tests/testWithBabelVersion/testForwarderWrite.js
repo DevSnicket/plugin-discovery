@@ -44,9 +44,13 @@ module.exports =
 		test(
 			"plug-in transform/forwarder write",
 			async() => {
-				const pluginsTransformed =
-					await Promise.all(
-						plugins.map(plugin => transformFilePath(plugin.filePath)),
+				const pluginsTransformed = [];
+
+				for (const plugin of plugins)
+					pluginsTransformed.push(
+						// plug-ins transformed in order to match expected forwarder file side-effect
+						// eslint-disable-next-line no-await-in-loop
+						await transformFilePath(plugin.filePath),
 					);
 
 				expect({
@@ -76,14 +80,6 @@ module.exports =
 			});
 		}
 
-		function getForwarderExpected() {
-			return (
-				plugins
-				.map(plugin => `require("../../${plugin.requirePath}")\n`)
-				.join("")
-			);
-		}
-
 		function getForwarderPath() {
 			return (
 				path.join(
@@ -92,6 +88,14 @@ module.exports =
 					repository.packageName,
 					repository.filename,
 				)
+			);
+		}
+
+		function getForwarderExpected() {
+			return (
+				plugins
+				.map(plugin => `require("../../${plugin.requirePath}")\n`)
+				.join("")
 			);
 		}
 	};
