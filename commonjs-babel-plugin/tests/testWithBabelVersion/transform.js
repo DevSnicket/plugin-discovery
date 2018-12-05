@@ -23,7 +23,10 @@ module.exports =
 						[
 							[
 								"@devsnicket/plugin-discovery-commonjs-babel-plugin",
-								{ log: "warnings" },
+								{
+									log: "warnings",
+									outputDirectoryPath: process.cwd(),
+								},
 							],
 						],
 					sourceFileName:
