@@ -35,7 +35,7 @@ module.exports =
 		) {
 			const forwardersDirectory =
 				forwardersDirectories.getFromPluginOptions(
-					state.file.opts,
+					state.opts,
 				);
 
 			forwardersDirectory.ensureRemovedOnce();
@@ -65,7 +65,7 @@ module.exports =
 						const shared = createSharedFromState(state);
 
 						const outputDirectoryPath =
-							state.file.opts.outputDirectoryPath
+							state.opts.outputDirectoryPath
 							||
 							inferOutputDirectoryOrLogErrorWith(shared.log.warning);
 
