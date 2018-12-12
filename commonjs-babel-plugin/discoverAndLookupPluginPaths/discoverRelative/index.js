@@ -83,7 +83,7 @@ function discoverRelative({
 		filePath,
 	) {
 		return (
-			filePath !== repositoryFile.path
+			filePath !== `${repositoryFile.path}${javascriptFileExtension}`
 			&&
 			path.extname(filePath) === javascriptFileExtension
 			&&
