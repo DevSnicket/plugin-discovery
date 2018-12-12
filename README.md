@@ -91,7 +91,7 @@ The Babel plug-in will need to be specified in your [Babel configuration](https:
 
 The Babel plug-in has a parameter ignoreDirectoryNames, when not specified this defaults to node_modules. Scanning of the node_modules directory for Devsnicket plug-ins would be inefficient and likely to take a long time.
 
-Webpack can be configured to run Babel for plug-in repositories even when they are in a package and so in the node_modules directory. So long as the plug-ins for these repositories aren't also in packages/node_modules, they can be discovered and rewritten by Webpack/Babel in the output. Webpack is often also configured to not include or to exclude running Babel for the node_modules directory. So you will need to ensure that your Webpack configuration still includes the paths to repositories in packages/node_modules for this to work.
+Webpack can be configured to run Babel for repositories even when they are in a package and so in the node_modules directory. So long as the plug-ins for these repositories aren't also in packages/node_modules, they can be discovered and rewritten by Webpack/Babel in the output. Webpack is often also configured to not include or to exclude running Babel for the node_modules directory. So you will need to ensure that your Webpack configuration still includes the paths to repositories in packages/node_modules for this to work.
 
 ### Forwarder lookup (respositories and plug-ins in packages)
 
@@ -131,6 +131,12 @@ When Babel is run with the -d / --out-dir parameter the forwarder directories an
 | outputDirectoryPath | directory where Babel transformed files are being outputted to | Babel -d / --out-dir parameters if specified
 
 <a name="footnote1"><sup>1</sup></a> If a plug-in is transformed by Babel first, a forwarder will be written for it, if its repository is transformed afterwards, the forwarder will be deleted (as its redundant).
+
+#### Package versions
+
+It is advised that repositories are not included in packages with other content that might frequently change and so require new package versions.
+
+If there are multiple versions of a repository's package installed, this is likely to result in that one repository effectively becoming multiple separate repositories with the same name. When this is happens, something plugged into a repository package of one version won't be returned when iterating that same repository package of another version. If this happens it is due to the behaviour of the package manager being used. Package managers such as NPM will install the same package multiple times, in multiple directories, to avoid version conflicts.
 
 ### Tests
 

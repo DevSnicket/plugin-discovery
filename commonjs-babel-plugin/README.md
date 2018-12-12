@@ -88,6 +88,12 @@ When Babel is run with the -d / --out-dir parameter the forwarder directories an
 
 <a name="footnote1"><sup>1</sup></a> If a plug-in is transformed by Babel first, a forwarder will be written for it, if its repository is transformed afterwards, the forwarder will be deleted (as its redundant).
 
+#### Package versions
+
+It is advised that repositories are not included in packages with other content that might frequently change and so require new package versions.
+
+If there are multiple versions of a repository's package installed, this is likely to result in that one repository effectively becoming multiple separate repositories with the same name. When this is happens, something plugged into a repository package of one version won't be returned when iterating that same repository package of another version. If this happens it is due to the behaviour of the package manager being used. Package managers such as NPM will install the same package multiple times, in multiple directories, to avoid version conflicts.
+
 ### Tests
 
 There are automated tests that run Babel with the plug-in and check the transformed output. The tests are run for the latest versions of Babel 6 and 7. NPM is run by the tests to install Babel and test case packages which are generated. To isolate Babel it is run in a separate process.
