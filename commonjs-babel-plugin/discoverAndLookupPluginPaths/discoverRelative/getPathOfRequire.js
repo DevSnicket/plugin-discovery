@@ -9,9 +9,9 @@ module.exports =
 		nodeModulesPath,
 	}) => {
 		return (
-			argument
-			&&
-			(getWhenPackage() || getAsRelative())
+			getWhenPackage()
+			||
+			getAsRelative()
 		);
 
 		function getWhenPackage() {

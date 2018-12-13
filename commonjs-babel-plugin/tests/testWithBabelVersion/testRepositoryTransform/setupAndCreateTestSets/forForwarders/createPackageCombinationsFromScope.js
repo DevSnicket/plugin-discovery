@@ -8,20 +8,49 @@ module.exports =
 		return (
 			[
 				{
-					pluginHasScope: false,
-					repositoryHasScope: false,
+					pluginHasScope:
+						false,
+					repository:
+						{
+							hasScope: false,
+							isDirectoryIndex: false,
+						},
 				},
 				{
-					pluginHasScope: true,
-					repositoryHasScope: false,
+					pluginHasScope:
+						true,
+					repository:
+						{
+							hasScope: false,
+							isDirectoryIndex: false,
+						},
 				},
 				{
-					pluginHasScope: false,
-					repositoryHasScope: true,
+					pluginHasScope:
+						false,
+					repository:
+						{
+							hasScope: true,
+							isDirectoryIndex: false,
+						},
 				},
 				{
-					pluginHasScope: true,
-					repositoryHasScope: true,
+					pluginHasScope:
+						true,
+					repository:
+						{
+							hasScope: true,
+							isDirectoryIndex: false,
+						},
+				},
+				{
+					pluginHasScope:
+						false,
+					repository:
+						{
+							hasScope: false,
+							isDirectoryIndex: true,
+						},
 				},
 			]
 			.map(createPackageCombination)
@@ -29,12 +58,12 @@ module.exports =
 
 		function createPackageCombination({
 			pluginHasScope,
-			repositoryHasScope,
+			repository,
 		}) {
 			const nameElementsWithScope =
 				{
-					plugin: `plugin${getNameSuffixWhenHasScope(pluginHasScope)}`,
-					repository: `repository${getNameSuffixWhenHasScope(repositoryHasScope)}`,
+					plugin: `plugin${getNameSuffixForHasScope(pluginHasScope)}`,
+					repository: `repository${getRepositoryNameSuffix()}`,
 				};
 
 			return (
@@ -44,7 +73,21 @@ module.exports =
 				}
 			);
 
-			function getNameSuffixWhenHasScope(
+			function getRepositoryNameSuffix() {
+				return (
+					`${getForHasScope()}${getForIsDirectoryIndex()}`
+				);
+
+				function getForHasScope() {
+					return getNameSuffixForHasScope(repository.hasScope);
+				}
+
+				function getForIsDirectoryIndex() {
+					return repository.isDirectoryIndex ? "-of-directory-index" : "";
+				}
+			}
+
+			function getNameSuffixForHasScope(
 				hasScope,
 			) {
 				return hasScope ? "-with-scope" : "";
@@ -78,19 +121,23 @@ module.exports =
 				return (
 					{
 						filename:
+							repository.isDirectoryIndex
+							?
+							"index.js"
+							:
 							`${nameInScope}.js`,
 						package:
 							{
 								directory:
 									path.join(
 										nodeModulesDirectory,
-										repositoryHasScope ? path.join(scope, nameInScope) : nameInScope,
+										repository.hasScope ? path.join(scope, nameInScope) : nameInScope,
 									),
 								name:
-									repositoryHasScope ? `${scope}/${nameInScope}` : nameInScope,
+									repository.hasScope ? `${scope}/${nameInScope}` : nameInScope,
 								nameInScope,
 								scope:
-									repositoryHasScope && scope,
+									repository.hasScope && scope,
 							},
 					}
 				);

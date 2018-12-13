@@ -101,10 +101,18 @@ function discoverRelative({
 			return (
 				!javascript.startsWith("// @flow")
 				&&
-				javascript.includes(repositoryFile.name)
+				isNameInJavascript()
 				&&
 				isInJavascript()
 			);
+
+			function isNameInJavascript() {
+				return (
+					repositoryFile.name === "index"
+					||
+					javascript.includes(repositoryFile.name)
+				);
+			}
 
 			function isInJavascript() {
 				let found = false;
@@ -127,34 +135,58 @@ function discoverRelative({
 						return (
 							isRequireCall(callExpression)
 							&&
-							repositoryFile.path === getPathFromRequireArguments()
+							isRequireArgumentOfRepository()
 						);
 
-						function getPathFromRequireArguments() {
+						function isRequireArgumentOfRepository() {
+							const argument = getSingleRequireArgument(callExpression);
+
 							return (
-								getJavascriptPathWithoutExtension(
-									getPathOfRequire({
-										argument: getSingleRequireArgument(callExpression),
-										filePath,
-										nodeModulesPath,
-									}),
+								argument
+								&&
+								isRequirePathOfRepository(
+									getJavascriptPathWithoutExtension(
+										getPathOfRequire({
+											argument,
+											filePath,
+											nodeModulesPath,
+										}),
+									),
 								)
 							);
+
+							function getJavascriptPathWithoutExtension(
+								javascriptPath,
+							) {
+								return (
+									path.join(
+										path.dirname(javascriptPath),
+										path.basename(javascriptPath, javascriptFileExtension),
+									)
+								);
+							}
 						}
 					}
 				}
-
-				function getJavascriptPathWithoutExtension(
-					javascriptPath,
-				) {
-					return (
-						path.join(
-							path.dirname(javascriptPath),
-							path.basename(javascriptPath, javascriptFileExtension),
-						)
-					);
-				}
 			}
+		}
+	}
+
+	function isRequirePathOfRepository(
+		requirePath,
+	) {
+		return (
+			repositoryFile.path === requirePath
+			||
+			isIndex()
+		);
+
+		function isIndex() {
+			return (
+				repositoryFile.name === "index"
+				&&
+				repositoryFile.path === path.join(requirePath, repositoryFile.name)
+			);
 		}
 	}
 }

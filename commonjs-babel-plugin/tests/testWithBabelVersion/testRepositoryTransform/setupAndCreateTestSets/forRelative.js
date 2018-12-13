@@ -24,6 +24,7 @@ module.exports =
 						{
 							directory: ".",
 							filename: "repositoryInRoot.js",
+							filenameForRequire: "repositoryInRoot.js",
 						},
 				}),
 				createTestCase({
@@ -33,6 +34,27 @@ module.exports =
 						{
 							directory: "repositoryInSubdirectory",
 							filename: "repositoryInSubdirectory.js",
+							filenameForRequire: "repositoryInSubdirectory.js",
+						},
+				}),
+				createTestCase({
+					name:
+						"file named index in sub-directory",
+					repository:
+						{
+							directory: "repositoryIndexFileInSubdirectory",
+							filename: "index.js",
+							filenameForRequire: "index.js",
+						},
+				}),
+				createTestCase({
+					name:
+						"index of sub-directory",
+					repository:
+						{
+							directory: "repositoryIndexOfSubdirectory",
+							filename: "index.js",
+							filenameForRequire: "",
 						},
 				}),
 			];
@@ -106,12 +128,16 @@ function createTestCase({
 			name,
 			plugins:
 				createRelativePluginsOfRepositoryFilename(
-					repository.filename,
+					repository.filenameForRequire,
 				),
 			repository:
 				{
 					...repository,
-					filePath: path.join(repository.directory, repository.filename),
+					filePath:
+						path.join(
+							repository.directory,
+							repository.filename,
+						),
 				},
 		}
 	);
