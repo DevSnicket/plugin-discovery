@@ -31,5 +31,5 @@ module.exports =
 function createParameterError(
 	parameterMessage,
 ) {
-	return { error: `Default output directory path could not be inferred from Babel process ${parameterMessage}.` };
+	return { error: `default output directory path could not be inferred from Babel process ${parameterMessage}.` };
 }
