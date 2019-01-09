@@ -26,7 +26,10 @@
   ],
   "license": "MIT",
   "name": "@devsnicket/plugin-discovery-create-repository",
-  "repository": "https://github.com/DevSnicket/plugin-discovery/tree/master/create-repository",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DevSnicket/plugin-discovery.git"
+	},
   "scripts": {
     "lint": "npx eslint .",
     "test": "npx jest"

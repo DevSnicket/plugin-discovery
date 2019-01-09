@@ -32,7 +32,10 @@
 	],
 	"license": "MIT",
 	"name": "@devsnicket/plugin-discovery-commonjs-babel-plugin",
-	"repository": "https://github.com/DevSnicket/plugin-discovery/tree/master/commonjs-babel-plugin",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DevSnicket/plugin-discovery.git"
+	},
 	"scripts": {
 		"lint": "npx eslint .",
 		"test": "npx jest"
