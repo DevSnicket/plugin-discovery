@@ -7,6 +7,7 @@
   "discovery": "https://github.com/DevSnicket/plugin-discovery/create-repository",
   "devDependencies": {
     "@types/jest": "23.3.10",
+    "cspell": "3.1.3",
     "eslint": "5.9.0",
     "jest": "23.6.0"
   },
@@ -26,12 +27,13 @@
   ],
   "license": "MIT",
   "name": "@devsnicket/plugin-discovery-create-repository",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/DevSnicket/plugin-discovery.git"
-	},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DevSnicket/plugin-discovery.git"
+  },
   "scripts": {
     "lint": "npx eslint .",
+    "spellcheck": "npx cspell -c ../cspell.json *.js **/*.js *.md **/*.md",
     "test": "npx jest"
   },
   "version": "1.5.1"
