@@ -93,9 +93,9 @@ The Babel plug-in has a parameter ignoreDirectoryNames, when not specified this 
 
 Webpack can be configured to run Babel for repositories even when they are in a package and so in the node_modules directory. So long as the plug-ins for these repositories aren't also in packages/node_modules, they can be discovered and rewritten by Webpack/Babel in the output. Webpack is often also configured to not include or to exclude running Babel for the node_modules directory. So you will need to ensure that your Webpack configuration still includes the paths to repositories in packages/node_modules for this to work.
 
-### Forwarder lookup (respositories and plug-ins in packages)
+### Forwarder lookup (repositories and plug-ins in packages)
 
-To support packages that contain DevSnicket plug-ins that won't be discovered by default (see above), the Babel plug-in also does a lookup inside the node_module directory. It expectes the following structure:
+To support packages that contain DevSnicket plug-ins that won't be discovered by default (see above), the Babel plug-in also does a lookup inside the node_module directory. It expects the following structure:
 
 ```
 node_modules
@@ -122,7 +122,7 @@ Forwarders:
 * generated upon build (i.e. when Babel is run)
 * included in the package
   
-When Babel is run with the -d / --out-dir parameter the forwarder directories and files described above will be created automatically. Forwarders are written for plug-ins when the repository is both in a package and not transformed by Babel<sup>[[1]](#footnote1)</sup>. The following Babel plug-in parameters can override the default behavour:
+When Babel is run with the -d / --out-dir parameter the forwarder directories and files described above will be created automatically. Forwarders are written for plug-ins when the repository is both in a package and not transformed by Babel<sup>[[1]](#footnote1)</sup>. The following Babel plug-in parameters can override the default behavior:
 
 | parameter | description | default 
 | - | - | - |
@@ -136,7 +136,7 @@ When Babel is run with the -d / --out-dir parameter the forwarder directories an
 
 It is advised that repositories are not included in packages with other content that might frequently change and so require new package versions.
 
-If there are multiple versions of a repository's package installed, this is likely to result in that one repository effectively becoming multiple separate repositories with the same name. When this is happens, something plugged into a repository package of one version won't be returned when iterating that same repository package of another version. If this happens it is due to the behaviour of the package manager being used. Package managers such as NPM will install the same package multiple times, in multiple directories, to avoid version conflicts.
+If there are multiple versions of a repository's package installed, this is likely to result in that one repository effectively becoming multiple separate repositories with the same name. When this is happens, something plugged into a repository package of one version won't be returned when iterating that same repository package of another version. If this happens it is due to the behavior of the package manager being used. Package managers such as NPM will install the same package multiple times, in multiple directories, to avoid version conflicts.
 
 ### Tests
 
