@@ -13,14 +13,14 @@ module.exports =
 			?
 			resolveWhenFileExists(requirePath)
 			:
-			getInferedWhenFileExists()
+			getInferredWhenFileExists()
 		);
 
 		function hasJavascriptExtension() {
 			return path.extname(requirePath) === javascriptFileExtension;
 		}
 
-		function getInferedWhenFileExists() {
+		function getInferredWhenFileExists() {
 			return (
 				resolveWhenFileExists(
 					`${requirePath}${javascriptFileExtension}`,
