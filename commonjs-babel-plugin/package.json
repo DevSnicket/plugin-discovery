@@ -10,10 +10,10 @@
 		"fs-extra": "7.0.1"
 	},
 	"devDependencies": {
-		"@types/jest": "23.3.10",
+		"@types/jest": "24.0.6",
 		"cspell": "3.1.3",
 		"eslint": "5.9.0",
-		"jest": "23.6.0"
+		"jest": "24.1.0"
 	},
 	"description": "A Babel plug-in that adds CommonJS require calls to import modules that use @devsnicket/plugin-discovery-create-repository.",
 	"discovery": "https://github.com/DevSnicket/plugin-discovery/commonjs-babel-plugin",
@@ -42,5 +42,5 @@
 		"spellcheck": "npx cspell -c ../cspell.json *.js **/*.js *.md **/*.md",
 		"test": "npx jest"
 	},
-	"version": "1.11.0"
+	"version": "1.11.1"
 }
