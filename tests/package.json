@@ -9,6 +9,8 @@
 	},
 	"license": "MIT",
 	"scripts": {
-		"lint": "npx eslint ."
+		"all": "npm run spellcheck && npm run lint",
+		"lint": "npx eslint .",
+		"spellcheck": "find -type f \\( -name \"*.js\" -or -name \"*.md\" \\) ! -path \"./node_modules/**/*\" -exec npx cspell -c ../cspell.json {} +"
 	}
 }
