@@ -1,6 +1,6 @@
 {
 	"ignorePaths": [ "tests/output/**" ],
-	"language": "en",
+	"language": "en-US",
     "version": "0.1",
     "words": [
         "devsnicket",

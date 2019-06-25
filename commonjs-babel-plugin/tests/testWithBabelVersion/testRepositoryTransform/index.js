@@ -11,7 +11,7 @@ module.exports =
 		testDirectory,
 		transformFilePath,
 	}) => {
-		// setup outside of describe and so setup all tests first, to recreate their potential to affect each others behaviour
+		// setup outside of describe and so setup all tests first, to recreate their potential to affect each others behavior
 		const testCaseSets =
 			setupAndCreateTestSets({
 				directory: testDirectory,
