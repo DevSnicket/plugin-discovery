@@ -128,10 +128,10 @@ function discoverRelative({
 				function visitCallExpression(
 					callExpression,
 				) {
-					if (!found && (found = isRequreOfPluginRepository()))
+					if (!found && (found = isRequireOfPluginRepository()))
 						logPlugin(`plug-in "${path.relative(sourceRootPath, filePath)}"`);
 
-					function isRequreOfPluginRepository() {
+					function isRequireOfPluginRepository() {
 						return (
 							isRequireCall(callExpression)
 							&&

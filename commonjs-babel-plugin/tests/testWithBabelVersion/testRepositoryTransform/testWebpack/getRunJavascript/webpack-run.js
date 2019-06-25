@@ -1,3 +1,5 @@
+// cSpell:words devtool pathinfo
+
 const path = require("path");
 
 require("webpack")(

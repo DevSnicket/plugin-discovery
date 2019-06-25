@@ -33,7 +33,7 @@
   },
   "scripts": {
     "lint": "npx eslint .",
-    "spellcheck": "npx cspell -c ../cspell.json *.js **/*.js *.md **/*.md",
+	"spellcheck": "find -type f \\( -name \"*.js\" -or -name \"*.md\" \\) ! -path \"./node_modules/**/*\" ! -path \"./tests/output/**/*\" -exec npx cspell -c ../cspell.json {} +",
     "test": "npx jest"
   },
   "version": "1.5.2"

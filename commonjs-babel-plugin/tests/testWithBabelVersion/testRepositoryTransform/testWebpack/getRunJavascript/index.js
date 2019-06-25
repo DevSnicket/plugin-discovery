@@ -14,7 +14,7 @@ module.exports =
 	}) => {
 		return (
 			[
-				...formatValuesAsConsts({
+				...formatValuesAsConstants({
 					babelPluginPath: getBabelPluginPath(),
 					entry: `./${entryFilename}`,
 					outputFileName,
@@ -33,7 +33,7 @@ module.exports =
 			);
 		}
 
-		function formatValuesAsConsts(
+		function formatValuesAsConstants(
 			constants,
 		) {
 			return (
