@@ -8,7 +8,7 @@
   "devDependencies": {
     "@types/jest": "24.0.6",
     "cspell": "4.0.23",
-    "eslint": "5.9.0",
+    "eslint": "6.0.1",
     "eslint-plugin-notice": "0.8.8",
     "jest": "24.1.0"
   },
