@@ -1,4 +1,4 @@
-# Plug-in Discovery ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/icon.svg?sanitize=true)
+# Plug-in Discovery ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/docs/icon.svg?sanitize=true)
 
 [![Build Status](https://travis-ci.org/DevSnicket/plugin-discovery.svg?branch=master)](https://travis-ci.org/DevSnicket/plugin-discovery) [![Gitter chat](https://badges.gitter.im/devsnicket-plugin-discovery/gitter.png)](https://gitter.im/devsnicket-plugin-discovery)
 
@@ -6,7 +6,7 @@ DevSnicket Plug-in Discovery consists of a JavaScript repository object and a Ba
 
 before | after
 ------ | -----
-![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/before.svg?sanitize=true) | ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/after.svg?sanitize=true)
+![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/docs/before.svg?sanitize=true) | ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/docs/after.svg?sanitize=true)
 
 Currently only CommonJS modules are supported (e.g. not ECMAScript ones).
 

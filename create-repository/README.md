@@ -1,4 +1,4 @@
-# Plug-in Discovery ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/icon.svg?sanitize=true)
+# Plug-in Discovery ![](https://raw.githubusercontent.com/DevSnicket/plugin-discovery/master/docs/icon.svg?sanitize=true)
 
 [![Build Status](https://travis-ci.org/DevSnicket/plugin-discovery.svg?branch=master)](https://travis-ci.org/DevSnicket/plugin-discovery) [![Gitter chat](https://badges.gitter.im/devsnicket-plugin-discovery/gitter.png)](https://gitter.im/devsnicket-plugin-discovery)
 
